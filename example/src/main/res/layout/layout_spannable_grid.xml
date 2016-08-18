@@ -38,5 +38,10 @@
         app:tv_layoutManager="SpannableGridLayoutManager"
         app:numColumns="4"
         app:numRows="4" />
+
+    <com.owen.tvrecyclerview.example.bridge.MainUpView
+        android:id="@+id/mainUpView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
 

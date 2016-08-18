@@ -14,14 +14,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-
-<com.owen.tvrecyclerview.widget.TvRecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="@style/TwoWayView"
-    app:tv_layoutManager="GridLayoutManager"
-    app:numColumns="2"
-    app:numRows="2" />
+    android:layout_height="match_parent">
+    
+    <com.owen.tvrecyclerview.widget.TvRecyclerView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/TwoWayView"
+        app:tv_layoutManager="GridLayoutManager"
+        app:numColumns="2"
+        app:numRows="2" />
+
+    <com.owen.tvrecyclerview.example.bridge.MainUpView
+        android:id="@+id/mainUpView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</FrameLayout>

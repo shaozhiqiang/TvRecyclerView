@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.owen.tvrecyclerview.example.bridge.MainUpView;
+import com.owen.tvrecyclerview.example.bridge.RecyclerViewBridge;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
@@ -43,6 +45,11 @@ public class LayoutFragment extends Fragment {
     private Toast mToast;
 
     private int mLayoutId;
+
+    MainUpView mainUpView1;
+    RecyclerViewBridge mRecyclerViewBridge;
+    View oldView;
+    View newView;
 
     public static LayoutFragment newInstance(int layoutId) {
         LayoutFragment fragment = new LayoutFragment();
@@ -89,6 +96,13 @@ public class LayoutFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLongClickable(true);
 
+        // 移动框
+        mainUpView1 = (MainUpView) view.findViewById(R.id.mainUpView1);
+        mainUpView1.setEffectBridge(new RecyclerViewBridge());
+        mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
+        mRecyclerViewBridge.setUpRectResource(R.drawable.test_rectangle);
+        mainUpView1.setDrawUpRectPadding(6);
+
         mPositionText = (TextView) view.getRootView().findViewById(R.id.position);
         mCountText = (TextView) view.getRootView().findViewById(R.id.count);
 
@@ -98,12 +112,19 @@ public class LayoutFragment extends Fragment {
         mRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                itemView.animate().scaleX(1f).scaleY(1f).setDuration(300).start();
+                mRecyclerViewBridge.setUnFocusView(itemView);
             }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                itemView.animate().scaleX(1.4f).scaleY(1.4f).setDuration(300).start();
+                newView = itemView;
+                mRecyclerViewBridge.setFocusView(itemView, 1.2f);
+            }
+
+            @Override
+            public void onReviseFocusFollow(TvRecyclerView parent, View itemView, int position) {
+                // 此处为了特殊情况时校正移动框
+                mRecyclerViewBridge.setFocusView(itemView, 1.2f);
             }
 
             @Override
