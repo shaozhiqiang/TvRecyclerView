@@ -18,7 +18,7 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.1'
+compile 'com.tv.boost:tv-recyclerview:1.0.2'
 ```
 
 ### 特性
@@ -67,7 +67,11 @@ compile 'com.tv.boost:tv-recyclerview:1.0.1'
         }
     });
     ```
-
+### 版本说明
+> * 1.0.1
+    解决item点击无效问题
+> * 1.0.2
+    解决移动边框错位问题
 
 ### 更详细的使用请见exmaple
 
