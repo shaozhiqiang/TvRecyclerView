@@ -209,7 +209,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         if (childCount == 0 || delta == 0) {
             return 0;
         }
-        Log.d("TvRecyclerView", "start delta="+delta);
+        
         final int start = getStartWithPadding();
         final int end = getEndWithPadding();
         final int firstPosition = getFirstVisiblePosition();
@@ -220,7 +220,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         } else {
             delta = Math.min(totalSpace - 1, delta);
         }
-        Log.d("TvRecyclerView", "middle delta="+delta);
+        
         final boolean cannotScrollBackward = (firstPosition == 0 &&
                 mLayoutStart >= start && delta <= 0);
         final boolean cannotScrollForward = (firstPosition + childCount == state.getItemCount() &&
@@ -240,7 +240,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
             canAddMoreViews(Direction.END, end + absDelta)) {
             fillGap(direction, recycler, state);
         }
-        Log.d("TvRecyclerView", "end delta="+delta);
+        
         return delta;
     }
 

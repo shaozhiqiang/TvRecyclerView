@@ -72,6 +72,8 @@ compile 'com.tv.boost:tv-recyclerview:1.0.2'
     解决item点击无效问题
 > * 1.0.2
     解决移动边框错位问题
+> * 1.0.3
+    优化了一些细节,删除无用资源
 
 ### 更详细的使用请见exmaple
 

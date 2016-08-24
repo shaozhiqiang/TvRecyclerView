@@ -51,6 +51,8 @@ public class TvRecyclerView extends RecyclerView {
     
     private int mOverscrollValue;
 
+    private int mOffset = -1;
+
     private OnItemListener mOnItemListener;
     
     private ItemListener mItemListener;
@@ -239,7 +241,7 @@ public class TvRecyclerView extends RecyclerView {
     @Override
     public void onScrollStateChanged(int state) {
         if(state == SCROLL_STATE_IDLE) {
-            offset = -1;
+            mOffset = -1;
             if (Math.abs(mOverscrollValue) != 1) {
                 mOverscrollValue = 1;
                 final View focuse = getFocusedChild();
@@ -296,9 +298,9 @@ public class TvRecyclerView extends RecyclerView {
         }
 
         if(cannotScrollForwardOrBackward(isVertical() ? dy : dx)) {
-            offset = -1;
+            mOffset = -1;
         } else {
-            offset = isVertical() ? dy : dx;
+            mOffset = isVertical() ? dy : dx;
             
             if (dx != 0 || dy != 0) {
                 if (immediate) {
@@ -317,11 +319,9 @@ public class TvRecyclerView extends RecyclerView {
         return false;
     }
     
-    private int offset = -1;
-
     @Override
     public int getBaseline() {
-        return offset;
+        return mOffset;
     }
 
     private boolean cannotScrollForwardOrBackward(int value) {
@@ -364,17 +364,29 @@ public class TvRecyclerView extends RecyclerView {
     
     public TwoWayLayoutManager.Orientation getOrientation() {
         if(mIsBaseLayoutManager) {
-            BaseLayoutManager layout = (BaseLayoutManager) getLayoutManager();
+            final BaseLayoutManager layout = (BaseLayoutManager) getLayoutManager();
             return layout.getOrientation();
-        } else {
-            return TwoWayLayoutManager.Orientation.HORIZONTAL;
+        } 
+        else if(getLayoutManager() instanceof LinearLayoutManager) {
+            final LinearLayoutManager layout = (LinearLayoutManager) getLayoutManager();
+            return layout.getOrientation() == LinearLayoutManager.HORIZONTAL 
+                    ? BaseLayoutManager.Orientation.HORIZONTAL 
+                    : BaseLayoutManager.Orientation.VERTICAL;
+        }
+        else {
+            return BaseLayoutManager.Orientation.VERTICAL;
         }
     }
 
     public void setOrientation(TwoWayLayoutManager.Orientation orientation) {
         if(mIsBaseLayoutManager) {
-            BaseLayoutManager layout = (BaseLayoutManager) getLayoutManager();
+            final BaseLayoutManager layout = (BaseLayoutManager) getLayoutManager();
             layout.setOrientation(orientation);
+        } 
+        else if(getLayoutManager() instanceof LinearLayoutManager) {
+            final LinearLayoutManager layout = (LinearLayoutManager) getLayoutManager();
+            layout.setOrientation(orientation == BaseLayoutManager.Orientation.HORIZONTAL 
+                    ? LinearLayoutManager.HORIZONTAL : LinearLayoutManager.VERTICAL);
         }
     }
 
@@ -542,7 +554,6 @@ public class TvRecyclerView extends RecyclerView {
     @Override
     public boolean isInTouchMode() {
         boolean result = super.isInTouchMode();
-//        Log.e(LOGTAG, "isInTouchMode...result="+result);
         // 解决4.4版本抢焦点的问题
         if (Build.VERSION.SDK_INT == 19) {
             return !(hasFocus() && !result);
