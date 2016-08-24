@@ -60,6 +60,11 @@ compile 'com.tv.boost:tv-recyclerview:1.0.2'
         public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 
         }
+        
+        @Override
+        public void onReviseFocusFollow(TvRecyclerView parent, View itemView, int position) {
+            // 此处为了特殊情况时校正移动框
+        }
 
         @Override
         public void onItemClick(TvRecyclerView parent, View itemView, int position) {
