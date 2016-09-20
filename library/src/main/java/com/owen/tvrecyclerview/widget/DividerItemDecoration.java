@@ -15,9 +15,9 @@ import com.owen.tvrecyclerview.BaseLayoutManager;
 import com.owen.tvrecyclerview.R;
 
 /**
- * {@link android.support.v7.widget.RecyclerView.ItemDecoration} that draws
+ * {android.support.v7.widget.RecyclerView.ItemDecoration} that draws
  * vertical and horizontal dividers between the items of the target
- * {@link android.support.v7.widget.RecyclerView}.
+ * {android.support.v7.widget.RecyclerView}.
  */
 public class DividerItemDecoration extends ItemDecoration {
     private final ItemSpacingOffsets mItemSpacing;
@@ -37,8 +37,8 @@ public class DividerItemDecoration extends ItemDecoration {
         if (divider != null) {
             mVerticalDivider = mHorizontalDivider = divider;
         } else {
-            mVerticalDivider = a.getDrawable(R.styleable.TvRecyclerView_DividerItemDecoration_verticalDivider);
-            mHorizontalDivider = a.getDrawable(R.styleable.TvRecyclerView_DividerItemDecoration_horizontalDivider);
+            mVerticalDivider = a.getDrawable(R.styleable.TvRecyclerView_DividerItemDecoration_tv_verticalDivider);
+            mHorizontalDivider = a.getDrawable(R.styleable.TvRecyclerView_DividerItemDecoration_tv_horizontalDivider);
         }
 
         a.recycle();

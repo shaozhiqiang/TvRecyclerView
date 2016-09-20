@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +39,7 @@ import com.owen.tvrecyclerview.TwoWayLayoutManager;
 import java.lang.reflect.Constructor;
 
 public class TvRecyclerView extends RecyclerView {
-    private static final String LOGTAG = TvRecyclerView.class.getSimpleName();
+    private static final String LOGTAG = TvRecyclerView.class.getSimpleName() + ":::";
     private static final int DEFAULT_SELECTED_ITEM_OFFSET = 40;
 
     private int mVerticalSpacingWithMargins = 0;
@@ -48,6 +50,12 @@ public class TvRecyclerView extends RecyclerView {
     
     private boolean mSelectedItemCentered;
     private boolean mIsBaseLayoutManager;
+    private boolean mIsInterceptKeyEvent;
+    private boolean mIsMenu;
+    private boolean mHasFocus = false;
+    
+    private int mOldSelectedPosition = 0;
+    private int mSelectedPosition = 0;
     
     private int mOverscrollValue;
 
@@ -55,12 +63,37 @@ public class TvRecyclerView extends RecyclerView {
 
     private OnItemListener mOnItemListener;
     
+    private OnInBorderKeyEventListener mOnInBorderKeyEventListener;
+    
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private boolean mHasMore = true;
+    private boolean mLoadingMore = false;
+    
     private ItemListener mItemListener;
 
     private static final Class<?>[] sConstructorSignature = new Class[] {
             Context.class, AttributeSet.class};
 
     private final Object[] sConstructorArgs = new Object[2];
+    
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 110:
+                    mHasFocus = true;
+                    onFocusChanged(mHasFocus, View.FOCUS_DOWN, null);
+                    break;
+                
+                case 111:
+                    if(getFocusedChild() == null) {
+                        mHasFocus = false;
+                        onFocusChanged(mHasFocus, View.FOCUS_DOWN, null);
+                    }
+                    break;
+            }
+        }
+    };
     
 
     public TvRecyclerView(Context context) {
@@ -82,15 +115,17 @@ public class TvRecyclerView extends RecyclerView {
         if (!TextUtils.isEmpty(name)) {
             loadLayoutManagerFromName(context, attrs, name);
         }
-        mSelectedItemCentered = a.getBoolean(R.styleable.TvRecyclerView_selectedItemisCentered, false);
-        mSelectedItemOffsetStart = a.getInt(R.styleable.TvRecyclerView_selectedItemOffsetStart, DEFAULT_SELECTED_ITEM_OFFSET);
-        mSelectedItemOffsetEnd = a.getInt(R.styleable.TvRecyclerView_selectedItemOffsetEnd, DEFAULT_SELECTED_ITEM_OFFSET);
+        mSelectedItemCentered = a.getBoolean(R.styleable.TvRecyclerView_tv_selectedItemIsCentered, false);
+        mIsInterceptKeyEvent = a.getBoolean(R.styleable.TvRecyclerView_tv_isInterceptKeyEvent, false);
+        mIsMenu = a.getBoolean(R.styleable.TvRecyclerView_tv_isMenu, false);
+        mSelectedItemOffsetStart = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tv_selectedItemOffsetStart, DEFAULT_SELECTED_ITEM_OFFSET);
+        mSelectedItemOffsetEnd = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tv_selectedItemOffsetEnd, DEFAULT_SELECTED_ITEM_OFFSET);
         
         a.recycle();
     }
 
     private void init(Context context){
-        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+        setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
         setChildrenDrawingOrderEnabled(true);
         setWillNotDraw(true); // 自身不作onDraw处理
         setHasFixedSize(true);
@@ -102,7 +137,7 @@ public class TvRecyclerView extends RecyclerView {
         setClickable(false);
         setFocusable(true);
         setFocusableInTouchMode(true);
-
+        
         mItemListener = new ItemListener() {
             /**
              * 子控件的点击事件
@@ -122,14 +157,26 @@ public class TvRecyclerView extends RecyclerView {
              */
             @Override
             public void onFocusChange(View itemView, boolean hasFocus) {
-                if(null != mOnItemListener) {
-                    if(null != itemView) {
-                        itemView.setSelected(hasFocus);
-                        if (hasFocus) {
-                            mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, getChildLayoutPosition(itemView));
-                        } else {
-                            mOnItemListener.onItemPreSelected(TvRecyclerView.this, itemView, getChildLayoutPosition(itemView));
-                        }
+                mHandler.removeMessages(110);
+                mHandler.removeMessages(111);
+                if(hasFocus && !mHasFocus){
+                    mHandler.sendEmptyMessage(110);
+                } 
+                else if(!hasFocus && mHasFocus) {
+                    mHandler.sendEmptyMessageDelayed(111, 50);
+                }
+                
+                if(null != itemView) {
+                    final int position = getChildLayoutPosition(itemView);
+                    itemView.setSelected(hasFocus);
+                    if (hasFocus) {
+                        mSelectedPosition = position;
+                        if(null != mOnItemListener)
+                            mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, position);
+                    } else {
+                        mOldSelectedPosition = position;
+                        if(null != mOnItemListener)
+                            mOnItemListener.onItemPreSelected(TvRecyclerView.this, itemView, position);
                     }
                 }
             }
@@ -167,6 +214,30 @@ public class TvRecyclerView extends RecyclerView {
         mIsBaseLayoutManager = layout instanceof BaseLayoutManager;
         super.setLayoutManager(layout);
     }
+    
+    public void requestDefaultFocus() {
+        setSelection(mOldSelectedPosition);
+    }
+    
+    public void setSelection(int position) {
+        ViewHolder holder = findViewHolderForLayoutPosition(position);
+        if(null != holder) {
+            holder.itemView.requestFocusFromTouch();
+            holder.itemView.requestFocus();
+        }
+    }
+
+    public int getSelectedPosition() {
+        return mSelectedPosition;
+    }
+    
+    public int getOldSelectedPosition() {
+        return mOldSelectedPosition;
+    }
+
+    public void setMenu(boolean menu) {
+        mIsMenu = menu;
+    }
 
     /**
      * 设置选中的Item距离开始或结束的偏移量；
@@ -187,6 +258,30 @@ public class TvRecyclerView extends RecyclerView {
      */
     public void setSelectedItemAtCentered(boolean isCentered) {
         this.mSelectedItemCentered = isCentered;
+    }
+
+    public boolean isSelectedItemCentered() {
+        return mSelectedItemCentered;
+    }
+
+    public void setLoadingMore(boolean loadingMore) {
+        mLoadingMore = loadingMore;
+    }
+
+    public boolean isLoadingMore() {
+        return mLoadingMore;
+    }
+
+    /**
+     * 设置是否拦截OnKey事件
+     * @param interceptKeyEvent
+     */
+    public void setInterceptKeyEvent(boolean interceptKeyEvent) {
+        mIsInterceptKeyEvent = interceptKeyEvent;
+    }
+
+    public boolean isInterceptKeyEvent() {
+        return mIsInterceptKeyEvent;
     }
 
     public boolean isVertical() {
@@ -218,6 +313,8 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     public void requestChildFocus(View child, View focused) {
+        Log.i(LOGTAG, "requestChildFocus: "+child);
+        
         if(null != child) {
             if (mSelectedItemCentered) {
                 mSelectedItemOffsetStart = !isVertical() ? (getFreeWidth() - child.getWidth()) : (getFreeHeight() - child.getHeight());
@@ -247,6 +344,13 @@ public class TvRecyclerView extends RecyclerView {
                 final View focuse = getFocusedChild();
                 if (null != mOnItemListener && null != focuse) {
                     mOnItemListener.onReviseFocusFollow(this, focuse, getChildLayoutPosition(focuse));
+                }
+            }
+            
+            // 加载更多回调
+            if(!mLoadingMore && mHasMore && null != mOnLoadMoreListener) {
+                if(getLastVisiblePosition() == getAdapter().getItemCount() - 1) {
+                    mHasMore = mOnLoadMoreListener.onLoadMore();
                 }
             }
         }
@@ -296,7 +400,7 @@ public class TvRecyclerView extends RecyclerView {
         } else {
             dy = 0;
         }
-
+        
         if(cannotScrollForwardOrBackward(isVertical() ? dy : dx)) {
             mOffset = -1;
         } else {
@@ -318,12 +422,20 @@ public class TvRecyclerView extends RecyclerView {
         
         return false;
     }
-    
-    @Override
-    public int getBaseline() {
+
+    /**
+     * 获取选中ITEM的滚动偏移量
+     * @return
+     */
+    public int getSelectedItemScrollOffset() {
         return mOffset;
     }
 
+    /**
+     * 判断当前是否还可以向前或后滚动
+     * @param value
+     * @return
+     */
     private boolean cannotScrollForwardOrBackward(int value) {
         if(mIsBaseLayoutManager) {
             final BaseLayoutManager layoutManager = (BaseLayoutManager) getLayoutManager();
@@ -349,7 +461,10 @@ public class TvRecyclerView extends RecyclerView {
         }
         adjustPadding();
     }
-    
+
+    /**
+     * 根据Margins调整Padding值
+     */
     private void adjustPadding() {
         if((mVerticalSpacingWithMargins > 0 || mHorizontalSpacingWithMargins > 0)) {
             final int verticalSpacingHalf = mVerticalSpacingWithMargins / 2;
@@ -414,32 +529,22 @@ public class TvRecyclerView extends RecyclerView {
         scrollToPosition(position);
     }
 
-//    @Override
-//    public void scrollToPosition(int position) {
-//        if(mIsBaseLayoutManager) {
-//            BaseLayoutManager layout = (BaseLayoutManager) getLayoutManager();
-//            layout.scrollToPosition(position);
-//            return;
-//        }
-//        super.scrollToPosition(position);
-//    }
-
-    int position = 0;
+    int mTempPosition = 0;
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
         View view = getFocusedChild();
         if(null != view) {
-            position = getChildAdapterPosition(view) - getFirstVisiblePosition();
-            if (position < 0) {
+            mTempPosition = getChildLayoutPosition(view) - getFirstVisiblePosition();
+            if (mTempPosition < 0) {
                 return i;
             } else {
                 if (i == childCount - 1) {//这是最后一个需要刷新的item
-                    if (position > i) {
-                        position = i;
+                    if (mTempPosition > i) {
+                        mTempPosition = i;
                     }
-                    return position;
+                    return mTempPosition;
                 }
-                if (i == position) {//这是原本要在最后一个刷新的item
+                if (i == mTempPosition) {//这是原本要在最后一个刷新的item
                     return childCount - 1;
                 }
             }
@@ -448,54 +553,106 @@ public class TvRecyclerView extends RecyclerView {
     }
 
     public boolean isScrolling() {
-        return getScrollState() == SCROLL_STATE_SETTLING;
+        return getScrollState() != SCROLL_STATE_IDLE;
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        switch (event.getAction()) {
-            case KeyEvent.ACTION_DOWN:
-                if(onKeyDown(event.getKeyCode(), event))
-                    return true;
-                break;
-            case KeyEvent.ACTION_UP:
-                if(onKeyUp(event.getKeyCode(), event))
-                    return true;
-                break;
+        boolean result = super.dispatchKeyEvent(event);
+        if(!result) {
+            switch (event.getAction()) {
+                case KeyEvent.ACTION_DOWN:
+                    result = onKeyDown(event.getKeyCode(), event);
+                    break;
+                case KeyEvent.ACTION_UP:
+                    result = onKeyUp(event.getKeyCode(), event);
+                    break;
+            }
         }
-        return super.dispatchKeyEvent(event);
+        return result;
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        int direction = -1;
-        switch (keyCode){
-            case KeyEvent.KEYCODE_DPAD_DOWN:
-                direction = FOCUS_DOWN;
-                break;
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                direction = FOCUS_RIGHT;
-                break;
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                direction = FOCUS_LEFT;
-                break;
-            case KeyEvent.KEYCODE_DPAD_UP:
-                direction = FOCUS_UP;
-                break;
+        boolean reuslt = super.onKeyDown(keyCode, event);
+        // 拦截key事件
+        if(mIsInterceptKeyEvent && !reuslt) {
+            reuslt = handleOnKey(keyCode, event);
         }
-        
-        if(direction == -1 || hasInBorder(direction)) {
+        return reuslt;
+    }
+
+    /**
+     * 处理onKeyDown等事件
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    private boolean handleOnKey(int keyCode, KeyEvent event) {
+        int direction = keyCode2Direction(keyCode);
+
+        if(direction == -1) {
             return false;
-        } else {
-            FocusFinder ff = FocusFinder.getInstance();
-            View newFocusedView = ff.findNextFocus(this, getFocusedChild(), direction);
+        } 
+        else if(hasInBorder(direction)) {
+            return null != mOnInBorderKeyEventListener && mOnInBorderKeyEventListener.onInBorderKeyEvent(direction, keyCode, event);
+        }
+        else {
+            View newFocusedView = findNextFocus(direction);
             if (null != newFocusedView) {
                 newFocusedView.requestFocus();
             }
         }
         return true;
     }
-    
+
+    /**
+     * 查找下个可获取焦点的view
+     * @param direction
+     * @return
+     */
+    private View findNextFocus(int direction) {
+        return FocusFinder.getInstance().findNextFocus(this, getFocusedChild(), direction);
+    }
+
+    /**
+     * keycode值转成Direction值
+     * @param keyCode
+     * @return
+     */
+    private int keyCode2Direction(int keyCode) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                return FOCUS_DOWN;
+            
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                return FOCUS_RIGHT;
+            
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                return FOCUS_LEFT;
+            
+            case KeyEvent.KEYCODE_DPAD_UP:
+                return FOCUS_UP;
+            
+            default:
+                return -1;
+        }
+    }
+
+    @Override
+    public View focusSearch(View focused, int direction) {
+        if(hasInBorder(direction)) {
+            return super.focusSearch(focused, direction);
+        } else {
+            return findNextFocus(direction);
+        }
+    }
+
+    /**
+     * 判断选中的item是否到达边界
+     * @param direction
+     * @return
+     */
     private boolean hasInBorder(int direction) {
         boolean result = false;
         final View view = getFocusedChild();
@@ -535,24 +692,75 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     public void onChildAttachedToWindow(View child) {
-        child.setOnClickListener(mItemListener);
-        child.setOnFocusChangeListener(mItemListener);
+        if(!ViewCompat.hasOnClickListeners(child)) {
+            child.setOnClickListener(mItemListener);
+        }
+        if(null == child.getOnFocusChangeListener()) {
+            child.setOnFocusChangeListener(mItemListener);
+        }
+    }
+
+    @Override
+    public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
+        Log.i(LOGTAG, "requestFocus: "+direction);
+
+        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
+        requestDefaultFocus();
+        
+        int descendantFocusability = getDescendantFocusability();
+        switch (descendantFocusability) {
+            case FOCUS_BLOCK_DESCENDANTS:
+                return true;
+            case FOCUS_BEFORE_DESCENDANTS: {
+                final boolean took = true;
+                return took ? took : onRequestFocusInDescendants(direction, previouslyFocusedRect);
+            }
+            case FOCUS_AFTER_DESCENDANTS: {
+                final boolean took = onRequestFocusInDescendants(direction, previouslyFocusedRect);
+                return took ? took : super.requestFocus(direction, previouslyFocusedRect);
+            }
+            default:
+                throw new IllegalStateException("descendant focusability must be "
+                        + "one of FOCUS_BEFORE_DESCENDANTS, FOCUS_AFTER_DESCENDANTS, FOCUS_BLOCK_DESCENDANTS "
+                        + "but is " + descendantFocusability);
+        }
     }
 
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
-        Log.e(LOGTAG, "onFocusChanged..." + gainFocus + " ,direction="+direction);
+        Log.i(LOGTAG, "onFocusChanged..." + gainFocus + " ,direction="+direction + " ,mOldSelectedPosition="+mOldSelectedPosition);
+        mHasFocus = gainFocus;
+        if(mIsMenu) {
+            // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
+            ViewHolder holder = findViewHolderForLayoutPosition(mOldSelectedPosition);
+            if(null != holder) {
+                holder.itemView.setActivated(false);
+            }
+            if(!gainFocus) {
+                if (null != holder) {
+                    holder.itemView.setActivated(true);
+                }
+            }
+        }
+        
+        if(gainFocus) {
+            setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
+        } else {
+            setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
+        }
+        
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
-
+    
     @Override
     public boolean hasFocus() {
-        Log.e(LOGTAG, "hasFocus...");
+        Log.i(LOGTAG, "hasFocus...");
         return super.hasFocus();
     }
 
     @Override
     public boolean isInTouchMode() {
+        Log.i(LOGTAG, "isInTouchMode...");
         boolean result = super.isInTouchMode();
         // 解决4.4版本抢焦点的问题
         if (Build.VERSION.SDK_INT == 19) {
@@ -562,17 +770,42 @@ public class TvRecyclerView extends RecyclerView {
         }
     }
 
-    private interface ItemListener extends View.OnClickListener, View.OnFocusChangeListener {
-    }
-
-    public interface OnItemListener {
-        void onItemPreSelected(TvRecyclerView parent, View itemView, int position);
-        void onItemSelected(TvRecyclerView parent, View itemView, int position);
-        void onReviseFocusFollow(TvRecyclerView parent, View itemView, int position);
-        void onItemClick(TvRecyclerView parent, View itemView, int position);
+    @Override
+    public boolean isInEditMode() {
+        return true;
     }
 
     public void setOnItemListener(OnItemListener onItemListener) {
         mOnItemListener = onItemListener;
+    }
+
+    public void setOnInBorderKeyEventListener(OnInBorderKeyEventListener onInBorderKeyEventListener) {
+        mOnInBorderKeyEventListener = onInBorderKeyEventListener;
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        mOnLoadMoreListener = onLoadMoreListener;
+    }
+
+    public interface OnLoadMoreListener {
+        boolean onLoadMore();
+    }
+
+    public interface OnInBorderKeyEventListener {
+        boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event);
+    }
+
+    public interface OnItemListener {
+        void onItemPreSelected(TvRecyclerView parent, View itemView, int position);
+
+        void onItemSelected(TvRecyclerView parent, View itemView, int position);
+
+        void onReviseFocusFollow(TvRecyclerView parent, View itemView, int position);
+
+        void onItemClick(TvRecyclerView parent, View itemView, int position);
+    }
+
+    private interface ItemListener extends View.OnClickListener, View.OnFocusChangeListener {
+        
     }
 }

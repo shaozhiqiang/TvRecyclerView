@@ -287,7 +287,7 @@ public class StaggeredGridLayoutManager extends GridLayoutManager {
             super(c, attrs);
 
             TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.TvRecyclerView_StaggeredGridViewChild);
-            span = Math.max(DEFAULT_SPAN, a.getInt(R.styleable.TvRecyclerView_StaggeredGridViewChild_span, -1));
+            span = Math.max(DEFAULT_SPAN, a.getInt(R.styleable.TvRecyclerView_StaggeredGridViewChild_tv_span, -1));
             a.recycle();
         }
 

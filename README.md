@@ -71,6 +71,32 @@ compile 'com.tv.boost:tv-recyclerview:1.0.2'
                 
         }
     });
+    
+    mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
+                @Override
+                public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_DPAD_DOWN:
+                            // do anything
+                            return true;
+                        case KeyEvent.KEYCODE_DPAD_RIGHT:
+                            // do anything
+                            return true;
+                    }
+                    return false;
+                }
+            });
+    
+    mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
+                @Override
+                public boolean onLoadMore() {
+                    mRecyclerView.setLoadingMore(true); //正在加载数据
+                    mLayoutAdapter.appendDatas(); //加载数据
+                    mRecyclerView.setLoadingMore(false); //加载数据完毕
+                    return true; //是否还有更多数据
+                }
+            });
+           
     ```
 ### 版本说明
 > * 1.0.1
@@ -79,6 +105,25 @@ compile 'com.tv.boost:tv-recyclerview:1.0.2'
     解决移动边框错位问题
 > * 1.0.3
     优化了一些细节,删除无用资源
+> * 1.0.4
+    优化了一些细节,删除无用资源
+> * 1.0.5
+    1)修复在adapter内为item设置监听无效的问题;
+    2)可自由设置是否拦截key事件;
+    3)增加焦点移动边缘监听;
+    4)增加菜单模式;
+    5)自定义属性统一增加前缀tv;
+> * 1.0.5.1
+    1)修复菜单模式下的bug;
+> * 1.0.5.2
+    1)修复菜单模式下的bug;
+> * 1.0.6
+    自动记忆历史焦点,默认选中上次离开时的position;
+> * 1.0.6.1
+    微调;
+> * 1.0.6.2
+    1)增加加载更多监听;
+    2)修复加载更多数据更新时焦点错乱问题;
 
 ### 更详细的使用请见exmaple
 

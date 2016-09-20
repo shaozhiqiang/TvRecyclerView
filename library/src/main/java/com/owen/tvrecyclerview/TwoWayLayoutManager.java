@@ -209,6 +209,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         if (childCount == 0 || delta == 0) {
             return 0;
         }
+//        Log.i(LOGTAG, "scrollBy..1..delta = "+delta);
         
         final int start = getStartWithPadding();
         final int end = getEndWithPadding();
@@ -220,6 +221,8 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         } else {
             delta = Math.min(totalSpace - 1, delta);
         }
+
+//        Log.i(LOGTAG, "scrollBy..2..delta = "+delta + " ,mLayoutStart = "+mLayoutStart + " ,mLayoutEnd = "+mLayoutEnd);
         
         final boolean cannotScrollBackward = (firstPosition == 0 &&
                 mLayoutStart >= start && delta <= 0);
@@ -240,7 +243,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
             canAddMoreViews(Direction.END, end + absDelta)) {
             fillGap(direction, recycler, state);
         }
-        
+//        Log.i(LOGTAG, "scrollBy..3..delta = "+delta + " ,mLayoutStart = "+mLayoutStart + " ,mLayoutEnd = "+mLayoutEnd);
         return delta;
     }
 
@@ -249,6 +252,8 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         final int extraSpace = getExtraLayoutSpace(state);
         final int firstPosition = getFirstVisiblePosition();
 
+//        Log.i(LOGTAG, "fillGap...childCount="+childCount+" ,extraSpace="+extraSpace+" ,firstPosition="+firstPosition);
+        
         if (direction == Direction.END) {
             fillAfter(firstPosition + childCount, recycler, state, extraSpace);
             correctTooHigh(childCount, recycler, state);
@@ -263,6 +268,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
     }
 
     private void fillBefore(int position, Recycler recycler, int extraSpace) {
+//        Log.i(LOGTAG, "fillBefore...position="+position);
         final int limit = getStartWithPadding() - extraSpace;
 
         while (canAddMoreViews(Direction.START, limit) && position >= 0) {
@@ -276,6 +282,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
     }
 
     private void fillAfter(int position, Recycler recycler, State state, int extraSpace) {
+//        Log.i(LOGTAG, "fillAfter...position="+position);
         final int limit = getEndWithPadding() + extraSpace;
 
         final int itemCount = state.getItemCount();
@@ -286,6 +293,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
     }
 
     private void fillSpecific(int position, Recycler recycler, State state) {
+//        Log.i(LOGTAG, "fillSpecific...position="+position);
         if (state.getItemCount() <= 0) {
             return;
         }
@@ -496,15 +504,18 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         // Refresh state by requesting layout without changing the
         // first visible position. This will ensure the layout will
         // sync with the adapter changes.
+        
         final int firstPosition = getFirstVisiblePosition();
         final View firstChild = findViewByPosition(firstPosition);
         if (firstChild != null) {
-            setPendingScrollPositionWithOffset(firstPosition, getChildStart(firstChild));
+            setPendingScrollPositionWithOffset(firstPosition, mLayoutStart);
         } else {
             setPendingScrollPositionWithOffset(RecyclerView.NO_POSITION, 0);
         }
     }
-
+    
+    
+    
     private void updateLayoutEdgesFromNewChild(View newChild) {
         final int childStart = getChildStart(newChild);
         if (childStart < mLayoutStart) {
@@ -736,10 +747,12 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
             }
         }*/
 
+        Log.i(LOGTAG, "onLayoutChildren: ");
+        
         final int anchorItemPosition = getAnchorItemPosition(state);
         detachAndScrapAttachedViews(recycler);
         fillSpecific(anchorItemPosition, recycler, state);
-
+            
         onLayoutScrapList(recycler, state);
 
         setPendingScrollPositionWithOffset(RecyclerView.NO_POSITION, 0);
@@ -970,141 +983,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
 
         return getPosition(getChildAt(childCount - 1));
     }
-
-    /**
-     * add by zhousuqiang
-     */
-//    @Override
-//    public boolean onRequestChildFocus(RecyclerView parent, State state, final View child, View focused) {
-//        Log.e(LOGTAG ,"onRequestChildFocus...");
-//        if(null != mRecyclerView) {
-//            if (mIsVertical) {
-//                mRecyclerView.scrollBy(1, 0);
-//            }
-//            else {
-//                mRecyclerView.scrollBy(0, 1);
-//            }
-//        }
-//        if(null != child) {
-////            smoothToCenter(child);
-//            child.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(v.getContext(), getPosition(child) + "", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//        return super.onRequestChildFocus(parent, state, child, focused);
-//    }
-
-    /**
-     * add by zhousuqiang
-     */
-//    private int byValue;
-//    private long time;
-//    private float bl = 0.2f;
-//    @Override
-//    public View onFocusSearchFailed(View focused, int direction, Recycler recycler, State state) {
-//        Log.d(LOGTAG, "onFocusSearchFailed...");
-////        Log.d(LOGTAG, "前 time = " + time);
-////        long difference = System.currentTimeMillis() - time;
-////        time = System.currentTimeMillis();
-////        Log.d(LOGTAG, "后 difference = " + difference);
-////        if (difference < 200) {
-////            bl = 1f; // 防止长按遥控器焦点丢失
-////        } else {
-////            bl = 0.2f;
-////        }
-//        
-//        final boolean cannotScrollBackward = getFirstVisiblePosition() == 0;
-//        final boolean cannotScrollForward = getFirstVisiblePosition() + getChildCount() == state.getItemCount();
-//        if(cannotScrollBackward && (direction == View.FOCUS_UP || direction == View.FOCUS_LEFT)) {
-//            return null;
-//        } 
-//        else if (cannotScrollForward && (direction == View.FOCUS_DOWN || direction == View.FOCUS_RIGHT)) {
-//            return null;
-//        }
-//        
-//        if(null == focused) return null; 
-//        if(mIsVertical) {
-//            byValue = (int) (focused.getHeight() * bl);
-//        } else {
-//            byValue = (int) (focused.getWidth() * bl);
-//        }
-//        
-//        switch (direction) {
-//            case View.FOCUS_DOWN:
-//                scrollVerticallyBy(byValue, recycler, state);
-//                break;
-//            case View.FOCUS_UP:
-//                scrollVerticallyBy(-byValue, recycler, state);
-//                break;
-//            
-//            case View.FOCUS_LEFT:
-//                scrollHorizontallyBy(-byValue, recycler, state);
-//                break;
-//            
-//            case View.FOCUS_RIGHT:
-////                smoothScrollToPosition(mRecyclerView, state, getPosition(focused) + 3);
-//                scrollToPositionWithOffset(getPosition(focused) + 3, 100);
-////                scrollHorizontallyBy(byValue, recycler, state);
-//                break;
-//        }
-//        return null;
-//    }
-
-    /**
-     * add by zhousuqiang
-     * 将指定item平滑移动到整个view的中间位置
-     * @param position
-     */
-    int dx;
-    public void smoothToCenter(View targetChild){
-        dx = 0;
-        int count = getItemCount();
-        int childWidth = targetChild.getWidth();
-        int parentWidth = getWidth();//获取父视图的宽度
-        int childLeftPx = targetChild.getLeft();//子view相对于父view的左边距
-        int childRightPx = parentWidth - (childLeftPx + childWidth);//子view相对于父view的右边距
-        childLeftPx -= getPaddingLeft();
-        childRightPx -= getPaddingRight();
-        int childWidthHalf = childWidth / 2;
-        Log.i(LOGTAG, "target-->left:" + childLeftPx + "   right:" + childRightPx + "   childWidthHalf:"+childWidthHalf);
-
-        if(childLeftPx < childWidth) {
-            mRecyclerView.smoothScrollBy(-(childWidth /2 *3), 0);
-            Log.i(LOGTAG,"向左移动...");
-        } else if(childRightPx < childWidth) {
-            mRecyclerView.smoothScrollBy((childWidth /2 *3), 0);
-            Log.i(LOGTAG,"向右移动...");
-        }
-        
-//        int centerLeft = parentWidth/2-childWidth/2;//计算子view居中后相对于父view的左边距
-//        int centerRight = parentWidth/2+childWidth/2;//计算子view居中后相对于父view的右边距
-//        Log.i(LOGTAG,"parent width:"+parentWidth+"   item width:"+childWidth+"   centerleft:"+centerLeft+"   centerRight:"+centerRight);
-        
-//        if(childLeftPx > centerLeft){
-//            //子view左边距比居中view大（说明子view靠父view的右边，此时需要把子view向左平移
-//            //平移的起始位置就是子view的左边距，平移的距离就是两者之差
-//            dx = centerLeft - childLeftPx;
-//        }else if(childRightPx < centerRight){
-//            dx = centerRight - childRightPx;
-//            
-//        }
-//        
-//        Log.e(LOGTAG, "DX : " + dx);
-//        if(dx > 0) {
-//            mRecyclerView.smoothScrollBy(dx, 0);
-//        }
-
-
-//        int k = checkView.getMeasuredWidth();
-//        int l = checkView.getLeft() - mNavScroll.getLeft();
-//        int i2 = l + k / 2 - mNavScroll.getMeasuredWidth() / 2;
-//        i2 = Math.max(i2, 0);
-//        mNavScroll.smoothScrollTo(i2, 0);
-    }
-    
 
     protected abstract void measureChild(View child, Direction direction);
     protected abstract void layoutChild(View child, Direction direction);

@@ -54,9 +54,9 @@ public class GridLayoutManager extends BaseLayoutManager {
                 context.obtainStyledAttributes(attrs, R.styleable.TvRecyclerView, defStyle, 0);
 
         mNumColumns =
-                Math.max(1, a.getInt(R.styleable.TvRecyclerView_numColumns, defaultNumColumns));
+                Math.max(1, a.getInt(R.styleable.TvRecyclerView_tv_numColumns, defaultNumColumns));
         mNumRows =
-                Math.max(1, a.getInt(R.styleable.TvRecyclerView_numRows, defaultNumRows));
+                Math.max(1, a.getInt(R.styleable.TvRecyclerView_tv_numRows, defaultNumRows));
 
         a.recycle();
     }

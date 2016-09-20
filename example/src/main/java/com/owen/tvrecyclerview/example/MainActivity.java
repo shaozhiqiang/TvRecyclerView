@@ -17,8 +17,9 @@
 package com.owen.tvrecyclerview.example;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,43 +32,53 @@ public class MainActivity extends AppCompatActivity {
 
     private int mSelectedLayoutId;
 
+    private TabLayout mTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.addOnTabSelectedListener(new TabSelectedListener());
+
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+//                        .setText("list")
+                        .setIcon(R.drawable.ic_list)
+                , true);
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+//                        .setText("grid")
+                        .setIcon(R.drawable.ic_grid)
+        );
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+//                        .setText("grid2")
+                        .setIcon(R.drawable.ic_grid)
+        );
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+//                        .setText("staggered")
+                        .setIcon(R.drawable.ic_staggered)
+        );
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+//                        .setText("spannable")
+                        .setIcon(R.drawable.selector_ic_spannable)
+        );
 
         mSelectedLayoutId = DEFAULT_LAYOUT;
         if (savedInstanceState != null) {
             mSelectedLayoutId = savedInstanceState.getInt(ARG_SELECTED_LAYOUT_ID);
         }
 
-        addLayoutTab(
-                actionBar, R.layout.layout_list, R.drawable.ic_list, "list");
-        addLayoutTab(
-                actionBar, R.layout.layout_grid, R.drawable.ic_grid, "grid");
-        addLayoutTab(
-                actionBar, R.layout.layout_staggered_grid, R.drawable.ic_staggered, "staggered");
-        addLayoutTab(
-                actionBar, R.layout.layout_spannable_grid, R.drawable.selector_ic_spannable, "spannable");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_SELECTED_LAYOUT_ID, mSelectedLayoutId);
-    }
-
-    private void addLayoutTab(ActionBar actionBar, int layoutId, int iconId, String tag) {
-        ActionBar.Tab tab = actionBar.newTab()
-//                .setText(tag)
-                .setIcon(iconId)
-                .setTabListener(new TabListener(layoutId, tag));
-        actionBar.addTab(tab, layoutId == mSelectedLayoutId);
     }
 
     @Override
@@ -77,42 +88,51 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d(LOGTAG, "keyCode="+keyCode);
+        Log.d(LOGTAG, "keyCode=" + keyCode);
         return super.onKeyDown(keyCode, event);
     }
 
-    public class TabListener implements ActionBar.TabListener {
-        private LayoutFragment mFragment;
-        private final int mLayoutId;
-        private final String mTag;
+    public class TabSelectedListener implements TabLayout.OnTabSelectedListener {
+        private Fragment mFragment;
+        private int[] layoutIds = {
+                R.layout.layout_list,
+                R.layout.layout_grid,
+                R.layout.layout_grid2,
+                R.layout.layout_staggered_grid,
+                R.layout.layout_spannable_grid,
+        };
 
-        public TabListener(int layoutId, String tag) {
-            mLayoutId = layoutId;
-            mTag = tag;
+        public TabSelectedListener() {
         }
 
         @Override
-        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            mFragment = (LayoutFragment) getSupportFragmentManager().findFragmentByTag(mTag);
+        public void onTabSelected(TabLayout.Tab tab) {
+            final int position = tab.getPosition();
+            Log.i(LOGTAG, "onTabSelected...position="+position);
+            mFragment = (Fragment) getSupportFragmentManager().findFragmentByTag(position + "");
+            FragmentTransaction mFt = getSupportFragmentManager().beginTransaction();
             if (mFragment == null) {
-                mFragment = (LayoutFragment) LayoutFragment.newInstance(mLayoutId);
-                ft.add(R.id.content, mFragment, mTag);
+                mFragment = LayoutFragment.newInstance(layoutIds[position]);
+                mFt.add(R.id.content, mFragment, String.valueOf(position));
             } else {
-                ft.attach(mFragment);
+                mFt.attach(mFragment);
             }
-
-            mSelectedLayoutId = mFragment.getLayoutId();
+            mFt.commit();
+            mSelectedLayoutId = layoutIds[position];
         }
 
         @Override
-        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        public void onTabUnselected(TabLayout.Tab tab) {
             if (mFragment != null) {
-                ft.detach(mFragment);
+                FragmentTransaction mFt = getSupportFragmentManager().beginTransaction();
+                mFt.detach(mFragment);
+                mFt.commit();
             }
         }
 
         @Override
-        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        public void onTabReselected(TabLayout.Tab tab) {
+
         }
     }
 }

@@ -20,7 +20,7 @@
           android:drawable="@color/item_activated_color"/>
     
     <item android:state_activated="true"
-          android:drawable="@color/item_activated_color"/>
+          android:drawable="@color/item_border_color"/>
 
     <item android:state_pressed="true"
           android:drawable="@color/item_pressed_color"/>

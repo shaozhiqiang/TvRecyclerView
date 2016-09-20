@@ -20,11 +20,13 @@
     <declare-styleable name="TvRecyclerView">
         <attr name="android:orientation" tools:ignore="ResourceName"/>
         <attr name="tv_layoutManager" format="string"/>
-        <attr name="numColumns" format="integer"/>
-        <attr name="numRows" format="integer"/>
-        <attr name="selectedItemOffsetStart" format="integer"/>
-        <attr name="selectedItemOffsetEnd" format="integer"/>
-        <attr name="selectedItemisCentered" format="boolean"/>
+        <attr name="tv_numColumns" format="integer"/>
+        <attr name="tv_numRows" format="integer"/>
+        <attr name="tv_selectedItemOffsetStart" format="dimension"/>
+        <attr name="tv_selectedItemOffsetEnd" format="dimension"/>
+        <attr name="tv_selectedItemIsCentered" format="boolean"/>
+        <attr name="tv_isInterceptKeyEvent" format="boolean"/>
+        <attr name="tv_isMenu" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="TvRecyclerView_SpacingItemDecoration">
@@ -34,17 +36,17 @@
 
     <declare-styleable name="TvRecyclerView_DividerItemDecoration">
         <attr name="android:divider" tools:ignore="ResourceName"/>
-        <attr name="verticalDivider" format="reference"/>
-        <attr name="horizontalDivider" format="reference"/>
+        <attr name="tv_verticalDivider" format="reference"/>
+        <attr name="tv_horizontalDivider" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="TvRecyclerView_StaggeredGridViewChild">
-        <attr name="span" format="integer"/>
+        <attr name="tv_span" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="TvRecyclerView_SpannableGridViewChild">
-        <attr name="colSpan" format="integer"/>
-        <attr name="rowSpan" format="integer"/>
+        <attr name="tv_colSpan" format="integer"/>
+        <attr name="tv_rowSpan" format="integer"/>
     </declare-styleable>
 
 </resources>

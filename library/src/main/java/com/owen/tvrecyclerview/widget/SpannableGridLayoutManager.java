@@ -360,9 +360,9 @@ public class SpannableGridLayoutManager extends GridLayoutManager {
 
             TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.TvRecyclerView_SpannableGridViewChild);
             colSpan = Math.max(
-                    DEFAULT_SPAN, a.getInt(R.styleable.TvRecyclerView_SpannableGridViewChild_colSpan, -1));
+                    DEFAULT_SPAN, a.getInt(R.styleable.TvRecyclerView_SpannableGridViewChild_tv_colSpan, -1));
             rowSpan = Math.max(
-                    DEFAULT_SPAN, a.getInt(R.styleable.TvRecyclerView_SpannableGridViewChild_rowSpan, -1));
+                    DEFAULT_SPAN, a.getInt(R.styleable.TvRecyclerView_SpannableGridViewChild_tv_rowSpan, -1));
             a.recycle();
         }
 

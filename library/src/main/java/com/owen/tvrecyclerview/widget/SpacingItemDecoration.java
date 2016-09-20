@@ -11,9 +11,9 @@ import android.util.Log;
 import com.owen.tvrecyclerview.R;
 
 /**
- * {@link android.support.v7.widget.RecyclerView.ItemDecoration} that applies a
+ * {android.support.v7.widget.RecyclerView.ItemDecoration} that applies a
  * vertical and horizontal spacing between items of the target
- * {@link android.support.v7.widget.RecyclerView}.
+ * {android.support.v7.widget.RecyclerView}.
  */
 public class SpacingItemDecoration extends ItemDecoration {
     protected int mVerticalSpacing;

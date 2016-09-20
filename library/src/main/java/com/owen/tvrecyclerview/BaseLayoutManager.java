@@ -585,12 +585,6 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         return new LayoutParams(c, attrs);
     }
     
-    
-    
-    
-    
-    
-
     public abstract int getLaneCount();
     public abstract void getLaneForPosition(LaneInfo outInfo, int position, Direction direction);
     protected abstract void moveLayoutToPosition(int position, int offset, Recycler recycler, State state);
@@ -667,11 +661,4 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         };
     }
 
-//    @Override
-//    public boolean onRequestChildFocus(RecyclerView parent, State state, View child, View focused) {
-//        if(mRecyclerView instanceof TwoWayView) {
-//            ((TwoWayView)mRecyclerView).smoothToCenter(getPosition(child));
-//        }
-//        return super.onRequestChildFocus(parent, state, child, focused);
-//    }
 }

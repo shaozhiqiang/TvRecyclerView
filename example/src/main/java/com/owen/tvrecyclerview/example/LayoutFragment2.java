@@ -22,9 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,34 +31,31 @@ import android.widget.Toast;
 
 import com.owen.tvrecyclerview.example.bridge.MainUpView;
 import com.owen.tvrecyclerview.example.bridge.RecyclerViewBridge;
-import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
-public class LayoutFragment extends Fragment {
-    private static final String LOGTAG = LayoutFragment.class.getSimpleName();
+public class LayoutFragment2 extends Fragment {
+    private static final String LOGTAG = LayoutFragment2.class.getSimpleName();
     
     private static final String ARG_LAYOUT_ID = "layout_id";
 
-    private TvRecyclerView mRecyclerView;
+    private IRecyclerView mRecyclerView;
     private TextView mPositionText;
     private TextView mCountText;
     private TextView mStateText;
     private Toast mToast;
 
     private int mLayoutId;
-    
-    private LayoutAdapter mLayoutAdapter;
 
     MainUpView mainUpView1;
     RecyclerViewBridge mRecyclerViewBridge;
     View oldView;
     View newView;
 
-    public static LayoutFragment newInstance(int layoutId) {
-        LayoutFragment fragment = new LayoutFragment();
+    public static LayoutFragment2 newInstance(int layoutId) {
+        LayoutFragment2 fragment = new LayoutFragment2();
 
         Bundle args = new Bundle();
         args.putInt(ARG_LAYOUT_ID, layoutId);
@@ -100,9 +95,9 @@ public class LayoutFragment extends Fragment {
             });
         }
 
-        mRecyclerView = (TvRecyclerView) view.findViewById(R.id.list);
+        mRecyclerView = (IRecyclerView) view.findViewById(R.id.list);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setInterceptKeyEvent(true);
+        mRecyclerView.setLongClickable(true);
 
         // 移动框
         mainUpView1 = (MainUpView) view.findViewById(R.id.mainUpView1);
@@ -117,16 +112,16 @@ public class LayoutFragment extends Fragment {
         mStateText = (TextView) view.getRootView().findViewById(R.id.state);
         updateState(SCROLL_STATE_IDLE);
 
-        mRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
+        mRecyclerView.setOnItemListener(new IRecyclerView.OnItemListener() {
             @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+            public void onItemPreSelected(IRecyclerView parent, View itemView, int position) {
                 mRecyclerViewBridge.setUnFocusView(itemView);
 //                itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(500).start();
 //                Log.i(LOGTAG, "onItemPreSelected...1");
             }
 
             @Override
-            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+            public void onItemSelected(IRecyclerView parent, View itemView, int position) {
                 newView = itemView;
                 mRecyclerViewBridge.setFocusView(itemView, 1.1f);
 //                itemView.animate().scaleX(1.2f).scaleY(1.2f).setDuration(500).start();
@@ -134,14 +129,14 @@ public class LayoutFragment extends Fragment {
             }
 
             @Override
-            public void onReviseFocusFollow(TvRecyclerView parent, View itemView, int position) {
+            public void onReviseFocusFollow(IRecyclerView parent, View itemView, int position) {
                 // 此处为了特殊情况时校正移动框
                 mRecyclerViewBridge.setFocusView(itemView, 1.1f);
 //                Log.i(LOGTAG, "onReviseFocusFollow...3");
             }
 
             @Override
-            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+            public void onItemClick(IRecyclerView parent, View itemView, int position) {
                 mToast.setText("onItemClick::"+position);
                 mToast.show();
             }
@@ -154,24 +149,6 @@ public class LayoutFragment extends Fragment {
             }
         });
         
-        mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
-            @Override
-            public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
-                Log.i("zzzz", "onInBorderKeyEvent: ");
-                return false;
-            }
-        });
-        
-        mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
-            @Override
-            public boolean onLoadMore() {
-                mRecyclerView.setLoadingMore(true); //正在加载数据
-                mLayoutAdapter.appendDatas(); //加载数据
-                mRecyclerView.setLoadingMore(false); //加载数据完毕
-                return true; //是否还有更多数据
-            }
-        });
-        
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
@@ -180,10 +157,9 @@ public class LayoutFragment extends Fragment {
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int i, int i2) {
-                mPositionText.setText("First: " + mRecyclerView.getFirstVisiblePosition());
+//                mPositionText.setText("First: " + mRecyclerView.getFirstVisiblePosition());
                 mCountText.setText("Count: " + mRecyclerView.getChildCount());
             }
-            
         });
 
         if(mLayoutId == R.layout.layout_grid2) {
@@ -197,7 +173,7 @@ public class LayoutFragment extends Fragment {
 //      mRecyclerView.addItemDecoration(new SpacingItemDecoration(20, 20));
             // 通过Margins来设置布局的横纵间距(与addItemDecoration()方法可二选一)
             // 推荐使用此方法
-            mRecyclerView.setSpacingWithMargins(18, 18);
+//            mRecyclerView.setSpacingWithMargins(18, 18);
         }
         
         
@@ -206,10 +182,10 @@ public class LayoutFragment extends Fragment {
         // 设置选中的Item居中（与setSelectedItemOffset()方法二选一）
 //        mRecyclerView.setSelectedItemAtCentered(true);
 
+        
 
-        mLayoutAdapter = new LayoutAdapter(activity, mRecyclerView, mLayoutId);
-        mRecyclerView.setAdapter(mLayoutAdapter);
-
+        mRecyclerView.setAdapter(new LayoutAdapter2(activity, mRecyclerView, mLayoutId));
+        
     }
 
     private void updateState(int scrollState) {

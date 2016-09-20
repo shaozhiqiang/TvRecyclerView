@@ -5,9 +5,10 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+
+import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 public class RecyclerViewBridge extends EffectNoDrawBridge {
 	
@@ -47,9 +48,9 @@ public class RecyclerViewBridge extends EffectNoDrawBridge {
 			Rect toRect = findLocationWithView(focusView);
 			
 			// add by zhousuqiang
-			if(null != focusView.getParent() && focusView.getParent() instanceof RecyclerView) {
-				final RecyclerView rv = (RecyclerView) focusView.getParent();
-				final int offset = rv.getBaseline();
+			if(null != focusView.getParent() && focusView.getParent() instanceof TvRecyclerView) {
+				final TvRecyclerView rv = (TvRecyclerView) focusView.getParent();
+				final int offset = rv.getSelectedItemScrollOffset();
 				if(offset != -1) {
 					toRect.offset(rv.getLayoutManager().canScrollHorizontally() ? -offset : 0, 
 							rv.getLayoutManager().canScrollVertically() ? -offset : 0);

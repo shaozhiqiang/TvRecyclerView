@@ -17,6 +17,7 @@
 package com.owen.tvrecyclerview.example;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleViewHolder> {
-    private static final int COUNT = 50;
+    private static final int COUNT = 30;
 
     private final Context mContext;
     private final TvRecyclerView mRecyclerView;
@@ -58,6 +59,14 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
 
         mRecyclerView = recyclerView;
         mLayoutId = layoutId;
+    }
+    
+    public void appendDatas() {
+        for (int i = 0; i < 20; i++) {
+            final int id = mCurrentItemId++;
+            mItems.add(id);
+        }
+        notifyItemRangeInserted(mCurrentItemId, 20);
     }
 
     public void addItem(int position) {
@@ -133,7 +142,12 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
                 
                 itemView.setLayoutParams(lp);
             }
-        } 
+        } else if(mLayoutId == R.layout.layout_grid2) {
+            android.support.v7.widget.GridLayoutManager.LayoutParams params = (android.support.v7.widget.GridLayoutManager.LayoutParams) itemView.getLayoutParams();
+            params.width = 200;
+            params.height = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+            itemView.setLayoutParams(params);
+        }
     }
 
     @Override
