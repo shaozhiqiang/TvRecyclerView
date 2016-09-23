@@ -232,7 +232,7 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void requestDefaultFocus() {
-        if(mIsSelectFirstVisiblePosition) {
+        if(!mIsSelectFirstVisiblePosition) {
             setSelection(mOldSelectedPosition);
         } else {
             setSelection(getFirstVisiblePosition());
