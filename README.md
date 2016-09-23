@@ -126,6 +126,10 @@ compile 'com.tv.boost:tv-recyclerview:1.0.6.3'
     2)修复加载更多数据更新时焦点错乱问题;
 > * 1.0.6.3
     1)处理onSaveInstanceState,onRestoreInstanceState;
+> * 1.0.6.4
+    1)修复glide加载图片焦点错位问题;
+    2)增加IsSelectFirstVisiblePosition参数;
+    
 
 ### 更详细的使用请见exmaple
 

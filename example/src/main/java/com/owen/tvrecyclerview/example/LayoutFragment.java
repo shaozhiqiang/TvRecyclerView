@@ -188,7 +188,7 @@ public class LayoutFragment extends Fragment {
 
         if(mLayoutId == R.layout.layout_grid2) {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-            gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(gridLayoutManager);
         } else {
 

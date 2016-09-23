@@ -17,13 +17,14 @@
 package com.owen.tvrecyclerview.example;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.owen.tvrecyclerview.TwoWayLayoutManager;
 import com.owen.tvrecyclerview.widget.SpannableGridLayoutManager;
 import com.owen.tvrecyclerview.widget.StaggeredGridLayoutManager;
@@ -43,10 +44,12 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
         public final TextView title;
+        public final ImageView image;
 
         public SimpleViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
+            image = (ImageView) view.findViewById(R.id.image);
         }
     }
 
@@ -89,6 +92,9 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, final int position) {
         holder.title.setText(mItems.get(position).toString());
+        Glide.with(mContext)
+                .load("http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1503/17/c2/3974346_1426551981202_mthumb.jpg")
+                .into(holder.image);
 
         boolean isVertical = (mRecyclerView.getOrientation() == TwoWayLayoutManager.Orientation.VERTICAL);
         final View itemView = holder.itemView;
@@ -145,7 +151,7 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
         } else if(mLayoutId == R.layout.layout_grid2) {
             android.support.v7.widget.GridLayoutManager.LayoutParams params = (android.support.v7.widget.GridLayoutManager.LayoutParams) itemView.getLayoutParams();
             params.width = 200;
-            params.height = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+            params.height = 200;
             itemView.setLayoutParams(params);
         }
     }

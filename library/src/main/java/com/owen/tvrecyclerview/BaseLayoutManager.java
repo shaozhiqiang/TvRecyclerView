@@ -358,6 +358,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
 
         // Only move layout if we're not restoring a layout state.
         if (anchorItemPosition > 0 && (refreshingLanes || !restoringLanes)) {
+//            Log.i(LOGTAG, "onLayoutChildren: anchorItemPosition="+anchorItemPosition + " ,offset="+getPendingScrollOffset());
             moveLayoutToPosition(anchorItemPosition, getPendingScrollOffset(), recycler, state);
         }
 

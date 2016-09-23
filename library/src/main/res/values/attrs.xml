@@ -27,6 +27,7 @@
         <attr name="tv_selectedItemIsCentered" format="boolean"/>
         <attr name="tv_isInterceptKeyEvent" format="boolean"/>
         <attr name="tv_isMenu" format="boolean"/>
+        <attr name="tv_isSelectFirstVisiblePosition" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="TvRecyclerView_SpacingItemDecoration">

@@ -629,7 +629,11 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         if (mPendingSavedState != null) {
             return 0;
         }
-
+        // add by zhousuqiang 修复glide加载图片焦点错位问题
+        if(mPendingScrollOffset == 0 && getFirstVisiblePosition() > 0) {
+            return mLayoutStart;
+        }
+        
         return mPendingScrollOffset;
     }
 

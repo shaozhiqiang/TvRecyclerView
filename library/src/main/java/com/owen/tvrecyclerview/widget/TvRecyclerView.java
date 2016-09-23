@@ -29,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,6 +53,7 @@ public class TvRecyclerView extends RecyclerView {
     private boolean mSelectedItemCentered;
     private boolean mIsBaseLayoutManager;
     private boolean mIsInterceptKeyEvent;
+    private boolean mIsSelectFirstVisiblePosition;
     private boolean mIsMenu;
     private boolean mHasFocus = false;
     
@@ -119,6 +121,7 @@ public class TvRecyclerView extends RecyclerView {
         mSelectedItemCentered = a.getBoolean(R.styleable.TvRecyclerView_tv_selectedItemIsCentered, false);
         mIsInterceptKeyEvent = a.getBoolean(R.styleable.TvRecyclerView_tv_isInterceptKeyEvent, false);
         mIsMenu = a.getBoolean(R.styleable.TvRecyclerView_tv_isMenu, false);
+        mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.TvRecyclerView_tv_isMenu, false);
         mSelectedItemOffsetStart = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tv_selectedItemOffsetStart, DEFAULT_SELECTED_ITEM_OFFSET);
         mSelectedItemOffsetEnd = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tv_selectedItemOffsetEnd, DEFAULT_SELECTED_ITEM_OFFSET);
         
@@ -209,7 +212,19 @@ public class TvRecyclerView extends RecyclerView {
                                              "class: " + name, e);
         }
     }
-    
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        Log.i(LOGTAG, "onLayout: ");
+    }
+
+    @Override
+    protected void onMeasure(int widthSpec, int heightSpec) {
+        super.onMeasure(widthSpec, heightSpec);
+        Log.i(LOGTAG, "onMeasure: ");
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
         mIsBaseLayoutManager = layout instanceof BaseLayoutManager;
@@ -217,7 +232,11 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void requestDefaultFocus() {
-        setSelection(mOldSelectedPosition);
+        if(mIsSelectFirstVisiblePosition) {
+            setSelection(mOldSelectedPosition);
+        } else {
+            setSelection(getFirstVisiblePosition());
+        }
     }
     
     public void setSelection(int position) {
@@ -234,6 +253,14 @@ public class TvRecyclerView extends RecyclerView {
     
     public int getOldSelectedPosition() {
         return mOldSelectedPosition;
+    }
+
+    public void setSelectFirstVisiblePosition(boolean selectFirstVisiblePosition) {
+        mIsSelectFirstVisiblePosition = selectFirstVisiblePosition;
+    }
+
+    public boolean isSelectFirstVisiblePosition() {
+        return mIsSelectFirstVisiblePosition;
     }
 
     public void setMenu(boolean menu) {
@@ -789,6 +816,7 @@ public class TvRecyclerView extends RecyclerView {
         savedState.mIsInterceptKeyEvent = mIsInterceptKeyEvent;
         savedState.mIsMenu = mIsMenu;
         savedState.mHasMore = mHasMore;
+        savedState.mIsSelectFirstVisiblePosition = mIsSelectFirstVisiblePosition;
         return savedState;
     }
 
@@ -809,6 +837,7 @@ public class TvRecyclerView extends RecyclerView {
                 mIsInterceptKeyEvent = savedState.mIsInterceptKeyEvent;
                 mIsMenu = savedState.mIsMenu;
                 mHasMore = savedState.mHasMore;
+                mIsSelectFirstVisiblePosition = savedState.mIsSelectFirstVisiblePosition;
                 
                 super.onRestoreInstanceState(savedState.getSuperState());
             } else {
@@ -831,6 +860,7 @@ public class TvRecyclerView extends RecyclerView {
         private boolean mIsInterceptKeyEvent;
         private boolean mIsMenu;
         private boolean mHasMore;
+        private boolean mIsSelectFirstVisiblePosition;
 
         private SavedState() {
             superState = null;
@@ -851,13 +881,14 @@ public class TvRecyclerView extends RecyclerView {
             mHorizontalSpacingWithMargins = in.readInt();
             mSelectedItemOffsetStart = in.readInt();
             mSelectedItemOffsetEnd = in.readInt();
-            boolean[] booleens = new boolean[5];
+            boolean[] booleens = new boolean[6];
             in.readBooleanArray(booleens);
             mSelectedItemCentered = booleens[0];
-            mIsBaseLayoutManager = booleens[0];
-            mIsInterceptKeyEvent = booleens[0];
-            mIsMenu = booleens[0];
-            mHasMore = booleens[0];
+            mIsBaseLayoutManager = booleens[1];
+            mIsInterceptKeyEvent = booleens[2];
+            mIsMenu = booleens[3];
+            mHasMore = booleens[4];
+            mIsSelectFirstVisiblePosition = booleens[5];
         }
 
         public Parcelable getSuperState() {
@@ -876,7 +907,8 @@ public class TvRecyclerView extends RecyclerView {
             out.writeInt(mHorizontalSpacingWithMargins);
             out.writeInt(mSelectedItemOffsetStart);
             out.writeInt(mSelectedItemOffsetEnd);
-            boolean[] booleens = {mSelectedItemCentered, mIsBaseLayoutManager, mIsInterceptKeyEvent, mIsMenu, mHasMore};
+            boolean[] booleens = {mSelectedItemCentered, mIsBaseLayoutManager,
+                    mIsInterceptKeyEvent, mIsMenu, mHasMore, mIsSelectFirstVisiblePosition};
             out.writeBooleanArray(booleens);
         }
 
