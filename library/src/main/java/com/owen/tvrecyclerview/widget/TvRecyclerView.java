@@ -22,12 +22,13 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
@@ -208,7 +209,7 @@ public class TvRecyclerView extends RecyclerView {
                                              "class: " + name, e);
         }
     }
-
+    
     @Override
     public void setLayoutManager(LayoutManager layout) {
         mIsBaseLayoutManager = layout instanceof BaseLayoutManager;
@@ -313,7 +314,7 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     public void requestChildFocus(View child, View focused) {
-        Log.i(LOGTAG, "requestChildFocus: "+child);
+//        Log.i(LOGTAG, "requestChildFocus: "+child);
         
         if(null != child) {
             if (mSelectedItemCentered) {
@@ -702,7 +703,7 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-        Log.i(LOGTAG, "requestFocus: "+direction);
+//        Log.i(LOGTAG, "requestFocus: "+direction);
 
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         requestDefaultFocus();
@@ -728,7 +729,7 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
-        Log.i(LOGTAG, "onFocusChanged..." + gainFocus + " ,direction="+direction + " ,mOldSelectedPosition="+mOldSelectedPosition);
+//        Log.i(LOGTAG, "onFocusChanged..." + gainFocus + " ,direction="+direction + " ,mOldSelectedPosition="+mOldSelectedPosition);
         mHasFocus = gainFocus;
         if(mIsMenu) {
             // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
@@ -754,13 +755,13 @@ public class TvRecyclerView extends RecyclerView {
     
     @Override
     public boolean hasFocus() {
-        Log.i(LOGTAG, "hasFocus...");
+//        Log.i(LOGTAG, "hasFocus...");
         return super.hasFocus();
     }
 
     @Override
     public boolean isInTouchMode() {
-        Log.i(LOGTAG, "isInTouchMode...");
+//        Log.i(LOGTAG, "isInTouchMode...");
         boolean result = super.isInTouchMode();
         // 解决4.4版本抢焦点的问题
         if (Build.VERSION.SDK_INT == 19) {
@@ -773,6 +774,124 @@ public class TvRecyclerView extends RecyclerView {
     @Override
     public boolean isInEditMode() {
         return true;
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        SavedState savedState = new SavedState(super.onSaveInstanceState());
+        savedState.mSelectedPosition = mSelectedPosition;
+        savedState.mVerticalSpacingWithMargins = mVerticalSpacingWithMargins;
+        savedState.mHorizontalSpacingWithMargins = mHorizontalSpacingWithMargins;
+        savedState.mSelectedItemOffsetStart = mSelectedItemOffsetStart;
+        savedState.mSelectedItemOffsetEnd = mSelectedItemOffsetEnd;
+        savedState.mSelectedItemCentered = mSelectedItemCentered;
+        savedState.mIsBaseLayoutManager = mIsBaseLayoutManager;
+        savedState.mIsInterceptKeyEvent = mIsInterceptKeyEvent;
+        savedState.mIsMenu = mIsMenu;
+        savedState.mHasMore = mHasMore;
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+
+        if(null != state) {
+            if(state instanceof SavedState) {
+                SavedState savedState = (SavedState) state;
+                mOldSelectedPosition = savedState.mSelectedPosition;
+                mSelectedPosition = savedState.mSelectedPosition;
+                mVerticalSpacingWithMargins = savedState.mVerticalSpacingWithMargins;
+                mHorizontalSpacingWithMargins = savedState.mHorizontalSpacingWithMargins;
+                mSelectedItemOffsetStart = savedState.mSelectedItemOffsetStart;
+                mSelectedItemOffsetEnd = savedState.mSelectedItemOffsetEnd;
+                mSelectedItemCentered = savedState.mSelectedItemCentered;
+                mIsBaseLayoutManager = savedState.mIsBaseLayoutManager;
+                mIsInterceptKeyEvent = savedState.mIsInterceptKeyEvent;
+                mIsMenu = savedState.mIsMenu;
+                mHasMore = savedState.mHasMore;
+                
+                super.onRestoreInstanceState(savedState.getSuperState());
+            } else {
+                super.onRestoreInstanceState(state);
+            }
+        }
+    }
+
+    protected static class SavedState implements Parcelable {
+        protected static final SavedState EMPTY_STATE = new SavedState();
+
+        private final Parcelable superState;
+        private int mSelectedPosition;
+        private int mVerticalSpacingWithMargins;
+        private int mHorizontalSpacingWithMargins;
+        private int mSelectedItemOffsetStart;
+        private int mSelectedItemOffsetEnd;
+        private boolean mSelectedItemCentered;
+        private boolean mIsBaseLayoutManager;
+        private boolean mIsInterceptKeyEvent;
+        private boolean mIsMenu;
+        private boolean mHasMore;
+
+        private SavedState() {
+            superState = null;
+        }
+
+        protected SavedState(Parcelable superState) {
+            if (superState == null) {
+                throw new IllegalArgumentException("superState must not be null");
+            }
+
+            this.superState = (superState != EMPTY_STATE ? superState : null);
+        }
+
+        protected SavedState(Parcel in) {
+            this.superState = EMPTY_STATE;
+            mSelectedPosition = in.readInt();
+            mVerticalSpacingWithMargins = in.readInt();
+            mHorizontalSpacingWithMargins = in.readInt();
+            mSelectedItemOffsetStart = in.readInt();
+            mSelectedItemOffsetEnd = in.readInt();
+            boolean[] booleens = new boolean[5];
+            in.readBooleanArray(booleens);
+            mSelectedItemCentered = booleens[0];
+            mIsBaseLayoutManager = booleens[0];
+            mIsInterceptKeyEvent = booleens[0];
+            mIsMenu = booleens[0];
+            mHasMore = booleens[0];
+        }
+
+        public Parcelable getSuperState() {
+            return superState;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeInt(mSelectedPosition);
+            out.writeInt(mVerticalSpacingWithMargins);
+            out.writeInt(mHorizontalSpacingWithMargins);
+            out.writeInt(mSelectedItemOffsetStart);
+            out.writeInt(mSelectedItemOffsetEnd);
+            boolean[] booleens = {mSelectedItemCentered, mIsBaseLayoutManager, mIsInterceptKeyEvent, mIsMenu, mHasMore};
+            out.writeBooleanArray(booleens);
+        }
+
+        public static final Creator<SavedState> CREATOR
+                = new Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 
     public void setOnItemListener(OnItemListener onItemListener) {

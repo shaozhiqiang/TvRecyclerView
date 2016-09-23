@@ -18,7 +18,7 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.2'
+compile 'com.tv.boost:tv-recyclerview:1.0.6.3'
 ```
 
 ### 特性
@@ -124,6 +124,8 @@ compile 'com.tv.boost:tv-recyclerview:1.0.2'
 > * 1.0.6.2
     1)增加加载更多监听;
     2)修复加载更多数据更新时焦点错乱问题;
+> * 1.0.6.3
+    1)处理onSaveInstanceState,onRestoreInstanceState;
 
 ### 更详细的使用请见exmaple
 
