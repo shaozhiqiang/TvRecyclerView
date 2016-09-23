@@ -18,7 +18,7 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.6.3'
+compile 'com.tv.boost:tv-recyclerview:1.0.6.4'
 ```
 
 ### 特性
