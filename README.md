@@ -20,7 +20,7 @@ QQ群：20012743
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.6.4'
+compile 'com.tv.boost:tv-recyclerview:1.0.6.5'
 ```
 
 ### 特性
@@ -130,8 +130,10 @@ compile 'com.tv.boost:tv-recyclerview:1.0.6.4'
     1)处理onSaveInstanceState,onRestoreInstanceState;
 > * 1.0.6.4
     1)修复glide加载图片焦点错位问题;
-    2)增加IsSelectFirstVisiblePosition参数;
-    
+    2)增加tv_isSelectFirstVisiblePosition自定义参数;
+> * 1.0.6.5
+    1)修复IsSelectFirstVisiblePosition参数失效问题;
+    2)增加tv_loadMoreBeforehandCount自动定义参数;
 
 ### 更详细的使用请见exmaple
 

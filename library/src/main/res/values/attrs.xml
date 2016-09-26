@@ -28,6 +28,7 @@
         <attr name="tv_isInterceptKeyEvent" format="boolean"/>
         <attr name="tv_isMenu" format="boolean"/>
         <attr name="tv_isSelectFirstVisiblePosition" format="boolean"/>
+        <attr name="tv_loadMoreBeforehandCount" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="TvRecyclerView_SpacingItemDecoration">

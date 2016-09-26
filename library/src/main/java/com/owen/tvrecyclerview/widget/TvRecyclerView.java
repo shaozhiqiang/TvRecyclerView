@@ -43,6 +43,7 @@ import java.lang.reflect.Constructor;
 public class TvRecyclerView extends RecyclerView {
     private static final String LOGTAG = TvRecyclerView.class.getSimpleName() + ":::";
     private static final int DEFAULT_SELECTED_ITEM_OFFSET = 40;
+    private static final int DEFAULT_LOAD_MORE_BEFOREHAND_COUNT = 4;
 
     private int mVerticalSpacingWithMargins = 0;
     private int mHorizontalSpacingWithMargins = 0;
@@ -56,18 +57,15 @@ public class TvRecyclerView extends RecyclerView {
     private boolean mIsSelectFirstVisiblePosition;
     private boolean mIsMenu;
     private boolean mHasFocus = false;
+    private int mLoadMoreBeforehandCount;
     
     private int mOldSelectedPosition = 0;
     private int mSelectedPosition = 0;
-    
     private int mOverscrollValue;
-
     private int mOffset = -1;
 
     private OnItemListener mOnItemListener;
-    
     private OnInBorderKeyEventListener mOnInBorderKeyEventListener;
-    
     private OnLoadMoreListener mOnLoadMoreListener;
     private boolean mHasMore = true;
     private boolean mLoadingMore = false;
@@ -121,7 +119,8 @@ public class TvRecyclerView extends RecyclerView {
         mSelectedItemCentered = a.getBoolean(R.styleable.TvRecyclerView_tv_selectedItemIsCentered, false);
         mIsInterceptKeyEvent = a.getBoolean(R.styleable.TvRecyclerView_tv_isInterceptKeyEvent, false);
         mIsMenu = a.getBoolean(R.styleable.TvRecyclerView_tv_isMenu, false);
-        mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.TvRecyclerView_tv_isMenu, false);
+        mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.TvRecyclerView_tv_isSelectFirstVisiblePosition, false);
+        mLoadMoreBeforehandCount = a.getInt(R.styleable.TvRecyclerView_tv_loadMoreBeforehandCount, DEFAULT_LOAD_MORE_BEFOREHAND_COUNT);
         mSelectedItemOffsetStart = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tv_selectedItemOffsetStart, DEFAULT_SELECTED_ITEM_OFFSET);
         mSelectedItemOffsetEnd = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tv_selectedItemOffsetEnd, DEFAULT_SELECTED_ITEM_OFFSET);
         
@@ -232,7 +231,7 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void requestDefaultFocus() {
-        if(!mIsSelectFirstVisiblePosition) {
+        if(mIsMenu || !mIsSelectFirstVisiblePosition) {
             setSelection(mOldSelectedPosition);
         } else {
             setSelection(getFirstVisiblePosition());
@@ -240,6 +239,7 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void setSelection(int position) {
+//        Log.i("@@@@@", "setSelection: "+position);
         ViewHolder holder = findViewHolderForLayoutPosition(position);
         if(null != holder) {
             holder.itemView.requestFocusFromTouch();
@@ -265,6 +265,18 @@ public class TvRecyclerView extends RecyclerView {
 
     public void setMenu(boolean menu) {
         mIsMenu = menu;
+    }
+
+    public boolean isMenu() {
+        return mIsMenu;
+    }
+
+    public void setLoadMoreBeforehandCount(int loadMoreBeforehandCount) {
+        mLoadMoreBeforehandCount = loadMoreBeforehandCount;
+    }
+
+    public int getLoadMoreBeforehandCount() {
+        return mLoadMoreBeforehandCount;
     }
 
     /**
@@ -377,7 +389,7 @@ public class TvRecyclerView extends RecyclerView {
             
             // 加载更多回调
             if(!mLoadingMore && mHasMore && null != mOnLoadMoreListener) {
-                if(getLastVisiblePosition() == getAdapter().getItemCount() - 1) {
+                if(getLastVisiblePosition() == getAdapter().getItemCount() - (1 + mLoadMoreBeforehandCount)) {
                     mHasMore = mOnLoadMoreListener.onLoadMore();
                 }
             }
