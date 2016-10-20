@@ -165,6 +165,7 @@ public class LayoutFragment extends Fragment {
         mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
+                Log.i("@@@@", "onLoadMore: ");
                 mRecyclerView.setLoadingMore(true); //正在加载数据
                 mLayoutAdapter.appendDatas(); //加载数据
                 mRecyclerView.setLoadingMore(false); //加载数据完毕

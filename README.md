@@ -20,7 +20,7 @@ QQ群：20012743
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.6.5'
+compile 'com.tv.boost:tv-recyclerview:1.0.6.6'
 ```
 
 ### 特性
@@ -134,6 +134,9 @@ compile 'com.tv.boost:tv-recyclerview:1.0.6.5'
 > * 1.0.6.5
     1)修复IsSelectFirstVisiblePosition参数失效问题;
     2)增加tv_loadMoreBeforehandCount自动定义参数;
+> * 1.0.6.6
+    1)修复加载更多监听偶然失效的问题；
+    
 
 ### 更详细的使用请见exmaple
 

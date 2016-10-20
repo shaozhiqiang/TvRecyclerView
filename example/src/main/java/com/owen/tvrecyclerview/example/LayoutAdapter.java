@@ -18,6 +18,7 @@ package com.owen.tvrecyclerview.example;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
     }
     
     public void appendDatas() {
+        Log.i("@@@@", "appendDatas: ");
         for (int i = 0; i < 20; i++) {
             final int id = mCurrentItemId++;
             mItems.add(id);

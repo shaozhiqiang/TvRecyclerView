@@ -386,10 +386,10 @@ public class TvRecyclerView extends RecyclerView {
                     mOnItemListener.onReviseFocusFollow(this, focuse, getChildLayoutPosition(focuse));
                 }
             }
-            
+
             // 加载更多回调
             if(!mLoadingMore && mHasMore && null != mOnLoadMoreListener) {
-                if(getLastVisiblePosition() == getAdapter().getItemCount() - (1 + mLoadMoreBeforehandCount)) {
+                if(getLastVisiblePosition() >= getAdapter().getItemCount() - (1 + mLoadMoreBeforehandCount)) {
                     mHasMore = mOnLoadMoreListener.onLoadMore();
                 }
             }
