@@ -231,32 +231,42 @@ public class TvRecyclerView extends RecyclerView {
     }
 
     @Override
+    public void onViewAdded(View child) {
+        if(mHasFocus) {
+            ViewHolder holder = getChildViewHolder(child);
+            if(null != holder && holder.getLayoutPosition() == 0) {
+                requestDefaultFocus();
+            }
+        }
+    }
+
+    @Override
     public void onViewRemoved(View child) {
         if(mHasFocus) {
             setSelection(mOldSelectedPosition);
         }
     }
 
-    @Override
-    public void setAdapter(final Adapter adapter) {
-        super.setAdapter(adapter);
-        if(null != adapter && adapter.getItemCount() == 0) {
-            adapter.registerAdapterDataObserver(new AdapterDataObserver() {
-                @Override
-                public void onItemRangeInserted(int positionStart, int itemCount) {
-                    adapter.unregisterAdapterDataObserver(this);
-                    if(mHasFocus) {
-                        postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                requestDefaultFocus();
-                            }
-                        }, 500);
-                    }
-                }
-            });
-        }
-    }
+//    @Override
+//    public void setAdapter(final Adapter adapter) {
+//        super.setAdapter(adapter);
+//        if(null != adapter && adapter.getItemCount() == 0) {
+//            adapter.registerAdapterDataObserver(new AdapterDataObserver() {
+//                @Override
+//                public void onItemRangeInserted(int positionStart, int itemCount) {
+//                    adapter.unregisterAdapterDataObserver(this);
+//                    if(mHasFocus) {
+//                        postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                requestDefaultFocus();
+//                            }
+//                        }, 500);
+//                    }
+//                }
+//            });
+//        }
+//    }
     
     public void requestDefaultFocus() {
         if(mIsMenu || !mIsSelectFirstVisiblePosition) {
@@ -775,8 +785,6 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-//        Log.i(LOGTAG, "requestFocus: "+direction);
-
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         requestDefaultFocus();
         

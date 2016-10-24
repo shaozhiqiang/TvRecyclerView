@@ -138,7 +138,7 @@ compile 'com.tv.boost:tv-recyclerview:1.0.6.7'
     1)修复加载更多监听偶然失效的问题；
 > * 1.0.6.7
     1)处理removeItem后的焦点问题；
-    2)处理RangeInserted后的焦点问题；
+    2)处理初始化焦点问题；
     
 
 ### 更详细的使用请见exmaple
