@@ -229,6 +229,34 @@ public class TvRecyclerView extends RecyclerView {
         mIsBaseLayoutManager = layout instanceof BaseLayoutManager;
         super.setLayoutManager(layout);
     }
+
+    @Override
+    public void onViewRemoved(View child) {
+        if(mHasFocus) {
+            setSelection(mOldSelectedPosition);
+        }
+    }
+
+    @Override
+    public void setAdapter(final Adapter adapter) {
+        super.setAdapter(adapter);
+        if(null != adapter && adapter.getItemCount() == 0) {
+            adapter.registerAdapterDataObserver(new AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    adapter.unregisterAdapterDataObserver(this);
+                    if(mHasFocus) {
+                        postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                requestDefaultFocus();
+                            }
+                        }, 500);
+                    }
+                }
+            });
+        }
+    }
     
     public void requestDefaultFocus() {
         if(mIsMenu || !mIsSelectFirstVisiblePosition) {
@@ -239,8 +267,13 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void setSelection(int position) {
-//        Log.i("@@@@@", "setSelection: "+position);
         ViewHolder holder = findViewHolderForLayoutPosition(position);
+        if(null == holder) {
+            holder = findViewHolderForAdapterPosition(position - getFirstVisiblePosition());
+        }
+        if(null == holder && getChildCount() > 0) {
+            holder = getChildViewHolder(getChildAt(0));
+        }
         if(null != holder) {
             holder.itemView.requestFocusFromTouch();
             holder.itemView.requestFocus();

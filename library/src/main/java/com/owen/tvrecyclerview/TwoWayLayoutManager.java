@@ -31,7 +31,6 @@ import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 
@@ -751,8 +750,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
             }
         }*/
 
-        Log.i(LOGTAG, "onLayoutChildren: ");
-        
         final int anchorItemPosition = getAnchorItemPosition(state);
         detachAndScrapAttachedViews(recycler);
         fillSpecific(anchorItemPosition, recycler, state);
