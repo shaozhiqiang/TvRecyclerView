@@ -69,7 +69,6 @@ public class TvRecyclerView extends RecyclerView {
     private OnLoadMoreListener mOnLoadMoreListener;
     private boolean mHasMore = true;
     private boolean mLoadingMore = false;
-    private boolean mItemInsertedInitFocus = false;
     
     private ItemListener mItemListener;
 
@@ -234,35 +233,9 @@ public class TvRecyclerView extends RecyclerView {
     @Override
     public void setAdapter(final Adapter adapter) {
         super.setAdapter(adapter);
+        
         if(null == adapter) return;
-        if(adapter.getItemCount() == 0) {
-            mItemInsertedInitFocus = true;
-        } else {
-            mItemInsertedInitFocus = false;
-            if(mHasFocus) {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        requestDefaultFocus();
-                    }
-                }, 500);
-            }
-        }
-
         adapter.registerAdapterDataObserver(new AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                if(mHasFocus && mItemInsertedInitFocus) {
-                    mItemInsertedInitFocus = false;
-                    postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            requestDefaultFocus();
-                        }
-                    }, 500);
-                }
-            }
-
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 if(mHasFocus) {
