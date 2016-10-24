@@ -142,8 +142,8 @@ public class LayoutFragment extends Fragment {
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-                mToast.setText("onItemClick::"+position);
-                mToast.show();
+//                mToast.setText("onItemClick::"+position);
+//                mToast.show();
                 mLayoutAdapter.removeItem(position);
             }
         });
