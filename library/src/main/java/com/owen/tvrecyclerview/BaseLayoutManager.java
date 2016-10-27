@@ -544,10 +544,10 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         // add by zhousuqiang
         if(mVerticalSpacingWithMargins > 0 || mHorizontalSpacingWithMargins > 0) {
             lp.setMargins(
-                    mVerticalSpacingWithMargins/2, 
-                    mHorizontalSpacingWithMargins/2, 
-                    mVerticalSpacingWithMargins/2, 
-                    mHorizontalSpacingWithMargins/2
+                    mHorizontalSpacingWithMargins/2,
+                    mVerticalSpacingWithMargins/2,
+                    mHorizontalSpacingWithMargins/2,
+                    mVerticalSpacingWithMargins/2
             );
         }
         

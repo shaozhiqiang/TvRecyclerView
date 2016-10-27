@@ -20,7 +20,7 @@ QQ群：20012743
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.6.9'
+compile 'com.tv.boost:tv-recyclerview:1.0.7'
 ```
 
 ### 特性
@@ -144,6 +144,8 @@ compile 'com.tv.boost:tv-recyclerview:1.0.6.9'
     2)优化初始化焦点问题；
 > * 1.0.6.9
     1)暂时去掉初始化焦点；
+> * 1.0.7
+    1)verticalSpacing和horizontalSpacing对调；
     
 
 ### 更详细的使用请见exmaple

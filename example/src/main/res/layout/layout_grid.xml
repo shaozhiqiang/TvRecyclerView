@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/TwoWayView"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:tv_layoutManager="GridLayoutManager"
         app:tv_numColumns="2"
         app:tv_numRows="2" />
