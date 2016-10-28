@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -376,6 +377,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
 
     @Override
     public void onItemsAdded(RecyclerView recyclerView, int positionStart, int itemCount) {
+        Log.i(LOGTAG, "onItemsAdded: positionStart="+positionStart+" ,itemCount="+itemCount);
         handleUpdate(positionStart, itemCount, UpdateOp.ADD);
         super.onItemsAdded(recyclerView, positionStart, itemCount);
     }
@@ -441,7 +443,14 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         if (direction == Direction.START) {
             return (mLanes.getInnerStart() > limit);
         } else {
-            return (mLanes.getInnerEnd() < limit);
+            int innerEnd = mLanes.getInnerEnd();
+            // add by zhousuqaing 修复追加更多数据偶尔不显示的问题
+            if(isVertical()) {
+                innerEnd -= getPaddingBottom();
+            } else {
+                innerEnd -= getPaddingRight();
+            }
+            return (innerEnd < limit);
         }
     }
 

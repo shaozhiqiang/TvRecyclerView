@@ -67,11 +67,16 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.SimpleView
     
     public void appendDatas() {
         Log.i("@@@@", "appendDatas: ");
-        for (int i = 0; i < 20; i++) {
-            final int id = mCurrentItemId++;
-            mItems.add(id);
-        }
-        notifyItemRangeInserted(mCurrentItemId, 20);
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 20; i++) {
+                    final int id = mCurrentItemId++;
+                    mItems.add(id);
+                }
+                notifyItemRangeInserted(mCurrentItemId, 20);
+            }
+        }, 1000);
     }
 
     public void addItem(int position) {
