@@ -20,7 +20,7 @@ QQ群：20012743
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.7.1'
+compile 'com.tv.boost:tv-recyclerview:1.0.7.2'
 ```
 
 ### 特性
@@ -148,6 +148,8 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.1'
     1)verticalSpacing和horizontalSpacing对调；
 > * 1.0.7.1
     1)修复追加更多数据偶尔不显示的问题;
+> * 1.0.7.2
+    1)增加setItemActivated方法;
     
 
 ### 更详细的使用请见exmaple

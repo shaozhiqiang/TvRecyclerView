@@ -797,12 +797,7 @@ public class TvRecyclerView extends RecyclerView {
             // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
             ViewHolder holder = findViewHolderForLayoutPosition(mOldSelectedPosition);
             if(null != holder) {
-                holder.itemView.setActivated(false);
-            }
-            if(!gainFocus) {
-                if (null != holder) {
-                    holder.itemView.setActivated(true);
-                }
+                holder.itemView.setActivated(!gainFocus);
             }
         }
         
@@ -813,6 +808,16 @@ public class TvRecyclerView extends RecyclerView {
         }
         
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    }
+    
+    public void setItemActivated(int position) {
+        if(mIsMenu) {
+            ViewHolder holder = findViewHolderForLayoutPosition(position);
+            if(null != holder) {
+                holder.itemView.setActivated(true);
+                mOldSelectedPosition = position;
+            }
+        }
     }
     
     @Override
