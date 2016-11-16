@@ -31,20 +31,20 @@
         android:layout_height="match_parent"
         android:background="@drawable/item_background">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="#999999"
-            android:textSize="22sp"
-            android:textStyle="bold"/>
-        
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
 
     </FrameLayout>
 

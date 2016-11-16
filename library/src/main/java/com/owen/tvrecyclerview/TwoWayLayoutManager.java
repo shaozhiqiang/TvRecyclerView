@@ -126,7 +126,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         } else {
             offsetChildrenHorizontal(offset);
         }
-
         mLayoutStart += offset;
         mLayoutEnd += offset;
     }
@@ -296,7 +295,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         if (state.getItemCount() <= 0) {
             return;
         }
-
         makeAndAddView(position, Direction.END, recycler);
 
         final int extraSpaceBefore;
@@ -472,12 +470,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
     }
 
     private void setupChild(View child, Direction direction) {
-        /*final ItemSelectionSupport itemSelection = ItemSelectionSupport.from(mRecyclerView);
-        if (itemSelection != null) {
-            final int position = getPosition(child);
-            itemSelection.setViewChecked(child, itemSelection.isItemChecked(position));
-        }*/
-
         measureChild(child, direction);
         layoutChild(child, direction);
     }
@@ -512,8 +504,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
             setPendingScrollPositionWithOffset(RecyclerView.NO_POSITION, 0);
         }
     }
-    
-    
     
     private void updateLayoutEdgesFromNewChild(View newChild) {
         final int childStart = getChildStart(newChild);
@@ -715,7 +705,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
     public void onAttachedToWindow(RecyclerView view) {
         super.onAttachedToWindow(view);
         mRecyclerView = view;
-        
+
         // add by zhousuqiang 修复第一次获取焦点时leftPadding会自动增加
         mLayoutStart = getStartWithPadding();
     }
@@ -725,35 +715,20 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         super.onDetachedFromWindow(view, recycler);
         mRecyclerView = null;
     }
-
+    
     @Override
     public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
         super.onAdapterChanged(oldAdapter, newAdapter);
-
-        /*final ItemSelectionSupport itemSelectionSupport = ItemSelectionSupport.from(mRecyclerView);
-        if (oldAdapter != null && itemSelectionSupport != null) {
-            itemSelectionSupport.clearChoices();
-        }*/
     }
 
     @Override
     public void onLayoutChildren(Recycler recycler, State state) {
-        /*final ItemSelectionSupport itemSelection = ItemSelectionSupport.from(mRecyclerView);
-        if (itemSelection != null) {
-            final Bundle itemSelectionState = getPendingItemSelectionState();
-            if (itemSelectionState != null) {
-                itemSelection.onRestoreInstanceState(itemSelectionState);
-            }
-
-            if (state.didStructureChange()) {
-                itemSelection.onAdapterDataChanged();
-            }
-        }*/
 
         final int anchorItemPosition = getAnchorItemPosition(state);
         detachAndScrapAttachedViews(recycler);
+        
         fillSpecific(anchorItemPosition, recycler, state);
-            
+        
         onLayoutScrapList(recycler, state);
 
         setPendingScrollPositionWithOffset(RecyclerView.NO_POSITION, 0);
@@ -937,13 +912,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         }
         state.anchorItemPosition = anchorItemPosition;
         state.itemSelectionState = Bundle.EMPTY;
-
-        /*final ItemSelectionSupport itemSelection = ItemSelectionSupport.from(mRecyclerView);
-        if (itemSelection != null) {
-            state.itemSelectionState = itemSelection.onSaveInstanceState();
-        } else {
-            state.itemSelectionState = Bundle.EMPTY;
-        }*/
 
         return state;
     }

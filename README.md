@@ -20,7 +20,7 @@ QQ群：20012743
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.7.2'
+compile 'com.tv.boost:tv-recyclerview:1.0.7.3'
 ```
 
 ### 特性
@@ -150,6 +150,8 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.2'
     1)修复追加更多数据偶尔不显示的问题;
 > * 1.0.7.2
     1)增加setItemActivated方法;
+> * 1.0.7.3
+    修复重新setAdapter后第一条被遮挡的问题
     
 
 ### 更详细的使用请见exmaple

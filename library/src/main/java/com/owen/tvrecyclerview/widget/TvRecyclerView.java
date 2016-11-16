@@ -232,9 +232,18 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     public void setAdapter(final Adapter adapter) {
-        super.setAdapter(adapter);
-        
         if(null == adapter) return;
+        
+        //修复重新setAdapter后第一条被遮挡的问题
+        View view = getChildAt(0);
+        if(null != view && null != getAdapter()) {
+            int start = isVertical() ? getLayoutManager().getDecoratedTop(view) : getLayoutManager().getDecoratedLeft(view);
+            start -= isVertical() ? getPaddingTop() : getPaddingLeft();
+            scrollBy(start, start);
+        }
+        
+        super.setAdapter(adapter);
+        mOldSelectedPosition = 0;
         adapter.registerAdapterDataObserver(new AdapterDataObserver() {
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
@@ -375,6 +384,8 @@ public class TvRecyclerView extends RecyclerView {
     private int getFreeWidth() {
         return getWidth() - getPaddingLeft() - getPaddingRight();
     }
+    
+    
 
     @Override
     public void requestChildFocus(View child, View focused) {

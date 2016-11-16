@@ -95,7 +95,8 @@ public class LayoutFragment extends Fragment {
             btnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mRecyclerView.smoothScrollToPosition(15);
+//                    mRecyclerView.scrollToPosition(15);
+                    mRecyclerView.setAdapter(mLayoutAdapter);
                 }
             });
         }
