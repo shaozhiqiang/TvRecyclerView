@@ -1,6 +1,6 @@
 # 欢迎使用 TvRecyclerView
 
-QQ群：20012743
+群   号：484790001
 
 首先感谢lucasr开发出杰出的作品[TwoWayView](https://github.com/lucasr/twoway-view),**TvRecyclerView**就是在[TwoWayView](https://github.com/lucasr/twoway-view)的基础上进行的延伸，即：
 
