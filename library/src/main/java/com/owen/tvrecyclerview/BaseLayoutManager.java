@@ -25,7 +25,6 @@ import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -377,7 +376,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
 
     @Override
     public void onItemsAdded(RecyclerView recyclerView, int positionStart, int itemCount) {
-        Log.i(LOGTAG, "onItemsAdded: positionStart="+positionStart+" ,itemCount="+itemCount);
+//        Log.i(LOGTAG, "onItemsAdded: positionStart="+positionStart+" ,itemCount="+itemCount);
         handleUpdate(positionStart, itemCount, UpdateOp.ADD);
         super.onItemsAdded(recyclerView, positionStart, itemCount);
     }

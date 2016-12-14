@@ -215,13 +215,13 @@ public class TvRecyclerView extends RecyclerView {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        Log.i(LOGTAG, "onLayout: ");
+//        Log.i(LOGTAG, "onLayout: ");
     }
 
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
         super.onMeasure(widthSpec, heightSpec);
-        Log.i(LOGTAG, "onMeasure: ");
+//        Log.i(LOGTAG, "onMeasure: ");
     }
 
     @Override
@@ -268,6 +268,9 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void setSelection(int position) {
+        if(getDescendantFocusability() != FOCUS_BEFORE_DESCENDANTS) {
+            setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
+        }
         ViewHolder holder = findViewHolderForLayoutPosition(position);
         if(null == holder) {
             holder = findViewHolderForAdapterPosition(position - getFirstVisiblePosition());
@@ -779,7 +782,9 @@ public class TvRecyclerView extends RecyclerView {
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
-        requestDefaultFocus();
+        if(null == getFocusedChild()) {
+            requestDefaultFocus();
+        }
         
         int descendantFocusability = getDescendantFocusability();
         switch (descendantFocusability) {

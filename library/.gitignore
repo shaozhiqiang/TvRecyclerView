@@ -1,3 +1,4 @@
 /build
-gradle.properties
-bintray.gradle
+bintrayUpload.gradle
+bintrayKey.properties
+bintrayProject.properties
