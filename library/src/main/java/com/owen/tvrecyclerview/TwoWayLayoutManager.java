@@ -786,7 +786,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
 
     @Override
     public boolean supportsPredictiveItemAnimations() {
-        return true;
+        return false; //修复removeItem为0时，报异常的bug;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class TvRecyclerView extends RecyclerView {
     private boolean mHasFocus = false;
     private int mLoadMoreBeforehandCount;
     
-    private int mOldSelectedPosition = 0;
+    private int mPreSelectedPosition = 0;
     private int mSelectedPosition = 0;
     private int mOverscrollValue;
     private int mOffset = -1;
@@ -159,14 +159,14 @@ public class TvRecyclerView extends RecyclerView {
              * @param hasFocus
              */
             @Override
-            public void onFocusChange(View itemView, boolean hasFocus) {
+            public void onFocusChange(final View itemView, boolean hasFocus) {
                 mHandler.removeMessages(110);
                 mHandler.removeMessages(111);
                 if(hasFocus && !mHasFocus){
                     mHandler.sendEmptyMessage(110);
                 } 
                 else if(!hasFocus && mHasFocus) {
-                    mHandler.sendEmptyMessageDelayed(111, 50);
+                    mHandler.sendEmptyMessageDelayed(111, 10);
                 }
                 
                 if(null != itemView) {
@@ -174,10 +174,24 @@ public class TvRecyclerView extends RecyclerView {
                     itemView.setSelected(hasFocus);
                     if (hasFocus) {
                         mSelectedPosition = position;
+                        if(mIsMenu && itemView.isActivated()) {
+                            itemView.setActivated(false);
+                        }
                         if(null != mOnItemListener)
                             mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, position);
                     } else {
-                        mOldSelectedPosition = position;
+                        mPreSelectedPosition = position;
+                        if(mIsMenu) {
+                            // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
+                            itemView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(!hasFocus()) {
+                                        itemView.setActivated(true);
+                                    }
+                                }
+                            }, 3);
+                        }
                         if(null != mOnItemListener)
                             mOnItemListener.onItemPreSelected(TvRecyclerView.this, itemView, position);
                     }
@@ -243,7 +257,7 @@ public class TvRecyclerView extends RecyclerView {
         }
         
         super.setAdapter(adapter);
-        mOldSelectedPosition = 0;
+        mPreSelectedPosition = 0;
         adapter.registerAdapterDataObserver(new AdapterDataObserver() {
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
@@ -261,7 +275,7 @@ public class TvRecyclerView extends RecyclerView {
     
     public void requestDefaultFocus() {
         if(mIsMenu || !mIsSelectFirstVisiblePosition) {
-            setSelection(mOldSelectedPosition);
+            setSelection(mPreSelectedPosition);
         } else {
             setSelection(getFirstVisiblePosition());
         }
@@ -288,8 +302,8 @@ public class TvRecyclerView extends RecyclerView {
         return mSelectedPosition;
     }
     
-    public int getOldSelectedPosition() {
-        return mOldSelectedPosition;
+    public int getPreSelectedPosition() {
+        return mPreSelectedPosition;
     }
 
     public void setSelectFirstVisiblePosition(boolean selectFirstVisiblePosition) {
@@ -427,7 +441,7 @@ public class TvRecyclerView extends RecyclerView {
             }
 
             // 加载更多回调
-            if(!mLoadingMore && mHasMore && null != mOnLoadMoreListener) {
+            if(null != mOnLoadMoreListener && !mLoadingMore && mHasMore) {
                 if(getLastVisiblePosition() >= getAdapter().getItemCount() - (1 + mLoadMoreBeforehandCount)) {
                     mHasMore = mOnLoadMoreListener.onLoadMore();
                 }
@@ -599,11 +613,17 @@ public class TvRecyclerView extends RecyclerView {
             return getChildLayoutPosition(getChildAt(childCount - 1));
     }
     
-    public void scrollToPositionWithOffset(int position) {
+    public void scrollToPositionWithOffsetStart(int position) {
+        scrollToPositionWithOffset(position, mSelectedItemOffsetStart);
+    }
+    
+    public void scrollToPositionWithOffset(int position, int offset) {
         if(mIsBaseLayoutManager) {
             BaseLayoutManager layout = (BaseLayoutManager) getLayoutManager();
-            layout.scrollToPositionWithOffset(position, mSelectedItemOffsetStart);
+            layout.scrollToPositionWithOffset(position, offset);
             return;
+        } else if (getLayoutManager() instanceof LinearLayoutManager) {
+            ((LinearLayoutManager)getLayoutManager()).scrollToPositionWithOffset(position, offset);
         }
         scrollToPosition(position);
     }
@@ -809,13 +829,6 @@ public class TvRecyclerView extends RecyclerView {
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
 //        Log.i(LOGTAG, "onFocusChanged..." + gainFocus + " ,direction="+direction + " ,mOldSelectedPosition="+mOldSelectedPosition);
         mHasFocus = gainFocus;
-        if(mIsMenu) {
-            // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
-            ViewHolder holder = findViewHolderForLayoutPosition(mOldSelectedPosition);
-            if(null != holder) {
-                holder.itemView.setActivated(!gainFocus);
-            }
-        }
         
         if(gainFocus) {
             setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
@@ -831,7 +844,7 @@ public class TvRecyclerView extends RecyclerView {
             ViewHolder holder = findViewHolderForLayoutPosition(position);
             if(null != holder) {
                 holder.itemView.setActivated(true);
-                mOldSelectedPosition = position;
+                mPreSelectedPosition = position;
             }
         }
     }
@@ -861,8 +874,9 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        SavedState savedState = new SavedState(super.onSaveInstanceState());
+        ISavedState savedState = new ISavedState(super.onSaveInstanceState());
         savedState.mSelectedPosition = mSelectedPosition;
+        savedState.mPreSelectedPosition = mPreSelectedPosition;
         savedState.mVerticalSpacingWithMargins = mVerticalSpacingWithMargins;
         savedState.mHorizontalSpacingWithMargins = mHorizontalSpacingWithMargins;
         savedState.mSelectedItemOffsetStart = mSelectedItemOffsetStart;
@@ -880,10 +894,10 @@ public class TvRecyclerView extends RecyclerView {
     protected void onRestoreInstanceState(Parcelable state) {
 
         if(null != state) {
-            if(state instanceof SavedState) {
-                SavedState savedState = (SavedState) state;
-                mOldSelectedPosition = savedState.mSelectedPosition;
+            if(state instanceof ISavedState) {
+                ISavedState savedState = (ISavedState) state;
                 mSelectedPosition = savedState.mSelectedPosition;
+                mPreSelectedPosition = savedState.mPreSelectedPosition;
                 mVerticalSpacingWithMargins = savedState.mVerticalSpacingWithMargins;
                 mHorizontalSpacingWithMargins = savedState.mHorizontalSpacingWithMargins;
                 mSelectedItemOffsetStart = savedState.mSelectedItemOffsetStart;
@@ -894,19 +908,20 @@ public class TvRecyclerView extends RecyclerView {
                 mIsMenu = savedState.mIsMenu;
                 mHasMore = savedState.mHasMore;
                 mIsSelectFirstVisiblePosition = savedState.mIsSelectFirstVisiblePosition;
-                
-                super.onRestoreInstanceState(savedState.getSuperState());
+                try {
+                    super.onRestoreInstanceState(savedState.getSuperState());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 super.onRestoreInstanceState(state);
             }
         }
     }
 
-    protected static class SavedState implements Parcelable {
-        protected static final SavedState EMPTY_STATE = new SavedState();
-
-        private final Parcelable superState;
+    protected static class ISavedState extends android.view.View.BaseSavedState {
         private int mSelectedPosition;
+        private int mPreSelectedPosition;
         private int mVerticalSpacingWithMargins;
         private int mHorizontalSpacingWithMargins;
         private int mSelectedItemOffsetStart;
@@ -918,21 +933,14 @@ public class TvRecyclerView extends RecyclerView {
         private boolean mHasMore;
         private boolean mIsSelectFirstVisiblePosition;
 
-        private SavedState() {
-            superState = null;
+        protected ISavedState(Parcelable superState) {
+            super(superState);
         }
 
-        protected SavedState(Parcelable superState) {
-            if (superState == null) {
-                throw new IllegalArgumentException("superState must not be null");
-            }
-
-            this.superState = (superState != EMPTY_STATE ? superState : null);
-        }
-
-        protected SavedState(Parcel in) {
-            this.superState = EMPTY_STATE;
+        protected ISavedState(Parcel in) {
+            super(in);
             mSelectedPosition = in.readInt();
+            mPreSelectedPosition = in.readInt();
             mVerticalSpacingWithMargins = in.readInt();
             mHorizontalSpacingWithMargins = in.readInt();
             mSelectedItemOffsetStart = in.readInt();
@@ -947,18 +955,11 @@ public class TvRecyclerView extends RecyclerView {
             mIsSelectFirstVisiblePosition = booleens[5];
         }
 
-        public Parcelable getSuperState() {
-            return superState;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
         @Override
         public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
             out.writeInt(mSelectedPosition);
+            out.writeInt(mPreSelectedPosition);
             out.writeInt(mVerticalSpacingWithMargins);
             out.writeInt(mHorizontalSpacingWithMargins);
             out.writeInt(mSelectedItemOffsetStart);
@@ -968,16 +969,16 @@ public class TvRecyclerView extends RecyclerView {
             out.writeBooleanArray(booleens);
         }
 
-        public static final Creator<SavedState> CREATOR
-                = new Creator<SavedState>() {
+        public static final Creator<ISavedState> CREATOR
+                = new Creator<ISavedState>() {
             @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
+            public ISavedState createFromParcel(Parcel in) {
+                return new ISavedState(in);
             }
 
             @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
+            public ISavedState[] newArray(int size) {
+                return new ISavedState[size];
             }
         };
     }

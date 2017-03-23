@@ -155,6 +155,12 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.5'
 > * 1.0.7.5
     1）优化setSelection方法；
     2）注释log打印；
+> * 1.0.7.6
+    1）增加scrollToPositionWithOffsetStart(int position)；
+    2）增加scrollToPositionWithOffset(int position, int offset)；
+    3）修复removeItem为0时，报异常的bug;
+    4）修复系统回收后重建报异常的bug;
+    5）优化菜单模式下selector的状态切换；
     
 
 ### 更详细的使用请见exmaple
