@@ -29,10 +29,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Adapter;
 
 import com.owen.tvrecyclerview.BaseLayoutManager;
 import com.owen.tvrecyclerview.R;
@@ -328,6 +328,14 @@ public class TvRecyclerView extends RecyclerView {
 
     public int getLoadMoreBeforehandCount() {
         return mLoadMoreBeforehandCount;
+    }
+
+    public boolean isHasMore() {
+        return mHasMore;
+    }
+
+    public void setHasMore(boolean hasMore) {
+        mHasMore = hasMore;
     }
 
     /**
@@ -874,7 +882,9 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        ISavedState savedState = new ISavedState(super.onSaveInstanceState());
+        RecyclerView.SavedState superSavedState = (RecyclerView.SavedState) super.onSaveInstanceState();
+        ISavedState savedState = new ISavedState(superSavedState.getSuperState());
+        savedState.mISuperState = superSavedState;
         savedState.mSelectedPosition = mSelectedPosition;
         savedState.mPreSelectedPosition = mPreSelectedPosition;
         savedState.mVerticalSpacingWithMargins = mVerticalSpacingWithMargins;
@@ -892,7 +902,6 @@ public class TvRecyclerView extends RecyclerView {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-
         if(null != state) {
             if(state instanceof ISavedState) {
                 ISavedState savedState = (ISavedState) state;
@@ -909,7 +918,7 @@ public class TvRecyclerView extends RecyclerView {
                 mHasMore = savedState.mHasMore;
                 mIsSelectFirstVisiblePosition = savedState.mIsSelectFirstVisiblePosition;
                 try {
-                    super.onRestoreInstanceState(savedState.getSuperState());
+                    super.onRestoreInstanceState(savedState.mISuperState);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -932,6 +941,7 @@ public class TvRecyclerView extends RecyclerView {
         private boolean mIsMenu;
         private boolean mHasMore;
         private boolean mIsSelectFirstVisiblePosition;
+        private Parcelable mISuperState;
 
         protected ISavedState(Parcelable superState) {
             super(superState);
@@ -939,6 +949,7 @@ public class TvRecyclerView extends RecyclerView {
 
         protected ISavedState(Parcel in) {
             super(in);
+            mISuperState = in.readParcelable(RecyclerView.class.getClassLoader());
             mSelectedPosition = in.readInt();
             mPreSelectedPosition = in.readInt();
             mVerticalSpacingWithMargins = in.readInt();
@@ -958,6 +969,7 @@ public class TvRecyclerView extends RecyclerView {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
+            out.writeParcelable(mISuperState, 0);
             out.writeInt(mSelectedPosition);
             out.writeInt(mPreSelectedPosition);
             out.writeInt(mVerticalSpacingWithMargins);

@@ -20,7 +20,7 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.7.5'
+compile 'com.tv.boost:tv-recyclerview:1.0.7.8'
 ```
 
 ### 特性
@@ -161,6 +161,11 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.5'
     3）修复removeItem为0时，报异常的bug;
     4）修复系统回收后重建报异常的bug;
     5）优化菜单模式下selector的状态切换；
+> * 1.0.7.7
+    1) 增加setHasMore方法；
+    
+> * 1.0.7.8
+    1) 尝试修复系统回收后重建报异常的bug;
     
 
 ### 更详细的使用请见exmaple
