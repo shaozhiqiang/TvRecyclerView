@@ -14,17 +14,17 @@
             android:id="@+id/btn1"
             android:text="b\nt\nn\n1"
             android:layout_width="50dp"
-            android:layout_height="500dp"/>
+            android:layout_height="match_parent"/>
 
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/list"
             style="@style/TwoWayView"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:tv_isMenu="true"
             app:tv_isInterceptKeyEvent="true"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:tv_layoutManager="ListLayoutManager"/>
 
         <Button

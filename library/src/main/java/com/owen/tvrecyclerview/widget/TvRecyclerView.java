@@ -258,10 +258,12 @@ public class TvRecyclerView extends RecyclerView {
         
         super.setAdapter(adapter);
         mPreSelectedPosition = 0;
+        //解决删除数据焦点丢失问题
         adapter.registerAdapterDataObserver(new AdapterDataObserver() {
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 if(mHasFocus) {
+                    requestFocus();
                     postDelayed(new Runnable() {
                         @Override
                         public void run() {

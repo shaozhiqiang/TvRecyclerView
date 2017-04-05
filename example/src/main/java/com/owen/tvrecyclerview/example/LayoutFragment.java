@@ -123,7 +123,7 @@ public class LayoutFragment extends Fragment {
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 mRecyclerViewBridge.setUnFocusView(itemView);
 //                itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(500).start();
-//                Log.i(LOGTAG, "onItemPreSelected...1");
+                Log.i(LOGTAG, "onItemPreSelected...1");
             }
 
             @Override
@@ -131,7 +131,7 @@ public class LayoutFragment extends Fragment {
                 newView = itemView;
                 mRecyclerViewBridge.setFocusView(itemView, 1.1f);
 //                itemView.animate().scaleX(1.2f).scaleY(1.2f).setDuration(500).start();
-//                Log.i(LOGTAG, "onItemSelected...2");
+                Log.i(LOGTAG, "onItemSelected...2");
             }
 
             @Override
