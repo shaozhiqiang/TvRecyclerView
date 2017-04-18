@@ -25,5 +25,6 @@
     <color name="item_default_color">#EEEEEE</color>
     <color name="item_pressed_color">#CCCCCC</color>
     <color name="item_activated_color">#77CEEE</color>
-
+    <color name="green_99cc00">#99cc00</color>
+    <color name="green_bright">#00FF00</color>
 </resources>

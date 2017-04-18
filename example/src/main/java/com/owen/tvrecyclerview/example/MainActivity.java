@@ -17,12 +17,14 @@
 package com.owen.tvrecyclerview.example;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+
+import com.owen.tvrecyclerview.example.tablayout.TabLayout;
+import com.owen.tvrecyclerview.example.tablayout.TvTabLayout;
 
 public class MainActivity extends AppCompatActivity {
     private final String LOGTAG = MainActivity.class.getSimpleName();
@@ -32,39 +34,40 @@ public class MainActivity extends AppCompatActivity {
 
     private int mSelectedLayoutId;
 
-    private TabLayout mTabLayout;
+    private TvTabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout = (TvTabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.setScaleValue(1.1f);
         mTabLayout.addOnTabSelectedListener(new TabSelectedListener());
 
         mTabLayout.addTab(
                 mTabLayout.newTab()
-//                        .setText("list")
+                        .setText("list")
                         .setIcon(R.drawable.ic_list)
                 , true);
         mTabLayout.addTab(
                 mTabLayout.newTab()
-//                        .setText("grid")
+                        .setText("grid")
                         .setIcon(R.drawable.ic_grid)
         );
         mTabLayout.addTab(
                 mTabLayout.newTab()
-//                        .setText("grid2")
+                        .setText("grid2")
                         .setIcon(R.drawable.ic_grid)
         );
         mTabLayout.addTab(
                 mTabLayout.newTab()
-//                        .setText("staggered")
+                        .setText("staggered")
                         .setIcon(R.drawable.ic_staggered)
         );
         mTabLayout.addTab(
                 mTabLayout.newTab()
-//                        .setText("spannable")
+                        .setText("spannable")
                         .setIcon(R.drawable.selector_ic_spannable)
         );
 
