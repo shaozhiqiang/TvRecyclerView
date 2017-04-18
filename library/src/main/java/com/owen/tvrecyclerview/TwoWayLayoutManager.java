@@ -705,9 +705,10 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
     public void onAttachedToWindow(RecyclerView view) {
         super.onAttachedToWindow(view);
         mRecyclerView = view;
-
         // add by zhousuqiang 修复第一次获取焦点时leftPadding会自动增加
-        mLayoutStart = getStartWithPadding();
+        if(mLayoutStart == 0) {
+            mLayoutStart = getStartWithPadding();
+        }
     }
 
     @Override
@@ -842,16 +843,6 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
                 } else {
                     return new PointF(direction, 0);
                 }
-            }
-
-            @Override
-            protected int getVerticalSnapPreference() {
-                return LinearSmoothScroller.SNAP_TO_END;
-            }
-
-            @Override
-            protected int getHorizontalSnapPreference() {
-                return LinearSmoothScroller.SNAP_TO_END;
             }
         };
         

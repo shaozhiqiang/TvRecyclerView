@@ -20,7 +20,7 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.7.8'
+compile 'com.tv.boost:tv-recyclerview:1.0.7.10'
 ```
 
 ### 特性
@@ -166,6 +166,10 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.8'
     
 > * 1.0.7.8
     1) 尝试修复系统回收后重建报异常的bug;
+        
+> * 1.0.7.10
+    1）优化setSelection方法；
+    2) 修复在ViewPager中移除重新添加后滚动实效的问题；
     
 
 ### 更详细的使用请见exmaple

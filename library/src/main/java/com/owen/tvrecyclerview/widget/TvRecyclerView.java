@@ -18,6 +18,7 @@ package com.owen.tvrecyclerview.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
@@ -26,13 +27,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Adapter;
 
 import com.owen.tvrecyclerview.BaseLayoutManager;
 import com.owen.tvrecyclerview.R;
@@ -230,6 +231,10 @@ public class TvRecyclerView extends RecyclerView {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 //        Log.i(LOGTAG, "onLayout: ");
+//        Log.i("@@@@", "onLayout...mHasFocus="+mHasFocus + "hasFocus()="+hasFocus());
+        if(!hasFocus()) {
+            setItemActivated(mPreSelectedPosition);
+        }
     }
 
     @Override
@@ -262,6 +267,7 @@ public class TvRecyclerView extends RecyclerView {
         adapter.registerAdapterDataObserver(new AdapterDataObserver() {
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
+//                Log.i("@@@@", "onItemRangeRemoved...mHasFocus="+mHasFocus + "hasFocus()="+hasFocus());
                 if(mHasFocus) {
                     requestFocus();
                     postDelayed(new Runnable() {
@@ -284,20 +290,56 @@ public class TvRecyclerView extends RecyclerView {
     }
     
     public void setSelection(int position) {
+        if(null == getAdapter() || position < 0 || position >= getAdapter().getItemCount()) {
+            return;
+        }
+        
         if(getDescendantFocusability() != FOCUS_BEFORE_DESCENDANTS) {
             setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         }
-        ViewHolder holder = findViewHolderForLayoutPosition(position);
-        if(null == holder) {
-            holder = findViewHolderForAdapterPosition(position - getFirstVisiblePosition());
-        }
-        if(null == holder && getChildCount() > 0) {
-            holder = getChildViewHolder(getChildAt(0));
-        }
-        if(null != holder) {
-            holder.itemView.requestFocusFromTouch();
-            holder.itemView.requestFocus();
-        }
+
+        final LinearSmoothScroller scroller = new LinearSmoothScroller(getContext()) {
+            private ViewHolder holder = null;
+            
+            @Override
+            public PointF computeScrollVectorForPosition(int targetPosition) {
+                if (getChildCount() == 0) {
+                    return null;
+                }
+
+                final int direction = targetPosition < getFirstVisiblePosition() ? -1 : 1;
+                if (isVertical()) {
+                    return new PointF(0, direction);
+                } else {
+                    return new PointF(direction, 0);
+                }
+            }
+
+            @Override
+            protected void onStop() {
+                super.onStop();
+                holder = null;
+                holder = findViewHolderForLayoutPosition(getTargetPosition());
+                if(null == holder) {
+                    holder = findViewHolderForAdapterPosition(getTargetPosition() - getFirstVisiblePosition());
+                }
+                if(null == holder) {
+                    holder = findViewHolderForLayoutPosition(0);
+                }
+                
+                if(null != holder) {
+                    holder.itemView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            holder.itemView.requestFocusFromTouch();
+                            holder.itemView.requestFocus();
+                        }
+                    });
+                }
+            }
+        };
+        scroller.setTargetPosition(position);
+        getLayoutManager().startSmoothScroll(scroller);
     }
 
     public int getSelectedPosition() {
@@ -411,8 +453,6 @@ public class TvRecyclerView extends RecyclerView {
     private int getFreeWidth() {
         return getWidth() - getPaddingLeft() - getPaddingRight();
     }
-    
-    
 
     @Override
     public void requestChildFocus(View child, View focused) {
@@ -634,10 +674,11 @@ public class TvRecyclerView extends RecyclerView {
             return;
         } else if (getLayoutManager() instanceof LinearLayoutManager) {
             ((LinearLayoutManager)getLayoutManager()).scrollToPositionWithOffset(position, offset);
+            return;
         }
         scrollToPosition(position);
     }
-
+    
     int mTempPosition = 0;
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
@@ -851,10 +892,18 @@ public class TvRecyclerView extends RecyclerView {
     
     public void setItemActivated(int position) {
         if(mIsMenu) {
-            ViewHolder holder = findViewHolderForLayoutPosition(position);
-            if(null != holder) {
+            ViewHolder holder;
+            if(position != mPreSelectedPosition) {
+                holder = findViewHolderForLayoutPosition(mPreSelectedPosition);
+                if(null != holder && holder.itemView.isActivated()) {
+                    holder.itemView.setActivated(false);
+                }
+            }
+            holder = findViewHolderForLayoutPosition(position);
+            if(null != holder && !holder.itemView.isActivated()) {
                 holder.itemView.setActivated(true);
                 mPreSelectedPosition = position;
+                mSelectedPosition = position;
             }
         }
     }
