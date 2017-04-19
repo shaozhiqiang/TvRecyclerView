@@ -298,48 +298,43 @@ public class TvRecyclerView extends RecyclerView {
             setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         }
 
-        final LinearSmoothScroller scroller = new LinearSmoothScroller(getContext()) {
-            private ViewHolder holder = null;
-            
-            @Override
-            public PointF computeScrollVectorForPosition(int targetPosition) {
-                if (getChildCount() == 0) {
-                    return null;
+        View view = getChildAt(position - getFirstVisiblePosition());
+        if(null != view) {
+            view.requestFocus();
+        }
+        else {
+            LinearSmoothScroller scroller = new LinearSmoothScroller(getContext()) {
+                @Override
+                public PointF computeScrollVectorForPosition(int targetPosition) {
+                    if (getChildCount() == 0) {
+                        return null;
+                    }
+
+                    final int direction = targetPosition < getFirstVisiblePosition() ? -1 : 1;
+                    if (isVertical()) {
+                        return new PointF(0, direction);
+                    } else {
+                        return new PointF(direction, 0);
+                    }
                 }
 
-                final int direction = targetPosition < getFirstVisiblePosition() ? -1 : 1;
-                if (isVertical()) {
-                    return new PointF(0, direction);
-                } else {
-                    return new PointF(direction, 0);
+                @Override
+                protected void onStop() {
+                    super.onStop();
+                    final View itemView = findViewByPosition(getTargetPosition());
+                    if (null != itemView) {
+                        itemView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                itemView.requestFocus();
+                            }
+                        });
+                    }
                 }
-            }
-
-            @Override
-            protected void onStop() {
-                super.onStop();
-                holder = null;
-                holder = findViewHolderForLayoutPosition(getTargetPosition());
-                if(null == holder) {
-                    holder = findViewHolderForAdapterPosition(getTargetPosition() - getFirstVisiblePosition());
-                }
-                if(null == holder) {
-                    holder = findViewHolderForLayoutPosition(0);
-                }
-                
-                if(null != holder) {
-                    holder.itemView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.itemView.requestFocusFromTouch();
-                            holder.itemView.requestFocus();
-                        }
-                    });
-                }
-            }
-        };
-        scroller.setTargetPosition(position);
-        getLayoutManager().startSmoothScroll(scroller);
+            };
+            scroller.setTargetPosition(position);
+            getLayoutManager().startSmoothScroll(scroller);
+        }
     }
 
     public int getSelectedPosition() {

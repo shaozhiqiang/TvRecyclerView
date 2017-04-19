@@ -18,15 +18,15 @@ package com.owen.tvrecyclerview.example;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
 import com.owen.tvrecyclerview.example.tablayout.TabLayout;
 import com.owen.tvrecyclerview.example.tablayout.TvTabLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     private final String LOGTAG = MainActivity.class.getSimpleName();
     private final String ARG_SELECTED_LAYOUT_ID = "selectedLayoutId";
 

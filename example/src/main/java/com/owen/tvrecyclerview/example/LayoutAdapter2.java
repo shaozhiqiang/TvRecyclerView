@@ -17,11 +17,11 @@
 package com.owen.tvrecyclerview.example;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class LayoutAdapter2 extends RecyclerView.Adapter<LayoutAdapter2.SimpleVi
         if(mLayoutId == R.layout.layout_grid2) {
             android.support.v7.widget.GridLayoutManager.LayoutParams params = (android.support.v7.widget.GridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
             params.width = 200;
-            params.height = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
             holder.itemView.setLayoutParams(params);
         }
     }
