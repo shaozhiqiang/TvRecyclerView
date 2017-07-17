@@ -60,7 +60,7 @@ public class ItemEntries {
     }
 
     public ItemEntry getItemEntry(int position) {
-        if (mItemEntries == null || position >= mItemEntries.length) {
+        if (mItemEntries == null || position >= mItemEntries.length || position < 0) {
             return null;
         }
 

@@ -74,6 +74,10 @@ public class GridLayoutManager extends BaseLayoutManager {
             throw new IllegalArgumentException("GridLayoutManager must have at least 1 row");
         }
     }
+    
+    public GridLayoutManager(Orientation orientation) {
+        this(orientation, DEFAULT_NUM_COLS, DEFAULT_NUM_ROWS);
+    }
 
     @Override
     public int getLaneCount() {

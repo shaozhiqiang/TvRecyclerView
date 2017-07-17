@@ -27,7 +27,7 @@ public class Lanes {
     private final boolean mIsVertical;
     private final Rect[] mLanes;
     private final Rect[] mSavedLanes;
-    private final int mLaneSize;
+    private final float mLaneSize;
 
     private final Rect mTempRect = new Rect();
     private final LaneInfo mTempLaneInfo = new LaneInfo();
@@ -54,7 +54,7 @@ public class Lanes {
         }
     }
 
-    public Lanes(BaseLayoutManager layout, Orientation orientation, Rect[] lanes, int laneSize) {
+    public Lanes(BaseLayoutManager layout, Orientation orientation, Rect[] lanes, float laneSize) {
         mLayout = layout;
         mIsVertical = (orientation == Orientation.VERTICAL);
         mLanes = lanes;
@@ -83,28 +83,28 @@ public class Lanes {
         final int paddingTop = layout.getPaddingTop();
 
         for (int i = 0; i < laneCount; i++) {
-            final int laneStart = i * mLaneSize;
+            final int laneStart = (int) (i * mLaneSize);
 
             final int l = paddingLeft + (mIsVertical ? laneStart : 0);
             final int t = paddingTop + (mIsVertical ? 0 : laneStart);
-            final int r = (mIsVertical ? l + mLaneSize : l);
-            final int b = (mIsVertical ? t : t + mLaneSize);
+            final int r = (mIsVertical ? l + (int)mLaneSize : l);
+            final int b = (mIsVertical ? t : t + (int)mLaneSize);
 
             mLanes[i].set(l, t, r, b);
         }
     }
 
-    public static int calculateLaneSize(BaseLayoutManager layout, int laneCount) {
+    public static float calculateLaneSize(BaseLayoutManager layout, int laneCount) {
         if (layout.isVertical()) {
             final int paddingLeft = layout.getPaddingLeft();
             final int paddingRight = layout.getPaddingRight();
             final int width = layout.getWidth() - paddingLeft - paddingRight;
-            return width / laneCount;
+            return width / (float)laneCount;
         } else {
             final int paddingTop = layout.getPaddingTop();
             final int paddingBottom = layout.getPaddingBottom();
             final int height = layout.getHeight() - paddingTop - paddingBottom;
-            return height / laneCount;
+            return height / (float)laneCount;
         }
     }
 
@@ -129,7 +129,7 @@ public class Lanes {
         }
     }
 
-    public int getLaneSize() {
+    public float getLaneSize() {
         return mLaneSize;
     }
 
@@ -248,8 +248,8 @@ public class Lanes {
         for (int l = findStart; l < findEnd; l++) {
             mTempLaneInfo.set(l, anchorLane);
 
-            getChildFrame(mTempRect, mIsVertical ? laneSpan * mLaneSize : 1,
-                    mIsVertical ? 1 : laneSpan * mLaneSize, mTempLaneInfo, direction);
+            getChildFrame(mTempRect, mIsVertical ? (int)(laneSpan * mLaneSize) : 1,
+                    mIsVertical ? 1 : (int)(laneSpan * mLaneSize), mTempLaneInfo, direction);
 
             if (!intersects(l, laneSpan, mTempRect)) {
                 return l;

@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:background="@color/item_default_color"
+        android:background="@drawable/selector_item_background"
         android:focusable="true"
         android:clickable="true">
 

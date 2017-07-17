@@ -1251,7 +1251,6 @@ public class TabLayout extends HorizontalScrollView {
     }
 
     protected void onTabReselected(@NonNull final Tab tab) {
-        onTabReselected(tab);
     }
 
     private int calculateScrollXForTab(int position, float positionOffset) {

@@ -6,23 +6,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btn1"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
     
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             style="@style/TwoWayView"
             android:orientation="vertical"
             app:tv_layoutManager="GridLayoutManager"
-            app:tv_numColumns="2"
-            app:tv_numRows="2" />
+            app:tv_numColumns="3"
+            app:tv_numRows="3" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
 
     </LinearLayout>
     

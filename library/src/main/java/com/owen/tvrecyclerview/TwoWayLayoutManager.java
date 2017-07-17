@@ -19,6 +19,7 @@ package com.owen.tvrecyclerview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,9 +35,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 
+import com.owen.tvrecyclerview.utils.Loger;
+import com.owen.tvrecyclerview.widget.TvRecyclerView;
+
 import java.util.List;
 
-public abstract class TwoWayLayoutManager extends LayoutManager {
+public abstract class TwoWayLayoutManager extends LayoutManager implements RecyclerView.SmoothScroller.ScrollVectorProvider{
     private static final String LOGTAG = TwoWayLayoutManager.class.getSimpleName();
 
     public static enum Orientation {
@@ -51,7 +55,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
 
     protected RecyclerView mRecyclerView;
 
-    private boolean mIsVertical = true;
+    protected boolean mIsVertical = true;
 
     private SavedState mPendingSavedState = null;
 
@@ -82,10 +86,17 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         }
 
         a.recycle();
+
+        setAutoMeasureEnabled(true);
     }
 
     public TwoWayLayoutManager(Orientation orientation) {
         mIsVertical = (orientation == Orientation.VERTICAL);
+        setAutoMeasureEnabled(true);
+    }
+
+    public boolean isVertical() {
+        return mIsVertical;
     }
 
     private int getTotalSpace() {
@@ -830,42 +841,61 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, State state, int position) {
-        final LinearSmoothScroller scroller = new LinearSmoothScroller(recyclerView.getContext()) {
-            @Override
-            public PointF computeScrollVectorForPosition(int targetPosition) {
-                if (getChildCount() == 0) {
-                    return null;
-                }
-
-                final int direction = targetPosition < getFirstVisiblePosition() ? -1 : 1;
-                if (mIsVertical) {
-                    return new PointF(0, direction);
-                } else {
-                    return new PointF(direction, 0);
-                }
-            }
-        };
-        
+        LinearSmoothScroller scroller =
+                new LinearSmoothScroller(recyclerView.getContext()) {
+                    @Override
+                    public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int
+                            snapPreference) {
+                        return boxStart - viewStart;
+                    }
+                };
         scroller.setTargetPosition(position);
         startSmoothScroll(scroller);
     }
 
     @Override
-    public int computeHorizontalScrollOffset(State state) {
+    public PointF computeScrollVectorForPosition(int targetPosition) {
         if (getChildCount() == 0) {
-            return 0;
+            return null;
         }
+        final int firstChildPos = getPosition(getChildAt(0));
+        final int direction = targetPosition < firstChildPos ? -1 : 1;
+        if (!mIsVertical) {
+            return new PointF(direction, 0);
+        } else {
+            return new PointF(0, direction);
+        }
+    }
 
-        return getFirstVisiblePosition();
+    @Override
+    public int computeHorizontalScrollOffset(State state) {
+        return computeScrollOffset(state, false);
     }
 
     @Override
     public int computeVerticalScrollOffset(State state) {
+        return computeScrollOffset(state, true);
+    }
+
+    private int computeScrollOffset(State state, boolean isVertical) {
         if (getChildCount() == 0) {
             return 0;
         }
+        
+        final int position = getFirstVisiblePosition();
+        final boolean start = isVertical ? getChildAt(0).getTop() < getPaddingTop() 
+                : getChildAt(0).getLeft() < getPaddingLeft();
+        if(position == 0 && start) {
+            return position + 1;
+        }
+        final boolean end = isVertical ? getChildAt(getChildCount()-1).getBottom() > getHeight() 
+                : getChildAt(getChildCount()-1).getRight() > getWidth();
+        Loger.i("LastVisiblePosition="+getLastVisiblePosition() +" FirstVisiblePosition="+position +" range="+(state.getItemCount() - getChildCount() - 1));
+        if((getLastVisiblePosition() == state.getItemCount() - 1 && end) || (position == (state.getItemCount() - getChildCount() - 1))) {
+            return position - 2;
+        }
 
-        return getFirstVisiblePosition();
+        return position;
     }
 
     @Override
@@ -942,6 +972,14 @@ public abstract class TwoWayLayoutManager extends LayoutManager {
         }
 
         return getPosition(getChildAt(childCount - 1));
+    }
+
+    @Override
+    public boolean requestChildRectangleOnScreen(RecyclerView parent, View child, Rect rect, boolean immediate, boolean focusedChildVisible) {
+        if(parent instanceof TvRecyclerView) {
+            return parent.requestChildRectangleOnScreen(child, rect, immediate);
+        }
+        return super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
     }
 
     protected abstract void measureChild(View child, Direction direction);

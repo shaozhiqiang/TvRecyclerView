@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 
 import com.owen.tvrecyclerview.Lanes.LaneInfo;
+import com.owen.tvrecyclerview.utils.Loger;
 
 
 public abstract class BaseLayoutManager extends TwoWayLayoutManager {
@@ -40,7 +41,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         public int anchorLane;
 
         private int[] spanMargins;
-
+        
         public ItemEntry(int startLane, int anchorLane) {
             this.startLane = startLane;
             this.anchorLane = anchorLane;
@@ -192,10 +193,6 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         childFrame.bottom = getDecoratedBottom(child);
     }
 
-    public boolean isVertical() {
-        return (getOrientation() == Orientation.VERTICAL);
-    }
-
     public Lanes getLanes() {
         return mLanes;
     }
@@ -252,7 +249,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         }
 
         final int laneCount = getLaneCount();
-        final int laneSize = Lanes.calculateLaneSize(this, laneCount);
+        final float laneSize = Lanes.calculateLaneSize(this, laneCount);
 
         return (lanes.getOrientation() == getOrientation() &&
                  lanes.getCount() == laneCount &&
@@ -419,7 +416,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         }
 
         state.orientation = getOrientation();
-        state.laneSize = (mLanes != null ? mLanes.getLaneSize() : 0);
+        state.laneSize = (mLanes != null ? mLanes.getLaneSize() : 0f);
         state.itemEntries = mItemEntries;
 
         return state;
@@ -440,15 +437,20 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
     @Override
     protected boolean canAddMoreViews(Direction direction, int limit) {
         if (direction == Direction.START) {
-            return (mLanes.getInnerStart() > limit);
-        } else {
-            int innerEnd = mLanes.getInnerEnd();
-            // add by zhousuqaing 修复追加更多数据偶尔不显示的问题
-            if(isVertical()) {
-                innerEnd -= getPaddingBottom();
-            } else {
-                innerEnd -= getPaddingRight();
+            // add by zhousuqaing 修复Padding区域的item不显示的问题
+            int paddingStart = isVertical() ? getPaddingTop() : getPaddingLeft();
+            if(paddingStart <= 0) {
+                paddingStart = 20; // 解决padding值过小无法滚动问题
             }
+            final int innerStart = mLanes.getInnerStart() + paddingStart;
+            return (innerStart > limit);
+        } else {
+            // add by zhousuqaing 修复Padding区域的item不显示的问题
+            int paddingEnd = isVertical() ? getPaddingBottom() : getPaddingRight();
+            if(paddingEnd <= 0) {
+                paddingEnd = 20; // 解决padding值过小无法滚动问题
+            }
+            int innerEnd = mLanes.getInnerEnd() - paddingEnd;
             return (innerEnd < limit);
         }
     }
@@ -458,7 +460,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
             return 0;
         }
 
-        final int size = getLanes().getLaneSize() * getLaneSpanForChild(child);
+        final int size = (int)(getLanes().getLaneSize() * getLaneSpanForChild(child));
         return getWidth() - getPaddingLeft() - getPaddingRight() - size;
     }
 
@@ -467,7 +469,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
             return 0;
         }
 
-        final int size = getLanes().getLaneSize() * getLaneSpanForChild(child);
+        final int size = (int)(getLanes().getLaneSize() * getLaneSpanForChild(child));
         return getHeight() - getPaddingTop() - getPaddingBottom() - size;
     }
 
@@ -483,22 +485,24 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
 
     @Override
     protected void layoutChild(View child, Direction direction) {
-        
+        final int position = getPosition(child);
+
         getLaneForChild(mTempLaneInfo, child, direction);
 
         mLanes.getChildFrame(mChildFrame, getDecoratedMeasuredWidth(child),
                 getDecoratedMeasuredHeight(child), mTempLaneInfo, direction);
-        final ItemEntry entry = cacheChildFrame(child, mChildFrame);
+        ItemEntry entry2 = cacheChildFrame(child, mChildFrame);
 
         layoutDecorated(child, mChildFrame.left, mChildFrame.top, mChildFrame.right,
                 mChildFrame.bottom);
 
-
         final LayoutParams lp = (LayoutParams) child.getLayoutParams();
         if (!lp.isItemRemoved()) {
-            pushChildFrame(entry, mChildFrame, mTempLaneInfo.startLane,
+            pushChildFrame(entry2, mChildFrame, mTempLaneInfo.startLane,
                     getLaneSpanForChild(child), direction);
         }
+
+        Loger.i("child position "+position+" childFrame="+mChildFrame);
     }
 
     @Override
@@ -533,32 +537,8 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
         return null;
     }
     
-    // add by zhousuqiang
-    private int mVerticalSpacingWithMargins = 0;
-    private int mHorizontalSpacingWithMargins = 0;
-    /**
-     * add by zhousuqiang
-     * 通过Margins来设置布局的横纵间距
-     * @param verticalSpacing
-     * @param horizontalSpacing
-     */
-    public void setSpacingWithMargins(int verticalSpacing, int horizontalSpacing) {
-        this.mVerticalSpacingWithMargins = verticalSpacing;
-        this.mHorizontalSpacingWithMargins = horizontalSpacing;
-    }
-    
     @Override
     public boolean checkLayoutParams(LayoutParams lp) {
-        // add by zhousuqiang
-        if(mVerticalSpacingWithMargins > 0 || mHorizontalSpacingWithMargins > 0) {
-            lp.setMargins(
-                    mHorizontalSpacingWithMargins/2,
-                    mVerticalSpacingWithMargins/2,
-                    mHorizontalSpacingWithMargins/2,
-                    mVerticalSpacingWithMargins/2
-            );
-        }
-        
         if (isVertical()) {
             return (lp.width == LayoutParams.MATCH_PARENT);
         } else {
@@ -601,7 +581,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
     protected static class LanedSavedState extends SavedState {
         private Orientation orientation;
         private Rect[] lanes;
-        private int laneSize;
+        private float laneSize;
         private ItemEntries itemEntries;
 
         protected LanedSavedState(Parcelable superState) {
@@ -612,7 +592,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
             super(in);
 
             orientation = Orientation.values()[in.readInt()];
-            laneSize = in.readInt();
+            laneSize = in.readFloat();
 
             final int laneCount = in.readInt();
             if (laneCount > 0) {
@@ -639,7 +619,7 @@ public abstract class BaseLayoutManager extends TwoWayLayoutManager {
             super.writeToParcel(out, flags);
 
             out.writeInt(orientation.ordinal());
-            out.writeInt(laneSize);
+            out.writeFloat(laneSize);
 
             final int laneCount = (lanes != null ? lanes.length : 0);
             out.writeInt(laneCount);

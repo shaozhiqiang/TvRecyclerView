@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         style="@style/TwoWayView"
         android:orientation="vertical"
-         />
+        app:spanCount="4"
+        app:tv_layoutManager="V7GridLayoutManager"/>
 
     <com.owen.tvrecyclerview.example.bridge.MainUpView
         android:id="@+id/mainUpView1"

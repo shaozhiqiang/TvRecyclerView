@@ -1,53 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+    
         <Button
             android:id="@+id/btn1"
             android:text="b\nt\nn\n1"
             android:layout_width="50dp"
-            android:layout_height="match_parent"/>
-
-        <com.owen.tvrecyclerview.widget.TvRecyclerView
-            android:id="@+id/list"
-            style="@style/TwoWayView"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:tv_isMenu="true"
-            app:tv_isInterceptKeyEvent="true"
-            android:orientation="horizontal"
-            app:tv_layoutManager="ListLayoutManager"/>
-
+            android:visibility="visible"/>
+    
+    
+        <com.owen.tvrecyclerview.widget.TvRecyclerView
+            android:id="@+id/list_v7"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#DDDD22"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:padding="20dp"
+            app:tv_selectedItemIsCentered="true"
+            android:orientation="vertical"
+            app:tv_layoutManager="V7LinearLayoutManager"/>
+    
         <Button
             android:id="@+id/btn2"
             android:text="b\nt\nn\n2"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="100dp"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_alignParentRight="true"/>
-
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+    
+        <com.owen.tvrecyclerview.widget.TvRecyclerView
+            android:id="@+id/list"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#DDDD22"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:orientation="horizontal"
+            app:tv_layoutManager="ListLayoutManager"/>
+    
+        <Button
+            android:id="@+id/btn3"
+            android:text="b\nt\nn\n3"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+        
+        
+        
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn3"
-        android:text="btn3"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="gone"/>
-    
     <com.owen.tvrecyclerview.example.bridge.MainUpView
         android:id="@+id/mainUpView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    
 </FrameLayout>

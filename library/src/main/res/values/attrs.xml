@@ -17,18 +17,23 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <item name="tag_offset_x" type="id" />
+    <item name="tag_offset_y" type="id" />
+    
     <declare-styleable name="TvRecyclerView">
         <attr name="android:orientation" tools:ignore="ResourceName"/>
         <attr name="tv_layoutManager" format="string"/>
         <attr name="tv_numColumns" format="integer"/>
         <attr name="tv_numRows" format="integer"/>
+        <attr name="tv_laneCountsStr" format="string"/>
+        <attr name="tv_isIntelligentScroll" format="boolean"/>
         <attr name="tv_selectedItemOffsetStart" format="dimension"/>
         <attr name="tv_selectedItemOffsetEnd" format="dimension"/>
         <attr name="tv_selectedItemIsCentered" format="boolean"/>
-        <attr name="tv_isInterceptKeyEvent" format="boolean"/>
         <attr name="tv_isMenu" format="boolean"/>
         <attr name="tv_isSelectFirstVisiblePosition" format="boolean"/>
         <attr name="tv_loadMoreBeforehandCount" format="integer"/>
+        <attr name="tv_optimizeLayout" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="TvRecyclerView_SpacingItemDecoration">

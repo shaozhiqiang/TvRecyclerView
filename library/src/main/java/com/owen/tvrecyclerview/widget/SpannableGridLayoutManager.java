@@ -166,11 +166,13 @@ public class SpannableGridLayoutManager extends GridLayoutManager {
     }
 
     private int getChildWidth(int colSpan) {
-        return (getLanes().getLaneSize()) * colSpan;
+//        return (int)(getLanes().getLaneSize() * colSpan + 0.5f);
+        return (int)(getLanes().getLaneSize()) * colSpan;
     }
 
     private int getChildHeight(int rowSpan) {
-        return (getLanes().getLaneSize()) * rowSpan;
+//        return (int)(getLanes().getLaneSize() * rowSpan + 0.5f);
+        return (int)(getLanes().getLaneSize()) * rowSpan;
     }
 
     private int getWidthUsed(View child) {
@@ -188,40 +190,6 @@ public class SpannableGridLayoutManager extends GridLayoutManager {
         // XXX: This will disable scrolling while measuring this child to ensure that
         // both width and height can use MATCH_PARENT properly.
         mMeasuring = true;
-
-        final int laneCount = getLanes().getCount();
-
-        final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-        int decorated = 30;
-        int laneSize;
-        if (isVertical()) {
-            int parentWidth = getWidth() - getPaddingLeft() - getPaddingRight() - decorated * (laneCount -1);
-            laneSize = parentWidth / laneCount;
-        } else {
-            int parentHeight = getHeight() - getPaddingTop() - getPaddingBottom() - decorated * (laneCount -1);
-            laneSize = parentHeight / laneCount;
-        }
-//        lp.width = laneSize * lp.colSpan + decorated * (lp.colSpan - 1);
-//        lp.height = laneSize * lp.rowSpan + decorated * (lp.rowSpan - 1);
-
-        getLaneForChild(mTempLaneInfo, child, Direction.END);
-        final int lane = mTempLaneInfo.startLane;
-        final int laneSpan = getLaneSpan(lp, isVertical());
-        
-//        final int itemCount = getItemCount();
-
-//        final boolean isVertical = isVertical();
-
-//        final boolean firstLane = (lane == 0);
-//        final boolean secondLane = isSecondLane(lm, itemPosition, lane);
-
-        final boolean lastLane = (lane + laneSpan == laneCount);
-//        final boolean beforeLastLane = (lane + laneSpan == laneCount - 1);
-        
-//        if(!lastLane) {
-//            lp.height = laneSize * lp.rowSpan + decorated * (lp.rowSpan - 1);
-//        }
-
         measureChildWithMargins(child, getWidthUsed(child), getHeightUsed(child));
         mMeasuring = false;
     }

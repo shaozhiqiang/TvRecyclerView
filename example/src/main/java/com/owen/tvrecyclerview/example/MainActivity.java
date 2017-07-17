@@ -21,88 +21,85 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 
+import com.owen.tvrecyclerview.example.fragment.GridFragment;
+import com.owen.tvrecyclerview.example.fragment.ListFragment;
+import com.owen.tvrecyclerview.example.fragment.MetroFragment;
+import com.owen.tvrecyclerview.example.fragment.SpannableFragment;
+import com.owen.tvrecyclerview.example.fragment.StaggeredFragment;
+import com.owen.tvrecyclerview.example.fragment.UpdateDataFragment;
+import com.owen.tvrecyclerview.example.fragment.V7GridFragment;
 import com.owen.tvrecyclerview.example.tablayout.TabLayout;
 import com.owen.tvrecyclerview.example.tablayout.TvTabLayout;
+import com.owen.tvrecyclerview.utils.Loger;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends FragmentActivity {
     private final String LOGTAG = MainActivity.class.getSimpleName();
-    private final String ARG_SELECTED_LAYOUT_ID = "selectedLayoutId";
 
-    private final int DEFAULT_LAYOUT = R.layout.layout_list;
-
-    private int mSelectedLayoutId;
-
-    private TvTabLayout mTabLayout;
+    @BindView(R.id.tab_layout) TvTabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mTabLayout = (TvTabLayout) findViewById(R.id.tab_layout);
+        ButterKnife.bind(this);
+        
+        Loger.isDebug = true; //是否打开TvRecyclerView的log打印
+        
         mTabLayout.setScaleValue(1.1f);
         mTabLayout.addOnTabSelectedListener(new TabSelectedListener());
 
         mTabLayout.addTab(
                 mTabLayout.newTab()
-                        .setText("list")
-                        .setIcon(R.drawable.ic_list)
+                        .setText("Metro")
+//                        .setIcon(R.drawable.ic_staggered)
                 , true);
         mTabLayout.addTab(
                 mTabLayout.newTab()
-                        .setText("grid")
-                        .setIcon(R.drawable.ic_grid)
+                        .setText("List")
+//                        .setIcon(R.drawable.ic_list)
+                );
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+                        .setText("Grid")
+//                        .setIcon(R.drawable.ic_grid)
         );
         mTabLayout.addTab(
                 mTabLayout.newTab()
-                        .setText("grid2")
-                        .setIcon(R.drawable.ic_grid)
+                        .setText("V7Grid")
+//                        .setIcon(R.drawable.ic_grid)
         );
         mTabLayout.addTab(
                 mTabLayout.newTab()
-                        .setText("staggered")
-                        .setIcon(R.drawable.ic_staggered)
+                        .setText("Staggered")
+//                        .setIcon(R.drawable.ic_staggered)
         );
         mTabLayout.addTab(
                 mTabLayout.newTab()
-                        .setText("spannable")
-                        .setIcon(R.drawable.selector_ic_spannable)
+                        .setText("Spannable")
+//                        .setIcon(R.drawable.selector_ic_spannable)
+        );
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+                        .setText("UpdateData")
+//                        .setIcon(R.drawable.ic_launcher)
         );
 
-        mSelectedLayoutId = DEFAULT_LAYOUT;
-        if (savedInstanceState != null) {
-            mSelectedLayoutId = savedInstanceState.getInt(ARG_SELECTED_LAYOUT_ID);
-        }
-
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(ARG_SELECTED_LAYOUT_ID, mSelectedLayoutId);
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d(LOGTAG, "keyCode=" + keyCode);
-        return super.onKeyDown(keyCode, event);
     }
 
     public class TabSelectedListener implements TabLayout.OnTabSelectedListener {
         private Fragment mFragment;
         private int[] layoutIds = {
+                R.layout.layout_metro_grid,
                 R.layout.layout_list,
                 R.layout.layout_grid,
                 R.layout.layout_grid2,
                 R.layout.layout_staggered_grid,
                 R.layout.layout_spannable_grid,
+                R.layout.layout_update_data_changed
         };
 
         public TabSelectedListener() {
@@ -115,13 +112,34 @@ public class MainActivity extends FragmentActivity {
             mFragment = (Fragment) getSupportFragmentManager().findFragmentByTag(position + "");
             FragmentTransaction mFt = getSupportFragmentManager().beginTransaction();
             if (mFragment == null) {
-                mFragment = LayoutFragment.newInstance(layoutIds[position]);
+                switch (layoutIds[position]) {
+                    case R.layout.layout_metro_grid:
+                        mFragment = MetroFragment.newInstance();
+                        break;
+                    case R.layout.layout_list:
+                        mFragment = ListFragment.newInstance();
+                        break;
+                    case R.layout.layout_grid:
+                        mFragment = GridFragment.newInstance();
+                        break;
+                    case R.layout.layout_grid2:
+                        mFragment = V7GridFragment.newInstance();
+                        break;
+                    case R.layout.layout_staggered_grid:
+                        mFragment = StaggeredFragment.newInstance();
+                        break;
+                    case R.layout.layout_spannable_grid:
+                        mFragment = SpannableFragment.newInstance();
+                        break;
+                    case R.layout.layout_update_data_changed:
+                        mFragment = UpdateDataFragment.newInstance();
+                        break;
+                }
                 mFt.add(R.id.content, mFragment, String.valueOf(position));
             } else {
                 mFt.attach(mFragment);
             }
             mFt.commit();
-            mSelectedLayoutId = layoutIds[position];
         }
 
         @Override
