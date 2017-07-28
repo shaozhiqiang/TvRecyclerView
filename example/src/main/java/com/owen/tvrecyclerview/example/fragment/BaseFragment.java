@@ -17,6 +17,7 @@
 package com.owen.tvrecyclerview.example.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.owen.tvrecyclerview.example.R;
+import com.owen.tvrecyclerview.example.focus.FocusBorder;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -41,6 +43,7 @@ public abstract class BaseFragment extends Fragment {
     private TextView mCountText;
     private TextView mStateText;
     protected Toast mToast;
+    protected FocusBorder mFocusBorder;
     private Unbinder unbinder;
 
     private RecyclerView mRecyclerView;
@@ -58,6 +61,20 @@ public abstract class BaseFragment extends Fragment {
     };
     
     abstract int getLayoutId();
+    
+    protected void onMoveFocusBorder(View focusedView, float scale) {
+        if(null != mFocusBorder) {
+            mFocusBorder.onFocus(focusedView, FocusBorder.OptionsFactory.get(scale, scale));
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(getActivity() instanceof FocusBorderHelper) {
+            mFocusBorder = ((FocusBorderHelper)getActivity()).getFocusBorder();
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,4 +160,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    public interface FocusBorderHelper {
+        FocusBorder getFocusBorder();
+    }
 }

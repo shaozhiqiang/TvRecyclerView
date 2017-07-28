@@ -25,9 +25,8 @@ import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.example.adapter.MetroAdapter;
-import com.owen.tvrecyclerview.example.bridge.MainUpView;
-import com.owen.tvrecyclerview.example.bridge.RecyclerViewBridge;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
+import com.owen.tvrecyclerview.example.focus.FocusBorder;
 import com.owen.tvrecyclerview.widget.MetroGridLayoutManager;
 import com.owen.tvrecyclerview.widget.MetroTitleItemDecoration;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -44,9 +43,6 @@ public class MetroFragment extends BaseFragment {
     
     @BindView(R.id.list_menu) TvRecyclerView mMenuView;
     
-    @BindView(R.id.mainUpView1) MainUpView mainUpView1;
-    
-    private RecyclerViewBridge mRecyclerViewBridge;
     private MetroAdapter mAdapter;
     private MenuAdapter mMenuAdapter;
     private int mCurSelectedMenuPosition = 0;
@@ -59,12 +55,6 @@ public class MetroFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // 移动框
-        mainUpView1.setEffectBridge(new RecyclerViewBridge());
-        mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
-        mRecyclerViewBridge.setUpRectResource(R.drawable.test_rectangle);
-        mainUpView1.setDrawUpRectPadding(6);
 
         setListener();
         
@@ -81,7 +71,7 @@ public class MetroFragment extends BaseFragment {
         mRecyclerView.setSpacingWithMargins(10, 10);//设置行列间距
         mRecyclerView.setAdapter(mAdapter);
     }
-    
+
     private void setListener() {
         setScrollListener(mRecyclerView);
         
@@ -102,24 +92,15 @@ public class MetroFragment extends BaseFragment {
                             break;
                     }
                 }
-                mRecyclerViewBridge.setFocusView(itemView, 1.1f);
-            }
-
-            @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setUnFocusView(itemView);
+                mFocusBorder.onFocus(itemView, FocusBorder.OptionsFactory.get(1.1f, 1.1f));
             }
         });
         
         mRecyclerView.setOnItemListener(new SimpleOnItemListener() {
-            @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setUnFocusView(itemView);
-            }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setFocusView(itemView, 1.1f);
+                mFocusBorder.onFocus(itemView, FocusBorder.OptionsFactory.get(1.1f, 1.1f));
             }
 
             @Override
@@ -133,7 +114,7 @@ public class MetroFragment extends BaseFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(mMenuView.hasFocus() && !hasFocus)
                     return;
-                mRecyclerViewBridge.setVisibleWidget(!hasFocus);
+                mFocusBorder.setVisible(hasFocus);
             }
         });
         
@@ -142,7 +123,7 @@ public class MetroFragment extends BaseFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(mRecyclerView.hasFocus() && !hasFocus)
                     return;
-                mRecyclerViewBridge.setVisibleWidget(!hasFocus);
+                mFocusBorder.setVisible(hasFocus);
             }
         });
 

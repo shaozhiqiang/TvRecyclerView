@@ -22,6 +22,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.owen.tvrecyclerview.example.focus.FocusBorder;
+import com.owen.tvrecyclerview.example.fragment.BaseFragment;
 import com.owen.tvrecyclerview.example.fragment.GridFragment;
 import com.owen.tvrecyclerview.example.fragment.ListFragment;
 import com.owen.tvrecyclerview.example.fragment.MetroFragment;
@@ -36,10 +38,12 @@ import com.owen.tvrecyclerview.utils.Loger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements BaseFragment.FocusBorderHelper{
     private final String LOGTAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.tab_layout) TvTabLayout mTabLayout;
+    
+    private FocusBorder mFocusBorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,11 @@ public class MainActivity extends FragmentActivity {
         ButterKnife.bind(this);
         
         Loger.isDebug = true; //是否打开TvRecyclerView的log打印
+
+        // 移动框
+        if(null == mFocusBorder) {
+            mFocusBorder = new FocusBorder.Builder().asDrawable().borderResId(R.drawable.focus).build(this);
+        }
         
         mTabLayout.setScaleValue(1.1f);
         mTabLayout.addOnTabSelectedListener(new TabSelectedListener());
@@ -88,6 +97,11 @@ public class MainActivity extends FragmentActivity {
 //                        .setIcon(R.drawable.ic_launcher)
         );
 
+    }
+
+    @Override
+    public FocusBorder getFocusBorder() {
+        return mFocusBorder;
     }
 
     public class TabSelectedListener implements TabLayout.OnTabSelectedListener {

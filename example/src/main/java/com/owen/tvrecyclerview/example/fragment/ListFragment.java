@@ -21,8 +21,6 @@ import android.view.View;
 
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.adapter.ListAdapter;
-import com.owen.tvrecyclerview.example.bridge.MainUpView;
-import com.owen.tvrecyclerview.example.bridge.RecyclerViewBridge;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -35,9 +33,6 @@ public class ListFragment extends BaseFragment {
     
     @BindView(R.id.list_v7) TvRecyclerView mRecyclerViewV7;
     
-    @BindView(R.id.mainUpView1) MainUpView mainUpView1;
-    
-    private RecyclerViewBridge mRecyclerViewBridge;
     private ListAdapter mAdapter;
     private ListAdapter mV7Adapter;
 
@@ -49,12 +44,6 @@ public class ListFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // 移动框
-        mainUpView1.setEffectBridge(new RecyclerViewBridge());
-        mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
-        mRecyclerViewBridge.setUpRectResource(R.drawable.test_rectangle);
-        mainUpView1.setDrawUpRectPadding(6);
 
         setListener();
 
@@ -76,14 +65,10 @@ public class ListFragment extends BaseFragment {
         setScrollListener(mRecyclerView);
 
         mRecyclerViewV7.setOnItemListener(new SimpleOnItemListener() {
-            @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setUnFocusView(itemView);
-            }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setFocusView(itemView, 1.1f);
+                onMoveFocusBorder(itemView, 1.1f);
             }
 
             @Override
@@ -93,14 +78,10 @@ public class ListFragment extends BaseFragment {
         });
         
         mRecyclerView.setOnItemListener(new SimpleOnItemListener() {
-            @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setUnFocusView(itemView);
-            }
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setFocusView(itemView, 1.1f);
+                onMoveFocusBorder(itemView, 1.1f);
             }
 
             @Override
@@ -114,7 +95,7 @@ public class ListFragment extends BaseFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(mRecyclerView.hasFocus() && !hasFocus)
                     return;
-                mRecyclerViewBridge.setVisibleWidget(!hasFocus);
+                mFocusBorder.setVisible(hasFocus);
             }
         });
 
@@ -123,7 +104,7 @@ public class ListFragment extends BaseFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(mRecyclerViewV7.hasFocus() && !hasFocus)
                     return;
-                mRecyclerViewBridge.setVisibleWidget(!hasFocus);
+                mFocusBorder.setVisible(hasFocus);
             }
         });
 

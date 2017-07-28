@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
-import static com.owen.tvrecyclerview.widget.TvRecyclerView.TAG_KEY_X;
-import static com.owen.tvrecyclerview.widget.TvRecyclerView.TAG_KEY_Y;
 
 /**
  * Created by owen on 2017/6/22.
@@ -263,14 +261,17 @@ public class MetroGridLayoutManager extends GridLayoutManager {
             if (mIsIntelligentScroll && suportIntelligentScroll && parent instanceof TvRecyclerView) {
                 getDecoratedBoundsWithMargins(child, mTempRect);
                 final TvRecyclerView recyclerView = (TvRecyclerView) parent;
-                final int offset = direction == Direction.END ?
+                final int offset = isVertical() ? 
+                        (direction == Direction.END ?
                         mTempRect.top - getPaddingTop() - recyclerView.getSelectedItemOffsetStart() :
-                        -(recyclerView.getHeight() - mTempRect.bottom - getPaddingBottom() - recyclerView.getSelectedItemOffsetEnd());
-                int dx = !isVertical() && ViewCompat.canScrollHorizontally(parent, offset) ? offset : 0;
-                int dy = isVertical() && ViewCompat.canScrollVertically(parent, offset) ? offset : 0;
+                        -(recyclerView.getHeight() - mTempRect.bottom - getPaddingBottom() - recyclerView.getSelectedItemOffsetEnd()))
+                        : (direction == Direction.END ?
+                        mTempRect.left - getPaddingLeft() - recyclerView.getSelectedItemOffsetStart() :
+                        -(recyclerView.getWidth() - mTempRect.right - getPaddingRight() - recyclerView.getSelectedItemOffsetEnd()));
+                final int dx = !isVertical() && ViewCompat.canScrollHorizontally(parent, offset) ? offset : 0;
+                final int dy = isVertical() && ViewCompat.canScrollVertically(parent, offset) ? offset : 0;
+                
                 Loger.d("dx=" + dx + " dy=" + dy);
-                child.setTag(TAG_KEY_X, dx);
-                child.setTag(TAG_KEY_Y, dy);
                 recyclerView.smoothScrollBy(dx, dy);
                 resutl = true;
             }

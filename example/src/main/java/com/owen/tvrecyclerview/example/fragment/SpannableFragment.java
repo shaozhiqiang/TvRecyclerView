@@ -22,9 +22,8 @@ import android.view.View;
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.SpannableAdapter;
-import com.owen.tvrecyclerview.example.bridge.MainUpView;
-import com.owen.tvrecyclerview.example.bridge.RecyclerViewBridge;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
+import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import butterknife.BindView;
@@ -33,9 +32,6 @@ public class SpannableFragment extends BaseFragment {
 
     @BindView(R.id.list) TvRecyclerView mRecyclerView;
     
-    @BindView(R.id.mainUpView1) MainUpView mainUpView1;
-    
-    private RecyclerViewBridge mRecyclerViewBridge;
     private CommonRecyclerViewAdapter mAdapter;
 
     public static SpannableFragment newInstance() {
@@ -46,12 +42,6 @@ public class SpannableFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // 移动框
-        mainUpView1.setEffectBridge(new RecyclerViewBridge());
-        mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
-        mRecyclerViewBridge.setUpRectResource(R.drawable.test_rectangle);
-        mainUpView1.setDrawUpRectPadding(6);
 
         setListener();
 
@@ -71,15 +61,11 @@ public class SpannableFragment extends BaseFragment {
     private void setListener() {
         setScrollListener(mRecyclerView);
         
-        mRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
-            @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setUnFocusView(itemView);
-            }
+        mRecyclerView.setOnItemListener(new SimpleOnItemListener() {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                mRecyclerViewBridge.setFocusView(itemView, 1.1f);
+                onMoveFocusBorder(itemView, 1.1f);
             }
 
             @Override
@@ -91,7 +77,7 @@ public class SpannableFragment extends BaseFragment {
         mRecyclerView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                mRecyclerViewBridge.setVisibleWidget(!hasFocus);
+                mFocusBorder.setVisible(hasFocus);
             }
         });
 

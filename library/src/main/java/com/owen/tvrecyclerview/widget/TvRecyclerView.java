@@ -18,6 +18,7 @@ package com.owen.tvrecyclerview.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -33,6 +34,7 @@ import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 
 import com.owen.tvrecyclerview.R;
 import com.owen.tvrecyclerview.TwoWayLayoutManager;
@@ -42,8 +44,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class TvRecyclerView extends RecyclerView implements View.OnClickListener, View.OnFocusChangeListener{
-    public static final int TAG_KEY_X = R.id.tag_offset_x;
-    public static final int TAG_KEY_Y = R.id.tag_offset_y;
     private static final int DEFAULT_LOAD_MORE_BEFOREHAND_COUNT = 4;
     private static final Class<?>[] LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE =
             new Class[]{Context.class, AttributeSet.class, int.class};
@@ -75,6 +75,8 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     private final IRecyclerViewDataObserver mDataObserver = new IRecyclerViewDataObserver();
     private boolean mShouldReverseLayout = true;
     private boolean mOptimizeLayout;
+    
+    protected int mScrollX, mScrollY;
 
     public TvRecyclerView(Context context) {
         this(context, null);
@@ -480,11 +482,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     public void onScrollStateChanged(int state) {
         if(state == SCROLL_STATE_IDLE) {
-            final View focusedView = getFocusedChild();
-            if(null != focusedView) {
-                focusedView.setTag(TAG_KEY_X, 0);
-                focusedView.setTag(TAG_KEY_Y, 0);
-            }
+            setScrollValue(0, 0);
 
             // 加载更多回调
             if(null != mOnLoadMoreListener && !mLoadingMore && mHasMoreData) {
@@ -494,6 +492,16 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             }
         }
         super.onScrollStateChanged(state);
+    }
+
+    private Point mScrollPoint = new Point();
+    void setScrollValue(int x, int y) {
+        if(x != 0 || y != 0) {
+            mScrollPoint.set(x, y);
+            setTag(mScrollPoint);
+        } else {
+            setTag(null);
+        }
     }
     
     @Override
@@ -507,14 +515,11 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                     : (getFreeHeight() - mTempRect.height())) / 2;
             mSelectedItemOffsetEnd = mSelectedItemOffsetStart;
         }
-        
+
         int[] scrollAmount = getChildRectangleOnScreenScrollAmount2(child, rect, mSelectedItemOffsetStart, mSelectedItemOffsetEnd);
         int dx = scrollAmount[0];
         int dy = scrollAmount[1];
         Loger.i("dx="+dx+" dy="+dy);
-
-        child.setTag(TAG_KEY_X, dx);
-        child.setTag(TAG_KEY_Y, dy);
 
         if (dx != 0 || dy != 0) {
             if (immediate) {
@@ -530,7 +535,13 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
         return false;
     }
-    
+
+    @Override
+    public void smoothScrollBy(int dx, int dy, Interpolator interpolator) {
+        setScrollValue(dx, dy);
+        super.smoothScrollBy(dx, dy, interpolator);
+    }
+
     private boolean isFocusedChildVisibleAfterScrolling(RecyclerView parent, int dx, int dy) {
         final View focusedChild = parent.getFocusedChild();
         if (focusedChild == null) {
