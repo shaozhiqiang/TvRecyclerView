@@ -521,12 +521,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         int dy = scrollAmount[1];
         Loger.i("dx="+dx+" dy="+dy);
 
+        smoothScrollBy(dx, dy);
+
         if (dx != 0 || dy != 0) {
-            if (immediate) {
-                scrollBy(dx, dy);
-            } else {
-                smoothScrollBy(dx, dy);
-            }
             return true;
         }
 

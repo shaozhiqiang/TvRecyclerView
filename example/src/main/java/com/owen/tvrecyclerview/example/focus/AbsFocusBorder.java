@@ -18,7 +18,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -235,7 +234,6 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
                 if (null != tag && tag instanceof Point) {
                     point = (Point) tag;
                     rect.offset(-point.x, -point.y);
-                    rv.setTag(null);
 //                    Log.i("@!@!", "point.x="+point.x+" point.y="+point.y);
                 }
                 if(null == tag && rv.getScrollState() != RecyclerView.SCROLL_STATE_IDLE
