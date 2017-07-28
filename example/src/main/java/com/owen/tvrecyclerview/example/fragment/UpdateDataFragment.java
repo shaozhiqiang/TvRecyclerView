@@ -23,8 +23,6 @@ import android.view.View;
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewHolder;
-import com.owen.tvrecyclerview.example.bridge.MainUpView;
-import com.owen.tvrecyclerview.example.bridge.RecyclerViewBridge;
 import com.owen.tvrecyclerview.example.data.ItemBean;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -42,9 +40,6 @@ public class UpdateDataFragment extends BaseFragment {
     @BindView(R.id.rv_v7grid) TvRecyclerView mV7GridView;
     @BindView(R.id.rv_grid) TvRecyclerView mGridView;
     
-    @BindView(R.id.mainUpView1) MainUpView mainUpView1;
-    
-    private RecyclerViewBridge mRecyclerViewBridge;
     private CommonRecyclerViewAdapter mV7GridAdapter;
     private CommonRecyclerViewAdapter mGridAdapter;
     
@@ -60,12 +55,6 @@ public class UpdateDataFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // 移动框
-        mainUpView1.setEffectBridge(new RecyclerViewBridge());
-        mRecyclerViewBridge = (RecyclerViewBridge) mainUpView1.getEffectBridge();
-        mRecyclerViewBridge.setUpRectResource(R.drawable.test_rectangle);
-        mainUpView1.setDrawUpRectPadding(6);
 
         setListener();
 
