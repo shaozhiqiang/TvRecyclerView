@@ -17,9 +17,6 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <item name="tag_offset_x" type="id" />
-    <item name="tag_offset_y" type="id" />
-    
     <declare-styleable name="TvRecyclerView">
         <attr name="android:orientation" tools:ignore="ResourceName"/>
         <attr name="tv_layoutManager" format="string"/>

@@ -9,13 +9,7 @@
 
 ### 效果
 
-![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/img_spannable.png)
-
-![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/img_staggered.png)
-
-![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/img_grid.png)
-
-![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/img_list.png)
+![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/img_all.gif)
 
 ### Android Studio 集成
 
