@@ -35,7 +35,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 
-import com.owen.tvrecyclerview.utils.Loger;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import java.util.List;
@@ -202,13 +201,13 @@ public abstract class TwoWayLayoutManager extends LayoutManager implements Recyc
     }
     
     // add by zhousuqiang
-    public boolean cannotScrollBackward(int delta) {
+    public boolean cannotScrollForward(int delta) {
         return  (getFirstVisiblePosition() == 0 &&
                 mLayoutStart >= getStartWithPadding() && delta <= 0);
     }
 
     // add by zhousuqiang
-    public boolean cannotScrollForward(int delta) {
+    public boolean cannotScrollBackward(int delta) {
         return (getFirstVisiblePosition() + getChildCount() == getItemCount() &&
                 mLayoutEnd <= getEndWithPadding() && delta >= 0);
     }
@@ -866,8 +865,8 @@ public abstract class TwoWayLayoutManager extends LayoutManager implements Recyc
             return new PointF(0, direction);
         }
     }
-
-    @Override
+    
+   /* @Override
     public int computeHorizontalScrollOffset(State state) {
         return computeScrollOffset(state, false);
     }
@@ -883,11 +882,13 @@ public abstract class TwoWayLayoutManager extends LayoutManager implements Recyc
         }
         
         final int position = getFirstVisiblePosition();
-        final boolean start = isVertical ? getChildAt(0).getTop() < getPaddingTop() 
+        final boolean start = isVertical ? getChildAt(0).getTop() < getPaddingTop()
                 : getChildAt(0).getLeft() < getPaddingLeft();
+        Loger.i("FirstVisiblePosition="+position+" start="+start);
         if(position == 0 && start) {
             return position + 1;
         }
+        
         final boolean end = isVertical ? getChildAt(getChildCount()-1).getBottom() > getHeight() 
                 : getChildAt(getChildCount()-1).getRight() > getWidth();
         Loger.i("LastVisiblePosition="+getLastVisiblePosition() +" FirstVisiblePosition="+position +" range="+(state.getItemCount() - getChildCount() - 1));
@@ -896,7 +897,7 @@ public abstract class TwoWayLayoutManager extends LayoutManager implements Recyc
         }
 
         return position;
-    }
+    }*/
 
     @Override
     public int computeHorizontalScrollExtent(State state) {

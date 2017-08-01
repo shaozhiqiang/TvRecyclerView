@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity implements BaseFragment.Focus
         ButterKnife.bind(this);
         
         Loger.isDebug = true; //是否打开TvRecyclerView的log打印
-
+        
         // 移动框
         if(null == mFocusBorder) {
             mFocusBorder = new FocusBorder.Builder().asDrawable().borderResId(R.drawable.focus).build(this);

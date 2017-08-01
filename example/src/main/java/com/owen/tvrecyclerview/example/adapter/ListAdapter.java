@@ -35,6 +35,6 @@ public class ListAdapter extends CommonRecyclerViewAdapter<ItemBean> {
 
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, ItemBean item, int position) {
-
+        helper.getHolder().setText(R.id.title, String.valueOf(position));
     }
 }

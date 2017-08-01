@@ -24,10 +24,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.FocusFinder;
@@ -465,7 +463,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             view.requestFocus();
         }
         else {
-            TvSmoothScroller scroller = new TvSmoothScroller(getContext(), true);
+            TvSmoothScroller scroller = new TvSmoothScroller(getContext(), true, true, mSelectedItemOffsetStart);
             scroller.setTargetPosition(position);
             getLayoutManager().startSmoothScroll(scroller);
         }
@@ -700,20 +698,38 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                 return start;
             }
         }
-        // focusView未超出下/右边界，但边距小于指定offset
-        else if(Math.abs(end) > 0 && Math.abs(end) < offsetEnd 
-                && (ViewCompat.canScrollHorizontally(this, 1) || ViewCompat.canScrollVertically(this, 1))) {
-            return offsetEnd - Math.abs(end);
-        }
         // focusView未超出上/左边界，但边距小于指定offset
         else if(start > 0 && start < offsetStart
                 && (ViewCompat.canScrollHorizontally(this, -1) || ViewCompat.canScrollVertically(this, -1))) {
             return start - offsetStart;
         }
+        // focusView未超出下/右边界，但边距小于指定offset
+        else if(Math.abs(end) > 0 && Math.abs(end) < offsetEnd
+                && (ViewCompat.canScrollHorizontally(this, 1) || ViewCompat.canScrollVertically(this, 1))) {
+            return offsetEnd - Math.abs(end);
+        }
         
         return 0;
     }
-    
+
+    @Override
+    public boolean canScrollHorizontally(int direction) {
+        if(null != getLayoutManager() && getLayoutManager() instanceof  TwoWayLayoutManager) {
+            final TwoWayLayoutManager lm = (TwoWayLayoutManager) getLayoutManager();
+            return lm.canScrollHorizontally() && (direction > 0 ? !lm.cannotScrollBackward(direction) : !lm.cannotScrollForward(direction));
+        }
+        return super.canScrollHorizontally(direction);
+    }
+
+    @Override
+    public boolean canScrollVertically(int direction) {
+        if(null != getLayoutManager() && getLayoutManager() instanceof  TwoWayLayoutManager) {
+            final TwoWayLayoutManager lm = (TwoWayLayoutManager) getLayoutManager();
+            return lm.canScrollVertically() && (direction > 0 ? !lm.cannotScrollBackward(direction) : !lm.cannotScrollForward(direction));
+        }
+        return super.canScrollVertically(direction);
+    }
+
     /**
      * 通过Margins来设置布局的横纵间距；
      * (与addItemDecoration()方法可二选一)
@@ -773,39 +789,58 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         else
             return getChildAdapterPosition(getChildAt(childCount - 1));
     }
-    
+
+    /**
+     * @deprecated Use {@link #scrollToPosition(int)} and
+     *             {@link #scrollToPositionWithOffset(int, int)}
+     * @param position
+     */
+    @Deprecated
     public void scrollToPositionWithOffsetStart(int position) {
-        scrollToPositionWithOffset(position, mSelectedItemOffsetStart);
+        scrollToPositionWithOffset(position, mSelectedItemOffsetStart, false);
     }
     
     public void scrollToPositionWithOffset(int position, int offset) {
-        mSelectedPosition = position;
+        scrollToPositionWithOffset(position, offset, false);
+    }
+    
+    public void scrollToPositionWithOffset(int position, int offset, boolean isRequestFocus) {
+
+        /*mSelectedPosition = position;
         mShouldReverseLayout = true;
         final LayoutManager layoutManager = getLayoutManager();
-        if(layoutManager instanceof TwoWayLayoutManager) {
-            ((TwoWayLayoutManager) layoutManager).scrollToPositionWithOffset(position, offset);
-            return;
-        } else if (layoutManager instanceof android.support.v7.widget.LinearLayoutManager) {
+        if (layoutManager instanceof android.support.v7.widget.LinearLayoutManager) {
             ((LinearLayoutManager)layoutManager).scrollToPositionWithOffset(position, offset);
             return;
         } else if (layoutManager instanceof android.support.v7.widget.StaggeredGridLayoutManager) {
-            ((StaggeredGridLayoutManager)layoutManager).scrollToPositionWithOffset(position, offset);
+            ((android.support.v7.widget.StaggeredGridLayoutManager)layoutManager).scrollToPositionWithOffset(position, offset);
             return;
-        }
-        super.scrollToPosition(position);
+        } */
+        
+        scrollToPosition(position, isRequestFocus, false, offset);
     }
 
     @Override
     public void scrollToPosition(int position) {
-        mSelectedPosition = position;
-        mShouldReverseLayout = true;
-        super.scrollToPosition(position);
+        scrollToPosition(position, false);
+    }
+    
+    public void scrollToPosition(int position, boolean isRequestFocus) {
+        scrollToPosition(position, isRequestFocus, false, mSelectedItemOffsetStart);
     }
 
     @Override
     public void smoothScrollToPosition(int position) {
+        smoothScrollToPosition(position, false);
+    }
+    
+    public void smoothScrollToPosition(int position, boolean isRequestFocus) {
+        scrollToPosition(position, isRequestFocus, true, mSelectedItemOffsetStart);
+    }
+    
+    private void scrollToPosition(int position, boolean isRequestFocus, boolean isSmooth, int offset) {
         mSelectedPosition = position;
-        TvSmoothScroller smoothScroller = new TvSmoothScroller(getContext(), false);
+        TvSmoothScroller smoothScroller = new TvSmoothScroller(getContext(), isRequestFocus, isSmooth, offset);
         smoothScroller.setTargetPosition(position);
         getLayoutManager().startSmoothScroll(smoothScroller);
     }
@@ -999,7 +1034,6 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         void onItemClick(TvRecyclerView parent, View itemView, int position);
     }
 
-
     @Override
     protected Parcelable onSaveInstanceState() {
         RecyclerView.SavedState superSavedState = (RecyclerView.SavedState) super.onSaveInstanceState();
@@ -1121,15 +1155,35 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     
     private class TvSmoothScroller extends LinearSmoothScroller {
         private boolean mRequestFocus;
+        private boolean mIsSmooth;
+        private int mOffset;
 
-        public TvSmoothScroller(Context context, boolean isRequestFocus) {
+        public TvSmoothScroller(Context context, boolean isRequestFocus, boolean isSmooth, int offset) {
             super(context);
             mRequestFocus = isRequestFocus;
+            mIsSmooth = isSmooth;
+            mOffset = offset;
+        }
+
+        @Override
+        protected int calculateTimeForScrolling(int dx) {
+            return mIsSmooth ? super.calculateTimeForScrolling(dx) : 
+                    ((int) Math.ceil(Math.abs(dx) * (11f / getContext().getResources().getDisplayMetrics().densityDpi)));
+        }
+
+        @Override
+        protected void onTargetFound(View targetView, State state, Action action) {
+            if(mSelectedItemCentered && null != getLayoutManager()) {
+                getDecoratedBoundsWithMargins(targetView, mTempRect);
+                mOffset = (getLayoutManager().canScrollHorizontally() ? (getFreeWidth() - mTempRect.width())
+                        : (getFreeHeight() - mTempRect.height())) / 2;
+            }
+            super.onTargetFound(targetView, state, action);
         }
 
         @Override
         public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int snapPreference) {
-            return boxStart - viewStart + mSelectedItemOffsetStart;
+            return boxStart - viewStart + mOffset;
         }
 
         @Override

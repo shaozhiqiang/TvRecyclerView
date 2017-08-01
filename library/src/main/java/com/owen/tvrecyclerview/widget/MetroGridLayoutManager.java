@@ -166,6 +166,12 @@ public class MetroGridLayoutManager extends GridLayoutManager {
     }
 
     @Override
+    protected void layoutChild(View child, Direction direction) {
+        
+        super.layoutChild(child, direction);
+    }
+    
+    @Override
     protected void moveLayoutToPosition(int position, int offset, RecyclerView.Recycler recycler, RecyclerView.State state) {
         final boolean isVertical = isVertical();
         final Lanes lanes = getLanes();
@@ -246,7 +252,7 @@ public class MetroGridLayoutManager extends GridLayoutManager {
             lp.isSectionStart = entry.isSectionStart;
         }
         
-        Loger.i("cacheChildLaneAndSpan position="+position + " lp.isSectionStart="+lp.isSectionStart);
+        Loger.i("cacheChildLaneAndSpan position="+position + " lp.isSectionStart="+lp.isSectionStart + " TopDecorationHeight="+getTopDecorationHeight(child));
 
         return entry;
     }

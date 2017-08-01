@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -445,19 +446,19 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             mScrolledX = Math.abs(dx) == 1 ? 0 : dx;
             mScrolledY = Math.abs(dy) == 1 ? 0 : dy;
-//            Log.i("@!@!", "onScrolled...dx="+dx+" dy="+dy);
+            Log.i("@!@!", "onScrolled...dx="+dx+" dy="+dy);
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             if(newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                Log.i("@!@!", "onScrollStateChanged...IDLE");
+                Log.i("@!@!", "onScrollStateChanged...IDLE");
                 final AbsFocusBorder border = mFocusBorder.get();
                 final View focused = recyclerView.getFocusedChild();
 //                Log.i("@!@!", "onScrollStateChanged...border is null = " + (null == border));
                 if(null != border && null != focused) {
                     if (border.mReAnim || mScrolledX != 0 || mScrolledY != 0) {
-//                        Log.i("@!@!", "onScrollStateChanged...scleX = " + Options.OptionsHolder.INSTANCE.scaleX + " scleY = "+Options.OptionsHolder.INSTANCE.scaleY);
+                        Log.i("@!@!", "onScrollStateChanged...scleX = " + Options.OptionsHolder.INSTANCE.scaleX + " scleY = "+Options.OptionsHolder.INSTANCE.scaleY);
                         border.runBorderAnimation(focused, Options.OptionsHolder.INSTANCE);
                     }
                 }

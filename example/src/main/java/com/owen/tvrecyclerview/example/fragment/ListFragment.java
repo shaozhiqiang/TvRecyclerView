@@ -26,6 +26,7 @@ import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class ListFragment extends BaseFragment {
 
@@ -52,13 +53,26 @@ public class ListFragment extends BaseFragment {
         mRecyclerViewV7.setSpacingWithMargins(10, 0);
 
         mAdapter = new ListAdapter(getContext(), false);
-        mAdapter.setDatas(ItemDatas.getDatas(40));
+        mAdapter.setDatas(ItemDatas.getDatas(64));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setSelectedItemAtCentered(true);
+//        mRecyclerView.setSelectedItemOffset(30, 30);
 
         mV7Adapter = new ListAdapter(getContext(), true);
         mV7Adapter.setDatas(ItemDatas.getDatas(20));
         mRecyclerViewV7.setAdapter(mV7Adapter);
 
+    }
+    
+    @OnClick(R.id.btn2) void btn2() {
+//        mRecyclerView.scrollToPositionWithOffset(30, 80);
+//        mRecyclerView.smoothScrollToPosition(40);
+//        mRecyclerView.scrollToPosition(13, true);
+        mRecyclerView.scrollToPosition(63);
+    }
+    
+    @OnClick(R.id.btn3) void btn3() {
+        mRecyclerView.scrollToPosition(0);
     }
     
     private void setListener() {
