@@ -82,7 +82,7 @@ public class ListFragment extends BaseFragment {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f);
+                onMoveFocusBorder(itemView, 1.1f, 0);
             }
 
             @Override
@@ -95,7 +95,7 @@ public class ListFragment extends BaseFragment {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f);
+                onMoveFocusBorder(itemView, 1.1f, 0);
             }
 
             @Override

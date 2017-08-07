@@ -26,7 +26,7 @@ import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.example.adapter.MetroAdapter;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
-import com.owen.tvrecyclerview.example.focus.FocusBorder;
+import com.owen.tvrecyclerview.utils.DensityUtil;
 import com.owen.tvrecyclerview.widget.MetroGridLayoutManager;
 import com.owen.tvrecyclerview.widget.MetroTitleItemDecoration;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -92,7 +92,7 @@ public class MetroFragment extends BaseFragment {
                             break;
                     }
                 }
-                mFocusBorder.onFocus(itemView, FocusBorder.OptionsFactory.get(1.1f, 1.1f));
+                onMoveFocusBorder(itemView, 1.1f, 0);
             }
         });
         
@@ -100,7 +100,7 @@ public class MetroFragment extends BaseFragment {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                mFocusBorder.onFocus(itemView, FocusBorder.OptionsFactory.get(1.1f, 1.1f));
+                onMoveFocusBorder(itemView, 1.1f, DensityUtil.dip2px(getContext(), 10));
             }
 
             @Override

@@ -68,6 +68,12 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    protected void onMoveFocusBorder(View focusedView, float scale, float roundRadius) {
+        if(null != mFocusBorder) {
+            mFocusBorder.onFocus(focusedView, FocusBorder.OptionsFactory.get(scale, scale, roundRadius));
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

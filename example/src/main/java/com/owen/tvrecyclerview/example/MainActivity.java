@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.owen.tvrecyclerview.example.focus.FocusBorder;
 import com.owen.tvrecyclerview.example.fragment.BaseFragment;
@@ -44,7 +45,7 @@ public class MainActivity extends FragmentActivity implements BaseFragment.Focus
     @BindView(R.id.tab_layout) TvTabLayout mTabLayout;
     
     private FocusBorder mFocusBorder;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +56,14 @@ public class MainActivity extends FragmentActivity implements BaseFragment.Focus
         
         // 移动框
         if(null == mFocusBorder) {
-            mFocusBorder = new FocusBorder.Builder().asDrawable().borderResId(R.drawable.focus).build(this);
+//            mFocusBorder = new FocusBorder.Builder().asDrawable().borderResId(R.drawable.focus).build(this);
+            mFocusBorder = new FocusBorder.Builder()
+                    .asColor()
+                    .borderColor(getResources().getColor(R.color.actionbar_color))
+                    .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 2)
+                    .shadowColor(getResources().getColor(R.color.green_bright))
+                    .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 18)
+                    .build(this);
         }
         
         mTabLayout.setScaleValue(1.1f);

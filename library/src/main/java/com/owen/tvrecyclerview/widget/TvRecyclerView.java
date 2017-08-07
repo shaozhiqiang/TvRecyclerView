@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.FocusFinder;
@@ -118,6 +119,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
         setFocusable(true);
         setFocusableInTouchMode(true);
+        
+        //修复adapter.notifyItemChanged时焦点闪烁的问题
+        ((SimpleItemAnimator)getItemAnimator()).setSupportsChangeAnimations(false);
     }
     
     /**
@@ -981,7 +985,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     
     @Override
     public void onChildAttachedToWindow(View child) {
-        if(!ViewCompat.hasOnClickListeners(child)) {
+        if(child.isClickable() && !ViewCompat.hasOnClickListeners(child)) {
             child.setOnClickListener(this);
         }
         if(child.isFocusable() && null == child.getOnFocusChangeListener()) {

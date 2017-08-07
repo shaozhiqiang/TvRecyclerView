@@ -25,6 +25,7 @@
             android:padding="20dp"
             app:tv_selectedItemIsCentered="true"
             android:orientation="vertical"
+            app:tv_isMenu="true"
             app:tv_layoutManager="V7LinearLayoutManager"/>
     
         <Button

@@ -25,9 +25,6 @@
     <item android:state_activated="true"
           android:drawable="@color/item_border_color"/>
 
-    <item android:state_pressed="true"
-          android:drawable="@color/item_pressed_color"/>
-
     <item android:drawable="@color/item_default_color"/>
 
 </selector>

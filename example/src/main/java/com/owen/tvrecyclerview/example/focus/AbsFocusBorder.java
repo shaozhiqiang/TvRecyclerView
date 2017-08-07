@@ -67,6 +67,9 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
     private OnFocusCallback mOnFocusCallback;
     private boolean mIsVisible = false;
     
+    private float mScaleX;
+    private float mScaleY;
+    
     protected AbsFocusBorder(Context context, int shimmerColor, long shimmerDuration, boolean isShimmerAnim, long animDuration, RectF paddingOfsetRectF) {
         super(context);
         
@@ -96,7 +99,10 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         if (mShimmerAnimating) {
             canvas.save();
             mTempRectF.set(mFrameRectF);
-            mTempRectF.inset(2f, 2f);
+            mTempRectF.left += mPaddingOfsetRectF.left;
+            mTempRectF.top += mPaddingOfsetRectF.top;
+            mTempRectF.right -= mPaddingOfsetRectF.right;
+            mTempRectF.bottom -= mPaddingOfsetRectF.bottom;
             float shimmerTranslateX = mTempRectF.width() * mShimmerTranslate;
             float shimmerTranslateY = mTempRectF.height() * mShimmerTranslate;
             mShimmerGradientMatrix.setTranslate(shimmerTranslateX, shimmerTranslateY);
@@ -129,8 +135,13 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
     private void setShimmerAnimating(boolean shimmerAnimating) {
         mShimmerAnimating = shimmerAnimating;
         if(mShimmerAnimating) {
+            mTempRectF.set(mFrameRectF);
+            mTempRectF.left += mPaddingOfsetRectF.left;
+            mTempRectF.top += mPaddingOfsetRectF.top;
+            mTempRectF.right -= mPaddingOfsetRectF.right;
+            mTempRectF.bottom -= mPaddingOfsetRectF.bottom;
             mShimmerLinearGradient = new LinearGradient(
-                    0, 0, mFrameRectF.width(), mFrameRectF.height(),
+                    0, 0, mTempRectF.width(), mTempRectF.height(),
                     new int[]{0x00FFFFFF, 0x1AFFFFFF, mShimmerColor, 0x1AFFFFFF, 0x00FFFFFF},
                     new float[]{0f, 0.2f, 0.5f, 0.8f, 1f}, Shader.TileMode.CLAMP);
             mShimmerPaint.setShader(mShimmerLinearGradient);
@@ -214,6 +225,8 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         if (descendant == root) {
             return rect;
         }
+        
+        final View srcDescendant = descendant;
 
         ViewParent theParent = descendant.getParent();
         Object tag;
@@ -253,6 +266,9 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
             rect.offset(descendant.getLeft() - descendant.getScrollX(),
                     descendant.getTop() - descendant.getScrollY());
         } 
+        
+        rect.right = rect.left + srcDescendant.getMeasuredWidth();
+        rect.bottom = rect.top + srcDescendant.getMeasuredHeight();
         
         return rect;
     }
@@ -299,7 +315,9 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
 
     private void runFocusAnimation(View focusView, Options options) {
         setVisible(true);
-        runFocusScaleAnimation(focusView, options.scaleX, options.scaleY); // 焦点缩放动画
+        mScaleX = options.scaleX;
+        mScaleY = options.scaleY;
+        runFocusScaleAnimation(focusView, mScaleX, mScaleY); // 焦点缩放动画
         runBorderAnimation(focusView, options); // 移动边框的动画。
     }
     
@@ -333,21 +351,25 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
 
         final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
         final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
-        final int newWidth = (int) (focusView.getMeasuredWidth() * options.scaleX + paddingWidth);
-        final int newHeight = (int) (focusView.getMeasuredHeight() * options.scaleY + paddingHeight);
+        final int ofsetWidth = (int) (focusView.getMeasuredWidth() * (options.scaleX - 1f) + paddingWidth);
+        final int ofsetHeight = (int) (focusView.getMeasuredHeight() * (options.scaleY - 1f) + paddingHeight);
+        
         final Rect fromRect = findLocationWithView(this);
         final Rect toRect = findLocationWithView(focusView);
-        final int x = toRect.left - fromRect.left;
-        final int y = toRect.top - fromRect.top;
-        final float newX = x - Math.abs(focusView.getMeasuredWidth() - newWidth) / 2f;
-        final float newY = y - Math.abs(focusView.getMeasuredHeight() - newHeight) / 2f;
-
+        toRect.inset(-ofsetWidth/2, -ofsetHeight/2);
+        
+        final int newWidth = toRect.width();
+        final int newHeight = toRect.height();
+        final int newX = toRect.left - fromRect.left;
+        final int newY = toRect.top - fromRect.top;
+        
         final List<Animator> together = new ArrayList<>();
         final List<Animator> appendTogether = getTogetherAnimators(newX, newY, newWidth, newHeight, options);
         together.add(getTranslationXAnimator(newX));
         together.add(getTranslationYAnimator(newY));
         together.add(getWidthAnimator(newWidth));
         together.add(getHeightAnimator(newHeight));
+
         if(null != appendTogether && !appendTogether.isEmpty()) {
             together.addAll(appendTogether);
         }
@@ -458,8 +480,8 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
 //                Log.i("@!@!", "onScrollStateChanged...border is null = " + (null == border));
                 if(null != border && null != focused) {
                     if (border.mReAnim || mScrolledX != 0 || mScrolledY != 0) {
-                        Log.i("@!@!", "onScrollStateChanged...scleX = " + Options.OptionsHolder.INSTANCE.scaleX + " scleY = "+Options.OptionsHolder.INSTANCE.scaleY);
-                        border.runBorderAnimation(focused, Options.OptionsHolder.INSTANCE);
+                        Log.i("@!@!", "onScrollStateChanged...scleX = " + border.mScaleX + " scleY = "+border.mScaleY);
+                        border.runBorderAnimation(focused, Options.get(border.mScaleX, border.mScaleY));
                     }
                 }
                 mScrolledX = mScrolledY = 0;

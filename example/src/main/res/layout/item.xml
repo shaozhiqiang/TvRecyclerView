@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="@color/item_default_color"
-        android:focusable="true"
-        android:clickable="true">
+<com.owen.tvrecyclerview.example.RoundFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:background="@color/item_default_color"
+    app:rfl_radius="10dp"
+    android:focusable="true"
+    android:clickable="true">
 
         <ImageView
             android:id="@+id/image"
@@ -31,4 +34,4 @@
             android:padding="10dp"
             android:textSize="20sp"/>
 
-</FrameLayout>
+</com.owen.tvrecyclerview.example.RoundFrameLayout>

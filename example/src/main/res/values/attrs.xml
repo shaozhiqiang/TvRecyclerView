@@ -10,8 +10,8 @@
         <attr name="refle_spacing"  format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="RoundAngleFrameLayout">
-        <attr name="ral_radius" format="dimension" />
+    <declare-styleable name="RoundFrameLayout">
+        <attr name="rfl_radius" format="dimension" />
         <attr name="topLeftRadius" format="dimension" />
         <attr name="topRightRadius" format="dimension" />
         <attr name="bottomLeftRadius" format="dimension" />

@@ -23,6 +23,7 @@ import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.GridAdapter;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
+import com.owen.tvrecyclerview.utils.DensityUtil;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
@@ -65,7 +66,7 @@ public class GridFragment extends BaseFragment {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f);
+                onMoveFocusBorder(itemView, 1.1f, DensityUtil.dip2px(getContext(), 10));
             }
 
             @Override
