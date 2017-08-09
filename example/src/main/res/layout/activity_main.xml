@@ -12,12 +12,12 @@
         android:background="@color/actionbar_color"
         app:tabIndicatorResId="@color/green_bright"
         app:tabIndicatorGravity="bottom"
-        app:tabIndicatorHeight="3dp"
-        app:tabIndicatorWidth="160dp"
+        app:tabIndicatorHeight="4pt"
+        app:tabIndicatorWidth="160pt"
         app:tabGravity="center"
-        app:tabTexSize="18dp"
+        app:tabTexSize="24pt"
         app:tabTextColor="@drawable/selector_tab_font_color"
-        app:tabMinWidth="200dp"
+        app:tabMinWidth="160pt"
         app:tabScrollMode="fixed"/>
 
     <FrameLayout

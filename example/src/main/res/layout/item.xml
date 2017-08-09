@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="130pt"
     android:background="@color/item_default_color"
-    app:rfl_radius="10dp"
+    app:rfl_radius="10pt"
     android:focusable="true"
     android:clickable="true">
 
@@ -20,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@android:color/holo_green_dark"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:textSize="28sp"
+            android:layout_marginLeft="10pt"
+            android:layout_marginRight="10pt"
+            android:textSize="28pt"
             android:textStyle="bold"/>
         
         <TextView
@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:textColor="@android:color/holo_green_dark"
             android:gravity="bottom|right"
-            android:padding="10dp"
-            android:textSize="20sp"/>
+            android:padding="10pt"
+            android:textSize="20pt"/>
 
 </com.owen.tvrecyclerview.example.RoundFrameLayout>

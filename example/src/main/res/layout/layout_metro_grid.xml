@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="60dp"
-    android:paddingRight="60dp">
+    android:paddingLeft="60pt"
+    android:paddingRight="60pt">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:id="@+id/list_menu"
             style="@style/TwoWayView"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="150dp"
+            android:layout_width="180pt"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
@@ -25,7 +25,7 @@
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/list"
             style="@style/TwoWayView"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="30pt"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

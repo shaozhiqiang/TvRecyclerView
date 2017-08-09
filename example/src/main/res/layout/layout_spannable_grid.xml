@@ -10,14 +10,14 @@
 
         <Button
             android:id="@+id/btn1"
-            android:layout_width="50dp"
-            android:layout_height="500dp"
+            android:layout_width="50pt"
+            android:layout_height="500pt"
             android:text="b\nt\nn\n1"/>
 
         <Button
             android:id="@+id/btn2"
-            android:layout_width="50dp"
-            android:layout_height="500dp"
+            android:layout_width="50pt"
+            android:layout_height="500pt"
             android:layout_alignParentRight="true"
             android:text="b\nt\nn\n2"/>
 

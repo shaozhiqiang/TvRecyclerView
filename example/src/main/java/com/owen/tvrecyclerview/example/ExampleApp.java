@@ -1,0 +1,29 @@
+package com.owen.tvrecyclerview.example;
+
+import android.app.Application;
+import android.util.Log;
+
+import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
+
+/**
+ * Created by owen on 2017/8/8.
+ * 
+ */
+
+public class ExampleApp extends Application {
+    final static float DESIGN_WIDTH = 1280; //绘制页面时参照的设计图宽度
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        DisplayAdaptive.getInstance().init(DESIGN_WIDTH, this);
+
+        Log.i("@#@!", "预览screen size = "+ DisplayAdaptive.screenSize(1280, 720) + " 英寸");
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        DisplayAdaptive.getInstance().release();
+    }
+}

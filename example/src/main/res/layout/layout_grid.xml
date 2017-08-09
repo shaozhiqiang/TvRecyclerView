@@ -11,7 +11,7 @@
         <Button
             android:id="@+id/btn1"
             android:layout_width="match_parent"
-            android:layout_height="50dp"/>
+            android:layout_height="50pt"/>
     
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,7 +28,7 @@
         <Button
             android:id="@+id/btn2"
             android:layout_width="match_parent"
-            android:layout_height="50dp"/>
+            android:layout_height="50pt"/>
 
     </LinearLayout>
 

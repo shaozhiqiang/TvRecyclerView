@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="78dp"
-              android:paddingBottom="10dp"
+              android:layout_height="78pt"
+              android:paddingBottom="10pt"
     android:background="@color/titlestrip_text_color">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="10pt"
         android:src="@mipmap/ic_launcher"/>
     <TextView
         android:id="@+id/title"
@@ -18,6 +18,6 @@
         android:layout_gravity="bottom"
         android:text="我是标题2"
         android:textColor="@color/item_default_color"
-        android:layout_marginLeft="10dp"
-        android:textSize="24sp"/>
+        android:layout_marginLeft="10pt"
+        android:textSize="24pt"/>
 </LinearLayout>

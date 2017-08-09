@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="72dp"
-        android:layout_height="130dp"
+        android:layout_width="72pt"
+        android:layout_height="130pt"
         android:background="@color/item_default_color"
         android:focusable="true"
         android:clickable="true">
@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@android:color/holo_green_dark"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:textSize="28sp"
+            android:layout_marginLeft="10pt"
+            android:layout_marginRight="10pt"
+            android:textSize="28pt"
             android:textStyle="bold"/>
         
         <TextView
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:textColor="@android:color/holo_green_dark"
             android:gravity="bottom|right"
-            android:padding="10dp"
-            android:textSize="20sp"/>
+            android:padding="10pt"
+            android:textSize="20pt"/>
 
 </FrameLayout>
