@@ -7,9 +7,9 @@ package com.owen.tvrecyclerview.utils;
 public class MathUtil {
     /**
      * 求两个最大公约数
-     * 辗转相除是用大的除以小的。如果n<m，第一次相当n与m值交换
-     * @param n
-     * @param m
+     * 辗转相除是用大的除以小的。如果n小于m，第一次相当n与m值交换
+     * @param n 
+     * @param m 
      * @return
      */
     public static int commonDivisor(int n, int m) {

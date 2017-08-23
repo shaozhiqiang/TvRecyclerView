@@ -14,7 +14,7 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.0.7.11'
+compile 'com.tv.boost:tv-recyclerview:1.1.0'
 ```
 
 ### 特性
@@ -46,28 +46,25 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.11'
 
 - [x] Item监听回调
     ```java
+    //item选中、点击监听
     mRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
         @Override
         public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                
+                //上次选中
         }
 
         @Override
         public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                
-        }
-        
-        @Override
-        public void onReviseFocusFollow(TvRecyclerView parent, View itemView, int position) {
-            // 此处为了特殊情况时校正移动框
+                //当前选中
         }
 
         @Override
         public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-                
+                //点击
         }
     });
     
+    //边界监听
     mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
                 @Override
                 public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
@@ -83,6 +80,7 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.11'
                 }
             });
     
+    //加载更多
     mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
                 @Override
                 public boolean onLoadMore() {
@@ -164,6 +162,10 @@ compile 'com.tv.boost:tv-recyclerview:1.0.7.11'
 > * 1.0.7.11
     1）优化setSelection方法；
     2) 修复在ViewPager中移除重新添加后滚动实效的问题；
+    
+> * 1.1.0
+    1）部分代码优化重构；
+    2）增加MetroGridLayoutManager；
     
 
 ### 更详细的使用请见exmaple

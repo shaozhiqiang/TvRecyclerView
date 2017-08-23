@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 31
-        versionName "1.1.0.preview"
+        versionCode 32
+        versionName "1.1.0"
     }
     buildTypes {
         release {
@@ -18,7 +18,7 @@ android {
     }
 }
 
-//apply from: 'bintrayUpload.gradle'
+apply from: 'bintrayUpload.gradle'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

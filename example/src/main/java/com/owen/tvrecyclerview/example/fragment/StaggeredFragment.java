@@ -23,7 +23,7 @@ import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.StaggeredAdapter;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
-import com.owen.tvrecyclerview.utils.DensityUtil;
+import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
@@ -66,7 +66,8 @@ public class StaggeredFragment extends BaseFragment {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f, DensityUtil.dip2px(getContext(), 10));
+                float radius = DisplayAdaptive.getInstance().toLocalPx(10);
+                onMoveFocusBorder(itemView, 1.1f, radius);
             }
 
             @Override

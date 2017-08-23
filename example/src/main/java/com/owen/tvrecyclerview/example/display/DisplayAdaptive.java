@@ -25,7 +25,7 @@ import static android.content.Context.WINDOW_SERVICE;
  *
  * 绘制：编写xml时完全对照设计稿上的尺寸来编写，只不过单位换为pt。
  *
- * 动态：需要在代码中动态转换成px时使用 {@link DisplayAdaptive#toLocalpx} (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, value, metrics))。
+ * 动态：需要在代码中动态转换成px时使用 {@link DisplayAdaptive#toLocalPx} --> (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, value, metrics))。
  *
  * 预览：实时预览时绘制页面是很重要的一个环节。
  * 以1280x720的设计图为例，为了实现于正常绘制时一样的预览功能，创建一个长为1280，宽为720的设备作为预览，
@@ -62,7 +62,7 @@ public class DisplayAdaptive {
         mApplication = null;
     }
     
-    public float toLocalpx(float pt) {
+    public float toLocalPx(float pt) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, pt, mApplication.getResources().getDisplayMetrics());
     }
 

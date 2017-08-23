@@ -26,7 +26,7 @@ import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.example.adapter.MetroAdapter;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
-import com.owen.tvrecyclerview.utils.DensityUtil;
+import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
 import com.owen.tvrecyclerview.widget.MetroGridLayoutManager;
 import com.owen.tvrecyclerview.widget.MetroTitleItemDecoration;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -101,7 +101,8 @@ public class MetroFragment extends BaseFragment {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f, DensityUtil.dip2px(getContext(), 10));
+                float radius = DisplayAdaptive.getInstance().toLocalPx(10);
+                onMoveFocusBorder(itemView, 1.1f, radius);
             }
 
             @Override

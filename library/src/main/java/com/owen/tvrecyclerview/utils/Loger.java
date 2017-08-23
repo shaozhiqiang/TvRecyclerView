@@ -12,7 +12,7 @@ import android.util.Log;
  */
 public class Loger {
 
-    public static String customTagPrefix = "[TVRV_LOG]";
+    private final static String customTagPrefix = "[TVRV_LOG]";
     
     public static boolean isDebug = false;
 
