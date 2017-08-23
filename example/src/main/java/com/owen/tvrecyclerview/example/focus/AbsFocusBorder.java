@@ -26,6 +26,8 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.owen.tvrecyclerview.utils.Loger;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -278,6 +280,8 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         if(null != mOldFocusView && null != mOldFocusView.get()) {
             runFocusScaleAnimation(mOldFocusView.get(), 1f, 1f);
             mOldFocusView.clear();
+        } else {
+            Loger.e("mOldFocusView is null !!!!!");
         }
         
         if(options instanceof Options) {
@@ -339,12 +343,10 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
      * @param oldOrNewFocusView
      * @param 
      */
-    protected void runFocusScaleAnimation(@Nullable View oldOrNewFocusView, float scaleX, float scaleY) {
+    protected void runFocusScaleAnimation(@Nullable final View oldOrNewFocusView, final float scaleX, final float scaleY) {
         if(null == oldOrNewFocusView)
             return;
-        if(scaleX != oldOrNewFocusView.getScaleX() || scaleY != oldOrNewFocusView.getScaleY()) {
-            oldOrNewFocusView.animate().scaleX(scaleX).scaleY(scaleY).setDuration(mAnimDuration).start();
-        }
+        oldOrNewFocusView.animate().scaleX(scaleX).scaleY(scaleY).setDuration(mAnimDuration).start();
     }
 
     protected void createBorderAnimation(View focusView, Options options) {

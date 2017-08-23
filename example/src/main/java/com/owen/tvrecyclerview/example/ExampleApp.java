@@ -1,7 +1,6 @@
 package com.owen.tvrecyclerview.example;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
 
@@ -17,8 +16,6 @@ public class ExampleApp extends Application {
     public void onCreate() {
         super.onCreate();
         DisplayAdaptive.getInstance().init(DESIGN_WIDTH, this);
-
-        Log.i("@#@!", "预览screen size = "+ DisplayAdaptive.screenSize(1280, 720) + " 英寸");
     }
 
     @Override

@@ -65,7 +65,8 @@ public class MetroFragment extends BaseFragment {
         mAdapter = new MetroAdapter(getContext());
         mAdapter.setDatas(ItemDatas.getDatas(60));
         
-//        MetroGridLayoutManager layoutManager = new MetroGridLayoutManager(TwoWayLayoutManager.Orientation.VERTICAL, 24, 60, 10);
+//        MetroGridLayoutManager layoutManager = new MetroGridLayoutManager
+//        (TwoWayLayoutManager.Orientation.VERTICAL, 24, 60, 10);
 //        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new MetroTitleItemDecoration(mAdapter));//设置title
         mRecyclerView.setSpacingWithMargins(10, 10);//设置行列间距
