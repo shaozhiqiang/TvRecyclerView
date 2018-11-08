@@ -102,7 +102,7 @@ public class MetroFragment extends BaseFragment {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 float radius = DisplayAdaptive.getInstance().toLocalPx(10);
-                onMoveFocusBorder(itemView, 1.1f, radius);
+                onMoveFocusBorder(itemView, 1.1f, 10);
             }
 
             @Override

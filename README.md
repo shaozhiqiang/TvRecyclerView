@@ -67,14 +67,20 @@ compile 'com.tv.boost:tv-recyclerview:1.1.0'
     //边界监听
     mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
                 @Override
-                public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_DPAD_DOWN:
-                            // do anything
-                            return true;
-                        case KeyEvent.KEYCODE_DPAD_RIGHT:
-                            // do anything
-                            return true;
+                public boolean onInBorderKeyEvent(int direction, View focused) {
+                    switch (direction) {
+                        case View.FOCUS_DOWN:
+
+                            break;
+                        case View.FOCUS_UP:
+
+                            break;
+                        case View.FOCUS_LEFT:
+
+                            break;
+                        case View.FOCUS_RIGHT:
+
+                            break;
                     }
                     return false;
                 }

@@ -125,7 +125,7 @@ public class ListFragment extends BaseFragment {
         //边界监听
 //        mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
 //            @Override
-//            public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
+//            public boolean onInBorderKeyEvent(int direction, View focused) {
 //                Log.i("zzzz", "onInBorderKeyEvent: ");
 //                return false;//需要拦截返回true,否则返回false
 //            }

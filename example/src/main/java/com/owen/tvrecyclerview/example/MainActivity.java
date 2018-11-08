@@ -18,8 +18,8 @@ package com.owen.tvrecyclerview.example;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -32,6 +32,7 @@ import com.owen.tvrecyclerview.example.fragment.SpannableFragment;
 import com.owen.tvrecyclerview.example.fragment.StaggeredFragment;
 import com.owen.tvrecyclerview.example.fragment.UpdateDataFragment;
 import com.owen.tvrecyclerview.example.fragment.V7GridFragment;
+import com.owen.tvrecyclerview.example.fragment.VLayoutFragment;
 import com.owen.tvrecyclerview.example.tablayout.TabLayout;
 import com.owen.tvrecyclerview.example.tablayout.TvTabLayout;
 import com.owen.tvrecyclerview.utils.Loger;
@@ -39,7 +40,7 @@ import com.owen.tvrecyclerview.utils.Loger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends FragmentActivity implements BaseFragment.FocusBorderHelper{
+public class MainActivity extends AppCompatActivity implements BaseFragment.FocusBorderHelper{
     private final String LOGTAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.tab_layout) TvTabLayout mTabLayout;
@@ -71,9 +72,14 @@ public class MainActivity extends FragmentActivity implements BaseFragment.Focus
 
         mTabLayout.addTab(
                 mTabLayout.newTab()
-                        .setText("Metro")
+                        .setText("VLayout")
 //                        .setIcon(R.drawable.ic_staggered)
                 , true);
+        mTabLayout.addTab(
+                mTabLayout.newTab()
+                        .setText("Metro")
+//                        .setIcon(R.drawable.ic_staggered)
+                );
         mTabLayout.addTab(
                 mTabLayout.newTab()
                         .setText("List")
@@ -115,6 +121,7 @@ public class MainActivity extends FragmentActivity implements BaseFragment.Focus
     public class TabSelectedListener implements TabLayout.OnTabSelectedListener {
         private Fragment mFragment;
         private int[] layoutIds = {
+                R.layout.layout_vlayout,
                 R.layout.layout_metro_grid,
                 R.layout.layout_list,
                 R.layout.layout_grid,
@@ -137,6 +144,9 @@ public class MainActivity extends FragmentActivity implements BaseFragment.Focus
                 switch (layoutIds[position]) {
                     case R.layout.layout_metro_grid:
                         mFragment = MetroFragment.newInstance();
+                        break;
+                    case R.layout.layout_vlayout:
+                        mFragment = VLayoutFragment.instantiate(MainActivity.this, VLayoutFragment.class.getName());
                         break;
                     case R.layout.layout_list:
                         mFragment = ListFragment.newInstance();

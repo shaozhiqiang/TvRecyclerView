@@ -7,6 +7,8 @@ import android.graphics.Point;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
+import com.owen.tvrecyclerview.example.ExampleApp;
+
 import java.lang.ref.WeakReference;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -63,7 +65,7 @@ public class DisplayAdaptive {
     }
     
     public float toLocalPx(float pt) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, pt, mApplication.getResources().getDisplayMetrics());
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, pt, ExampleApp.get().getResources().getDisplayMetrics());
     }
 
     private void resetDensity(){

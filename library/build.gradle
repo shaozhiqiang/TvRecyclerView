@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+//    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -18,9 +18,12 @@ android {
     }
 }
 
-apply from: 'bintrayUpload.gradle'
+//apply from: 'bintrayUpload.gradle'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
+    api ('com.alibaba.android:vlayout:1.2.18') {
+        transitive = true
+    }
 }

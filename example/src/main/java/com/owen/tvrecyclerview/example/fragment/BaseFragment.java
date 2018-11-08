@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.focus.FocusBorder;
+import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -55,7 +56,7 @@ public abstract class BaseFragment extends Fragment {
 
         @Override
         public void onScrolled(RecyclerView rv, int i, int i2) {
-            updatePosition(rv);
+            updatePosition((TvRecyclerView) rv);
         }
 
     };
@@ -136,10 +137,10 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    private void updatePosition(RecyclerView rv) {
+    private void updatePosition(TvRecyclerView rv) {
         if(null != mPositionText && null != mCountText) {
             final int count = rv.getChildCount();
-            final int first = count == 0 ? 0 : rv.getChildAdapterPosition(rv.getChildAt(0));
+            final int first = rv.getFirstVisiblePosition();
             mPositionText.setText("First: " + first);
             mCountText.setText("Count: " + count);
         }

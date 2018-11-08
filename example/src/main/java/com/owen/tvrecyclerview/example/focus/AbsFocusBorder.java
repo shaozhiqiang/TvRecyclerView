@@ -26,8 +26,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.owen.tvrecyclerview.utils.Loger;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,10 +99,7 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         if (mShimmerAnimating) {
             canvas.save();
             mTempRectF.set(mFrameRectF);
-            mTempRectF.left += mPaddingOfsetRectF.left;
-            mTempRectF.top += mPaddingOfsetRectF.top;
-            mTempRectF.right -= mPaddingOfsetRectF.right;
-            mTempRectF.bottom -= mPaddingOfsetRectF.bottom;
+            mTempRectF.intersect(mPaddingOfsetRectF);
             float shimmerTranslateX = mTempRectF.width() * mShimmerTranslate;
             float shimmerTranslateY = mTempRectF.height() * mShimmerTranslate;
             mShimmerGradientMatrix.setTranslate(shimmerTranslateX, shimmerTranslateY);
@@ -188,7 +183,7 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
             }
         }
     }
-
+    
     @Override
     public boolean isVisible() {
         return mIsVisible;
@@ -277,19 +272,29 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
 
     @Override
     public void onFocus(@NonNull View focusView, FocusBorder.Options options) {
-        if(null != mOldFocusView && null != mOldFocusView.get()) {
-            runFocusScaleAnimation(mOldFocusView.get(), 1f, 1f);
+        View oldFocus = null != mOldFocusView ? mOldFocusView.get() : null;
+        if(null != oldFocus) {
+            runFocusScaleAnimation(oldFocus, 1f, 1f);
             mOldFocusView.clear();
-        } else {
-            Loger.e("mOldFocusView is null !!!!!");
         }
         
         if(options instanceof Options) {
-            final Options baseOptions = (Options) options;
-            if (baseOptions.isScale()) {
-                mOldFocusView = new WeakReference<>(focusView);
-            }
-            runFocusAnimation(focusView, baseOptions);
+            restoreFocusBorder(oldFocus, focusView, (Options) options);
+            runFocusAnimation(focusView, (Options) options);
+            mOldFocusView = new WeakReference<>(focusView);
+        }
+    }
+    
+    private void restoreFocusBorder(View oldFocus, View newFocus, Options options) {
+        if(null == oldFocus) {
+            final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
+            final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
+            final Rect toRect = findLocationWithView(newFocus);
+            toRect.inset((int)(-paddingWidth/2), (int)(-paddingHeight/2));
+            setWidth(toRect.width());
+            setHeight(toRect.height());
+            setTranslationX(toRect.left);
+            setTranslationY(toRect.top);
         }
     }
     
@@ -310,9 +315,9 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
     @Override
     public void onGlobalFocusChanged(View oldFocus, View newFocus) {
         runFocusScaleAnimation(oldFocus, 1f, 1f);
-        
         final Options options = null != mOnFocusCallback ? (Options) mOnFocusCallback.onFocus(oldFocus, newFocus) : null;
         if(null != options) {
+            restoreFocusBorder(oldFocus, newFocus, options);
             runFocusAnimation(newFocus, options);
         }
     }
@@ -326,9 +331,9 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
     }
     
     protected void runBorderAnimation(View focusView, Options options) {
-        if(null == focusView)
+        if(null == focusView) {
             return;
-
+        }
         if(null != mAnimatorSet) {
             mAnimatorSet.cancel();
         }
@@ -344,8 +349,10 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
      * @param 
      */
     protected void runFocusScaleAnimation(@Nullable final View oldOrNewFocusView, final float scaleX, final float scaleY) {
-        if(null == oldOrNewFocusView)
+        if(null == oldOrNewFocusView
+                || (oldOrNewFocusView.getScaleX() == scaleX && oldOrNewFocusView.getScaleY() == scaleY)) {
             return;
+        }
         oldOrNewFocusView.animate().scaleX(scaleX).scaleY(scaleY).setDuration(mAnimDuration).start();
     }
 
@@ -353,12 +360,12 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
 
         final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
         final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
-        final int ofsetWidth = (int) (focusView.getMeasuredWidth() * (options.scaleX - 1f) + paddingWidth);
-        final int ofsetHeight = (int) (focusView.getMeasuredHeight() * (options.scaleY - 1f) + paddingHeight);
+        final int offsetWidth = (int) (focusView.getMeasuredWidth() * (options.scaleX - 1f) + paddingWidth);
+        final int offsetHeight = (int) (focusView.getMeasuredHeight() * (options.scaleY - 1f) + paddingHeight);
         
         final Rect fromRect = findLocationWithView(this);
         final Rect toRect = findLocationWithView(focusView);
-        toRect.inset(-ofsetWidth/2, -ofsetHeight/2);
+        toRect.inset(-offsetWidth/2, -offsetHeight/2);
         
         final int newWidth = toRect.width();
         final int newHeight = toRect.height();

@@ -85,7 +85,7 @@ public class StaggeredFragment extends BaseFragment {
 
 //        mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
 //            @Override
-//            public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
+//            public boolean onInBorderKeyEvent(int direction, View focused) {
 //                Log.i("zzzz", "onInBorderKeyEvent: ");
 //                return false;
 //            }

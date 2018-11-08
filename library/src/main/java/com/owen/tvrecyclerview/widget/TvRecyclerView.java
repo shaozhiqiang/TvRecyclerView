@@ -24,11 +24,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
@@ -323,14 +325,18 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
     @Override
     public void swapAdapter(Adapter adapter, boolean removeAndRecycleExistingViews) {
-        if(null == adapter) return;
+        if(null == adapter) {
+            return;
+        }
         resetAdapter(adapter);
         super.swapAdapter(adapter, removeAndRecycleExistingViews);
     }
 
     @Override
     public void setAdapter(final Adapter adapter) {
-        if(null == adapter) return;
+        if(null == adapter) {
+            return;
+        }
         resetAdapter(adapter);
         super.setAdapter(adapter);
     }
@@ -342,7 +348,6 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             mShouldReverseLayout = true;
         }
         newAdapter.registerAdapterDataObserver(mDataObserver);
-        
         //修复重新setAdapter后第一条被遮挡的问题
         View view = getChildAt(0);
         if(null != view && null != oldAdapter) {
@@ -372,8 +377,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                 if(mIsMenu && itemView.isActivated()) {
                     itemView.setActivated(false);
                 }
-                if(null != mOnItemListener)
+                if(null != mOnItemListener) {
                     mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, position);
+                }
             } else {
                 itemView.postDelayed(new Runnable() {
                     @Override
@@ -388,8 +394,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                         }
                     }
                 }, 6);
-                if(null != mOnItemListener)
+                if(null != mOnItemListener) {
                     mOnItemListener.onItemPreSelected(TvRecyclerView.this, itemView, position);
+                }
             }
         }
     }
@@ -458,7 +465,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             return;
         }
         
-        View view = getChildAt(position - getFirstVisiblePosition());
+        View view = getLayoutManager().findViewByPosition(position);
         if(null != view) {
             if(!hasFocus()) {
                 //模拟TvRecyclerView获取焦点
@@ -508,8 +515,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     
     @Override
     public boolean requestChildRectangleOnScreen(View child, Rect rect, boolean immediate) {
-        if(null == child)
+        if(null == child) {
             return false;
+        }
         
         if(mSelectedItemCentered) {
             getDecoratedBoundsWithMargins(child, mTempRect);
@@ -541,7 +549,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         super.smoothScrollBy(dx, dy, interpolator);
     }
 
-    private boolean isFocusedChildVisibleAfterScrolling(RecyclerView parent, int dx, int dy) {
+    /*private boolean isFocusedChildVisibleAfterScrolling(RecyclerView parent, int dx, int dy) {
         final View focusedChild = parent.getFocusedChild();
         if (focusedChild == null) {
             return false;
@@ -558,9 +566,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             return false;
         }
         return true;
-    }
+    }*/
 
-    private int[] getChildRectangleOnScreenScrollAmount1(View child, Rect rect, int offsetStart, int offsetEnd) {
+    /*private int[] getChildRectangleOnScreenScrollAmount1(View child, Rect rect, int offsetStart, int offsetEnd) {
         int dx = 0;
         int dy = 0;
 
@@ -605,12 +613,12 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         }
         
         return new int[]{dx, dy};
-    }
+    }*/
 
     /**
      * 判断当前是否还可以向前或后滚动
      */
-    private boolean cannotScrollForwardOrBackward(View child, int dx, int dy) {
+    /*private boolean cannotScrollForwardOrBackward(View child, int dx, int dy) {
         if(dy != 0) {
             if(getFirstVisiblePosition() == 0 && dy < 0) {
                 getDecoratedBoundsWithMargins(getChildAt(0), mTempRect);
@@ -646,7 +654,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         }
         
         return false;
-    }
+    }*/
     
     private int[] getChildRectangleOnScreenScrollAmount2(View focusView, Rect rect, int offsetStart, int offsetEnd) {
                     //横向滚动
@@ -704,18 +712,18 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         }
         // focusView未超出上/左边界，但边距小于指定offset
         else if(start > 0 && start < offsetStart
-                && (ViewCompat.canScrollHorizontally(this, -1) || ViewCompat.canScrollVertically(this, -1))) {
+                && (canScrollHorizontally( -1) || canScrollVertically( -1))) {
             return start - offsetStart;
         }
         // focusView未超出下/右边界，但边距小于指定offset
         else if(Math.abs(end) > 0 && Math.abs(end) < offsetEnd
-                && (ViewCompat.canScrollHorizontally(this, 1) || ViewCompat.canScrollVertically(this, 1))) {
+                && (canScrollHorizontally( 1) || canScrollVertically( 1))) {
             return offsetEnd - Math.abs(end);
         }
         
         return 0;
     }
-
+    
     @Override
     public boolean canScrollHorizontally(int direction) {
         if(null != getLayoutManager() && getLayoutManager() instanceof  TwoWayLayoutManager) {
@@ -780,18 +788,26 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     }
 
     public int getFirstVisiblePosition() {
-        if(getChildCount() == 0)
+        if(getChildCount() == 0) {
             return 0;
-        else
+        } else {
+            if(getLayoutManager() instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
+            }
             return getChildAdapterPosition(getChildAt(0));
+        }
     }
-
+    
     public int getLastVisiblePosition() {
         final int childCount = getChildCount();
-        if(childCount == 0)
+        if(childCount == 0) {
             return 0;
-        else
+        } else {
+            if(getLayoutManager() instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
+            }
             return getChildAdapterPosition(getChildAt(childCount - 1));
+        }
     }
 
     /**
@@ -851,21 +867,19 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
-        View view = getFocusedChild();
-        if(null != view) {
-            int tempPosition = getChildAdapterPosition(view) - getFirstVisiblePosition();
-            if (tempPosition < 0) {
-                return i;
-            } else {
-                if (i == childCount - 1) {//这是最后一个需要刷新的item
-                    if (tempPosition > i) {
-                        tempPosition = i;
-                    }
-                    return tempPosition;
+        View focusedView = getFocusedChild();
+        if(null != focusedView) {
+            int position = indexOfChild(focusedView);
+            if (i == childCount - 1) {
+                //这是最后一个需要刷新的item
+                if (position > i) {
+                    position = i;
                 }
-                if (i == tempPosition) {//这是原本要在最后一个刷新的item
-                    return childCount - 1;
-                }
+                return position;
+            }
+            else if (position == i) {
+                //这是原本要在最后一个刷新的item
+                return childCount - 1;
             }
         }
         return i;
@@ -875,7 +889,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         return getScrollState() != SCROLL_STATE_IDLE;
     }
     
-    @Override
+    /*@Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean result = super.dispatchKeyEvent(event);
         if(!result) {
@@ -891,13 +905,14 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         return result;
     }
 
-    /**
+    *//**
      * 处理onKeyDown等事件
      * @param keyCode
      * @param event
      * @return
-     */
+     *//*
     private boolean handleKeyDown(int keyCode, KeyEvent event) {
+        Log.i("zzzsq", "handleKeyDown...");
         int direction = keyCode2Direction(keyCode);
 
         if(direction == -1 || null == mOnInBorderKeyEventListener) {
@@ -912,7 +927,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             nextFocusedView.requestFocus();
         }
         return true;
-    }
+    }*/
 
     /**
      * 查找下个可获取焦点的view
@@ -922,36 +937,47 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     private View findNextFocus(int direction) {
         return FocusFinder.getInstance().findNextFocus(this, getFocusedChild(), direction);
     }
-
-    /**
-     * keycode值转成Direction值
-     * @param keyCode
-     * @return
-     */
-    private int keyCode2Direction(int keyCode) {
-        switch (keyCode){
-            case KeyEvent.KEYCODE_DPAD_DOWN:
-                return FOCUS_DOWN;
-
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                return FOCUS_RIGHT;
-
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                return FOCUS_LEFT;
-
-            case KeyEvent.KEYCODE_DPAD_UP:
-                return FOCUS_UP;
-
-            default:
-                return -1;
-        }
+    
+    @Override
+    public boolean dispatchUnhandledMove(View focused, int direction) {
+        return super.dispatchUnhandledMove(focused, direction);
     }
+    
+//    /**
+//     * keycode值转成Direction值
+//     * @param keyCode
+//     * @return
+//     */
+//    private int keyCode2Direction(int keyCode) {
+//        switch (keyCode){
+//            case KeyEvent.KEYCODE_DPAD_DOWN:
+//                return FOCUS_DOWN;
+//
+//            case KeyEvent.KEYCODE_DPAD_RIGHT:
+//                return FOCUS_RIGHT;
+//
+//            case KeyEvent.KEYCODE_DPAD_LEFT:
+//                return FOCUS_LEFT;
+//
+//            case KeyEvent.KEYCODE_DPAD_UP:
+//                return FOCUS_UP;
+//
+//            default:
+//                return -1;
+//        }
+//    }
+    
+    
 
     @Override
     public View focusSearch(View focused, int direction) {
         final View nextFocusedView = findNextFocus(direction);
-        if(hasInBorder(direction, nextFocusedView)) {
-            return super.focusSearch(focused, direction);
+        if(hasInBorder(direction, focused, nextFocusedView)) {
+            if(null == mOnInBorderKeyEventListener
+                    || !mOnInBorderKeyEventListener.onInBorderKeyEvent(direction, focused)) {
+                return super.focusSearch(focused, direction);
+            }
+            return null;
         } else {
             return nextFocusedView;
         }
@@ -960,24 +986,45 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     /**
      * 判断选中的item是否到达边界
      */
-    private boolean hasInBorder(int direction, View nextFocusedView) {
-        if(null != nextFocusedView)
-            return false;
-        Loger.i("hasInBorder...direction="+direction);
+    private boolean hasInBorder(int direction, View focused, View nextFocusedView) {
         switch (direction) {
-            case FOCUS_DOWN:
-                return !ViewCompat.canScrollVertically(this, 1);
+            case FOCUS_DOWN: {
+                boolean canScrollVertically = canScrollVertically(1);
+                if(null != nextFocusedView && !canScrollVertically) {
+                    if(null != focused) {
+                        int offset = Math.abs(getHeight() - focused.getBottom() - getPaddingBottom());
+                        Loger.i("zsq offset="+offset);
+                        return offset <= 2;
+                    }
+                    return false;
+                }
+                return !canScrollVertically;
+            }
+            case FOCUS_UP: {
+                if(null != nextFocusedView) {
+                    return false;
+                }
+                return !canScrollVertically(-1);
+            }
+            case FOCUS_LEFT: {
+                if(null != nextFocusedView) {
+                    return false;
+                }
+                return !canScrollHorizontally(-1);
+            }
+            case FOCUS_RIGHT: {
+                boolean canScrollHorizontally = canScrollHorizontally(1);
+                if(null != nextFocusedView && !canScrollHorizontally) {
+                    if(null != focused) {
+                        int offset = Math.abs(getWidth() - focused.getRight() - getPaddingRight());
+                        Loger.i("zsq offset="+offset);
+                        return offset <= 2;
+                    }
+                    return false;
+                }
+                return !canScrollHorizontally;
+            }
                 
-            case FOCUS_UP:
-                return !ViewCompat.canScrollVertically(this, -1);
-            
-            case FOCUS_LEFT:
-                return !ViewCompat.canScrollHorizontally(this, -1);
-            
-            case FOCUS_RIGHT:
-                
-                return !ViewCompat.canScrollHorizontally(this, 1);
-            
             default:
                 return false;
         }
@@ -1027,7 +1074,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     }
 
     public interface OnInBorderKeyEventListener {
-        boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event);
+        boolean onInBorderKeyEvent(int direction, View focused);
     }
 
     public interface OnItemListener {

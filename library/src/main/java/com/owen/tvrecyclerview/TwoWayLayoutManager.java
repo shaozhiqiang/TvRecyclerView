@@ -85,15 +85,17 @@ public abstract class TwoWayLayoutManager extends LayoutManager implements Recyc
         }
 
         a.recycle();
-
-        setAutoMeasureEnabled(true);
     }
 
     public TwoWayLayoutManager(Orientation orientation) {
         mIsVertical = (orientation == Orientation.VERTICAL);
-        setAutoMeasureEnabled(true);
     }
-
+    
+    @Override
+    public boolean isAutoMeasureEnabled() {
+        return true;
+    }
+    
     public boolean isVertical() {
         return mIsVertical;
     }
