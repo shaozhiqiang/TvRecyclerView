@@ -17,34 +17,48 @@
 compile 'com.tv.boost:tv-recyclerview:1.1.0'
 ```
 
+### 自定义属性
+| 属性      |  值/类型  |  简介  |
+| -------- | :-----: | :---- |
+| tv_layoutManager     | string |   指定LayoutManager     |
+| tv_selectedItemOffsetStart | dimension | 选中的item距离开始(上/左)的偏移量, 与tv_selectedItemIsCentered二选一 |
+| tv_selectedItemOffsetEnd | dimension | 选中的item距离结尾(右/下)的偏移量, 与tv_selectedItemIsCentered二选一 |
+| tv_selectedItemIsCentered | boolean | 选中居中, 与上面的偏移量二选一 |
+| tv_isMenu | boolean | 是否为菜单模式 |
+| tv_isMemoryFocus | boolean | 是否记忆焦点 |
+| tv_loadMoreBeforehandCount | int | 提前多少个开始加载更多 |
+| tv_optimizeLayout | boolean | 布局优化, 常用的LayoutManager作用不是很大,但对MetroGridLayoutManager这种计算量大的布局来说有一定的提升 |
+| tv_verticalSpacingWithMargins | dimension | 设置布局item间的竖向间距 |
+| tv_horizontalSpacingWithMargins | dimension | 设置布局item间的横向间距 |
+|  |  |  |
+| 自定义LayoutManager属性 |  |  |
+| tv_numColumns | int | 列数, GridLayoutManager及子类所拥有 |
+| tv_numRows | int | 行数, GridLayoutManager及子类所拥有 |
+| tv_laneCountsStr | string | 每块区域的列数, MetroGridLayoutManager所拥有, 格式 如:24,60,10 |
+| tv_isIntelligentScroll | boolean | 根据区域智能滚动, MetroGridLayoutManager所拥有 |
+
+
 ### 特性
 
-- [x] 支持焦点快速移动
+- [x] 支持快速移动焦点不丢失;
 
-- [x] 支持Item选中放大时不被叠压(无需手动调用bringChildToFront())
+- [x] 支持Item选中放大不叠压;
 
-- [x] 支持横/竖排列
+- [x] 多咱选中和滚动方式:
     ```java
-    android:orientation="horizontal"
-    ```
+    //选中指定项
+    setSelection(int psotion);
 
-- [x] 支持布局指定LayoutManager
-    ```java
-    app:tv_layoutManager="SpannableGridLayoutManager"
-    ```
+    //选中指定项(平滑的滚动方式)
+    setSelectionWithSmooth(int position)
 
-- [x] 支持设置选中Item边缘距离/居中
-    ```java
-    setSelectedItemAtCentered(boolean isCentered)
-    setSelectedItemOffset(int offsetStart, int offsetEnd)
-    ```
+    //滚动到指定位置, 可以指定便宜量, 可以指定是否获取焦点
+    scrollToPositionWithOffset(int position, int offset, boolean isRequestFocus)
 
-- [x] 支持设置横竖间距
-    ```java
-    setSpacingWithMargins(int verticalSpacing, int horizontalSpacing)
+    //平滑的滚动到指定位置, 可以指定便宜量, 可以指定是否获取焦点
+    smoothScrollToPositionWithOffset(int position, int offset, boolean isRequestFocus)
     ```
-
-- [x] Item监听回调
+- [x] 监听回调
     ```java
     //item选中、点击监听
     mRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
@@ -64,7 +78,7 @@ compile 'com.tv.boost:tv-recyclerview:1.1.0'
         }
     });
     
-    //边界监听
+    //焦点移动边界监听
     mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
                 @Override
                 public boolean onInBorderKeyEvent(int direction, View focused) {
@@ -82,11 +96,12 @@ compile 'com.tv.boost:tv-recyclerview:1.1.0'
 
                             break;
                     }
+                    //返回true时,事件将会被拦截由你来控制焦点
                     return false;
                 }
             });
     
-    //加载更多
+    //加载更多监听
     mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
                 @Override
                 public boolean onLoadMore() {
@@ -98,81 +113,6 @@ compile 'com.tv.boost:tv-recyclerview:1.1.0'
             });
            
     ```
-### 版本说明
-> * 1.0.1
-    解决item点击无效问题
-> * 1.0.2
-    解决移动边框错位问题
-> * 1.0.3
-    优化了一些细节,删除无用资源
-> * 1.0.4
-    优化了一些细节,删除无用资源
-> * 1.0.5
-    1)修复在adapter内为item设置监听无效的问题;
-    2)可自由设置是否拦截key事件;
-    3)增加焦点移动边缘监听;
-    4)增加菜单模式;
-    5)自定义属性统一增加前缀tv;
-> * 1.0.5.1
-    1)修复菜单模式下的bug;
-> * 1.0.5.2
-    1)修复菜单模式下的bug;
-> * 1.0.6
-    自动记忆历史焦点,默认选中上次离开时的position;
-> * 1.0.6.1
-    微调;
-> * 1.0.6.2
-    1)增加加载更多监听;
-    2)修复加载更多数据更新时焦点错乱问题;
-> * 1.0.6.3
-    1)处理onSaveInstanceState,onRestoreInstanceState;
-> * 1.0.6.4
-    1)修复glide加载图片焦点错位问题;
-    2)增加tv_isSelectFirstVisiblePosition自定义参数;
-> * 1.0.6.5
-    1)修复IsSelectFirstVisiblePosition参数失效问题;
-    2)增加tv_loadMoreBeforehandCount自动定义参数;
-> * 1.0.6.6
-    1)修复加载更多监听偶然失效的问题；
-> * 1.0.6.7
-    1)处理removeItem后的焦点问题；
-    2)处理初始化焦点问题；
-> * 1.0.6.8
-    1)优化removeItem后的焦点问题；
-    2)优化初始化焦点问题；
-> * 1.0.6.9
-    1)暂时去掉初始化焦点；
-> * 1.0.7
-    1)verticalSpacing和horizontalSpacing对调；
-> * 1.0.7.1
-    1)修复追加更多数据偶尔不显示的问题;
-> * 1.0.7.2
-    1)增加setItemActivated方法;
-> * 1.0.7.3
-    修复重新setAdapter后第一条被遮挡的问题
-> * 1.0.7.5
-    1）优化setSelection方法；
-    2）注释log打印；
-> * 1.0.7.6
-    1）增加scrollToPositionWithOffsetStart(int position)；
-    2）增加scrollToPositionWithOffset(int position, int offset)；
-    3）修复removeItem为0时，报异常的bug;
-    4）修复系统回收后重建报异常的bug;
-    5）优化菜单模式下selector的状态切换；
-> * 1.0.7.7
-    1) 增加setHasMore方法；
-    
-> * 1.0.7.8
-    1) 尝试修复系统回收后重建报异常的bug;
-        
-> * 1.0.7.11
-    1）优化setSelection方法；
-    2) 修复在ViewPager中移除重新添加后滚动实效的问题；
-    
-> * 1.1.0
-    1）部分代码优化重构；
-    2）增加MetroGridLayoutManager；
-    
 
 ### 更详细的使用请见exmaple
 

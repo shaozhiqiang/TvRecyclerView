@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * @author ZhouSuQiang
@@ -54,6 +55,7 @@ public class VLayoutFragment extends BaseFragment {
         final DelegateAdapter delegateAdapter = new DelegateAdapter((VLayoutManager)mRecyclerView.getLayoutManager(), true);
         mRecyclerView.setAdapter(delegateAdapter);
 //        mRecyclerView.setSelectedItemAtCentered(true);
+//        mRecyclerView.setSpacingWithMargins(10, 10);
         
         adapters = new LinkedList<>();
         setDatas();
@@ -75,7 +77,30 @@ public class VLayoutFragment extends BaseFragment {
 //        };
 //        mRecyclerView.addItemDecoration(itemDecoration);
         
-        mRecyclerView.bringToFront();
+        mRecyclerView.bringToFront(); //将RecyclerView移致前层, 这样焦点就会在RecyclerView底层移动
+        
+//        mRecyclerView.setSelection(20);
+    }
+    
+    @OnClick({R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4, R.id.btn5})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn1:
+                mRecyclerView.setSelection(1);
+                break;
+            case R.id.btn2:
+                mRecyclerView.scrollToPosition(30);
+                break;
+            case R.id.btn4:
+                mRecyclerView.scrollToPosition(70);
+                break;
+            case R.id.btn3:
+                mRecyclerView.setSelectionWithSmooth(10);
+                break;
+            case R.id.btn5:
+                mRecyclerView.smoothScrollToPositionWithOffset(60, 0, true);
+                break;
+        }
     }
     
     private void setDatas() {
@@ -144,7 +169,7 @@ public class VLayoutFragment extends BaseFragment {
 //            layoutHelper.setHGap(10);
 //            layoutHelper.setVGap(10);
             layoutHelper.setAspectRatio(4f);
-            adapters.add(new SubAdapter(getActivity(), layoutHelper, 18));
+            adapters.add(new SubAdapter(getActivity(), layoutHelper, 88));
         }
     
     }

@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 /**
- * Created by owen on 2017/7/20.
+ * @author ZhouSuQiang
+ * @date 2017/11/6
  */
-
 public interface FocusBorder {
 
     void setVisible(boolean visible);

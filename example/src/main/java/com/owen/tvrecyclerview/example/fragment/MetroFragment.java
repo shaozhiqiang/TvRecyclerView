@@ -143,6 +143,7 @@ public class MetroFragment extends BaseFragment {
         });
     }
 
+    @Override
     public int getLayoutId() {
         return R.layout.layout_metro_grid;
     }
