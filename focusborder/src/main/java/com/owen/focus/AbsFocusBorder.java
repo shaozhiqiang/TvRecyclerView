@@ -1,4 +1,4 @@
-package com.owen.tvrecyclerview.example.focus;
+package com.owen.focus;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -77,9 +77,11 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         this.mShimmerDuration = shimmerDuration;
         this.mIsShimmerAnim = isShimmerAnim;
         this.mAnimDuration = animDuration;
-        if(null != paddingOfsetRectF)
+        if(null != paddingOfsetRectF) {
             this.mPaddingOfsetRectF.set(paddingOfsetRectF);
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null); //关闭硬件加速
+        }
+        //关闭硬件加速
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setVisibility(INVISIBLE);
         
         mShimmerPaint = new Paint();

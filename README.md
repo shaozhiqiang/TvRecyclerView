@@ -2,12 +2,14 @@
 
 群   号：484790001 [群二维码](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/qq.png)
 
-首先感谢lucasr开发出杰出的作品[TwoWayView](https://github.com/lucasr/twoway-view),**TvRecyclerView**就是在[TwoWayView](https://github.com/lucasr/twoway-view)的基础上进行的延伸，即：
-
-> * 修复了一些小bug
-> * 针对TV端的特性进行了适配与开发
+>* 针对TV端的特性对RecyclerView进行了适配与开发;
+>* 优化[TwoWayView](https://github.com/lucasr/twoway-view)在TV端的适配和延伸;
+>* 支持v7包原生的LayoutManager;
+>* 支持阿里[vlayout](https://github.com/alibaba/vlayout)的布局及其它第三方LayoutManager;
 
 ### 效果
+
+![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/all_4.png)
 
 ![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/img_all.gif)
 
@@ -44,7 +46,7 @@ compile 'com.tv.boost:tv-recyclerview:1.1.0'
 
 - [x] 支持Item选中放大不叠压;
 
-- [x] 多咱选中和滚动方式:
+- [x] 多种选中和滚动方式:
     ```java
     //选中指定项
     setSelection(int psotion);

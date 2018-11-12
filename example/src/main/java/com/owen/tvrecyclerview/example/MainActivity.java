@@ -23,7 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 
-import com.owen.tvrecyclerview.example.focus.FocusBorder;
+import com.owen.focus.FocusBorder;
 import com.owen.tvrecyclerview.example.fragment.BaseFragment;
 import com.owen.tvrecyclerview.example.fragment.GridFragment;
 import com.owen.tvrecyclerview.example.fragment.ListFragment;

@@ -1,4 +1,4 @@
-package com.owen.tvrecyclerview.example.focus;
+package com.owen.focus;
 
 import android.animation.Animator;
 import android.app.Activity;

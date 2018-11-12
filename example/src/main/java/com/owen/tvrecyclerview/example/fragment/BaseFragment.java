@@ -28,8 +28,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.owen.focus.FocusBorder;
 import com.owen.tvrecyclerview.example.R;
-import com.owen.tvrecyclerview.example.focus.FocusBorder;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import butterknife.ButterKnife;

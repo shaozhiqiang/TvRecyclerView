@@ -1,4 +1,4 @@
-package com.owen.tvrecyclerview.example.focus;
+package com.owen.focus;
 
 import android.support.annotation.NonNull;
 import android.view.View;
