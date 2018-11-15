@@ -1,1 +1,1 @@
-include ':example', ':library', ':focusborder'
+include ':example', ':tv-recyclerview'

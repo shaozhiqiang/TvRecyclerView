@@ -2,8 +2,6 @@ package com.owen.tvrecyclerview.example;
 
 import android.app.Application;
 
-import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
-
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
 
@@ -12,8 +10,8 @@ import me.jessyan.autosize.unit.Subunits;
  * 
  */
 
-public class ExampleApp extends Application {
-    private static ExampleApp instance;
+public class App extends Application {
+    private static App instance;
     final static float DESIGN_WIDTH = 1280; //绘制页面时参照的设计图宽度
     
     @Override
@@ -30,7 +28,7 @@ public class ExampleApp extends Application {
 //        DisplayAdaptive.getInstance().release();
     }
     
-    public static ExampleApp get() {
+    public static App get() {
         return instance;
     }
 }

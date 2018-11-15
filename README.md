@@ -1,4 +1,4 @@
-# 欢迎使用 TvRecyclerView
+# 欢迎使用 TvRecyclerView [ ![Download](https://api.bintray.com/packages/zhousuqiang/maven/tv-recyclerview/images/download.svg) ](https://bintray.com/zhousuqiang/maven/tv-recyclerview/_latestVersion)
 
 群   号：484790001 [群二维码](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/qq.png)
 
@@ -16,7 +16,11 @@
 ### Android Studio 集成
 
 ```java
-compile 'com.tv.boost:tv-recyclerview:1.1.0'
+// 2.0+版本的引入
+implementation 'com.owen:tv-recyclerview:2.0.0'
+
+// 1.0版本的引入(已过时版本)
+implementation 'com.tv.boost:tv-recyclerview:1.1.0'
 ```
 
 ### 自定义属性
@@ -120,5 +124,6 @@ compile 'com.tv.boost:tv-recyclerview:1.1.0'
 
 ------
 
+焦点框框架[TvFocusBorder](https://github.com/zhousuqiang/TvFocusBorder)
 
 作者 [owen](https://github.com/zhousuqiang)

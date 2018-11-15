@@ -40,8 +40,12 @@ import com.owen.tvrecyclerview.utils.Loger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * @author ZhouSuQiang
+ */
 public class MainActivity extends AppCompatActivity implements BaseFragment.FocusBorderHelper{
     private final String LOGTAG = MainActivity.class.getSimpleName();
+    private final String[] tabNames = {"VLayout", "Metro", "Spannable", "List", "Grid", "V7Grid", "Staggered", "UpdateData"};
 
     @BindView(R.id.tab_layout) TvTabLayout mTabLayout;
     
@@ -52,65 +56,27 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        
-        Loger.isDebug = true; //是否打开TvRecyclerView的log打印
+    
+        //是否打开TvRecyclerView的log打印
+        Loger.isDebug = true;
         
         // 移动框
         if(null == mFocusBorder) {
-//            mFocusBorder = new FocusBorder.Builder().asDrawable().borderResId(R.drawable.focus).build(this);
             mFocusBorder = new FocusBorder.Builder()
                     .asColor()
-                    .borderColor(getResources().getColor(R.color.actionbar_color))
-                    .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 2)
-                    .shadowColor(getResources().getColor(R.color.green_bright))
-                    .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 18)
+                    .borderColorRes(R.color.actionbar_color)
+                    .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 3.2f)
+                    .shadowColorRes(R.color.green_bright)
+                    .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 22f)
                     .build(this);
         }
         
         mTabLayout.setScaleValue(1.1f);
         mTabLayout.addOnTabSelectedListener(new TabSelectedListener());
-
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("VLayout")
-//                        .setIcon(R.drawable.ic_staggered)
-                , true);
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("Metro")
-//                        .setIcon(R.drawable.ic_staggered)
-                );
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("List")
-//                        .setIcon(R.drawable.ic_list)
-                );
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("Grid")
-//                        .setIcon(R.drawable.ic_grid)
-        );
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("V7Grid")
-//                        .setIcon(R.drawable.ic_grid)
-        );
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("Staggered")
-//                        .setIcon(R.drawable.ic_staggered)
-        );
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("Spannable")
-//                        .setIcon(R.drawable.selector_ic_spannable)
-        );
-        mTabLayout.addTab(
-                mTabLayout.newTab()
-                        .setText("UpdateData")
-//                        .setIcon(R.drawable.ic_launcher)
-        );
-
+        for(String tabName : tabNames) {
+            mTabLayout.addTab(mTabLayout.newTab().setText(tabName));
+        }
+        mTabLayout.selectTab(0);
     }
 
     @Override
@@ -120,50 +86,37 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
 
     public class TabSelectedListener implements TabLayout.OnTabSelectedListener {
         private Fragment mFragment;
-        private int[] layoutIds = {
-                R.layout.layout_vlayout,
-                R.layout.layout_metro_grid,
-                R.layout.layout_list,
-                R.layout.layout_grid,
-                R.layout.layout_grid2,
-                R.layout.layout_staggered_grid,
-                R.layout.layout_spannable_grid,
-                R.layout.layout_update_data_changed
-        };
-
-        public TabSelectedListener() {
-        }
 
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             final int position = tab.getPosition();
             Log.i(LOGTAG, "onTabSelected...position="+position);
-            mFragment = (Fragment) getSupportFragmentManager().findFragmentByTag(position + "");
+            mFragment = getSupportFragmentManager().findFragmentByTag(position + "");
             FragmentTransaction mFt = getSupportFragmentManager().beginTransaction();
             if (mFragment == null) {
-                switch (layoutIds[position]) {
-                    case R.layout.layout_metro_grid:
-                        mFragment = MetroFragment.newInstance();
-                        break;
-                    case R.layout.layout_vlayout:
+                switch (position) {
+                    case 0:
                         mFragment = VLayoutFragment.instantiate(MainActivity.this, VLayoutFragment.class.getName());
                         break;
-                    case R.layout.layout_list:
-                        mFragment = ListFragment.newInstance();
+                    case 1:
+                        mFragment = MetroFragment.newInstance();
                         break;
-                    case R.layout.layout_grid:
-                        mFragment = GridFragment.newInstance();
-                        break;
-                    case R.layout.layout_grid2:
-                        mFragment = V7GridFragment.newInstance();
-                        break;
-                    case R.layout.layout_staggered_grid:
-                        mFragment = StaggeredFragment.newInstance();
-                        break;
-                    case R.layout.layout_spannable_grid:
+                    case 2:
                         mFragment = SpannableFragment.newInstance();
                         break;
-                    case R.layout.layout_update_data_changed:
+                    case 3:
+                        mFragment = ListFragment.newInstance();
+                        break;
+                    case 4:
+                        mFragment = GridFragment.newInstance();
+                        break;
+                    case 5:
+                        mFragment = V7GridFragment.newInstance();
+                        break;
+                    case 6:
+                        mFragment = StaggeredFragment.newInstance();
+                        break;
+                    case 7:
                         mFragment = UpdateDataFragment.newInstance();
                         break;
                 }

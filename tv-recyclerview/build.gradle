@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -9,6 +10,11 @@ android {
         versionCode 32
         versionName "1.1.0"
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -17,7 +23,14 @@ android {
     }
 }
 
-//apply from: 'bintrayUpload.gradle'
+publish {
+    userOrg = 'zhousuqiang'
+    groupId = 'com.owen'
+    artifactId = 'tv-recyclerview'
+    publishVersion = '2.0.0'
+    desc = 'TvRecyclerView'
+    website = 'https://github.com/zhousuqiang/TvRecyclerView'
+}
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])

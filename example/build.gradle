@@ -29,8 +29,8 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'me.jessyan:autosize:1.0.5'
-
-//    compile 'com.tv.boost:tv-recyclerview:1.0.7.11'
-    implementation project(':focusborder')
-    implementation project(':library')
+    implementation 'com.owen:tv-focusborder:1.0.0'
+//    implementation 'com.tv.boost:tv-recyclerview:1.1.0'
+//    implementation 'com.owen:tv-recyclerview:2.0.0'
+    implementation project(':tv-recyclerview')
 }

@@ -8,9 +8,13 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
 
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1' //自动化maven打包插件
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6' //自动上传至Bintray平台插件
+        classpath 'com.novoda:bintray-release:0.9'
     }
+}
+
+// 指定javadoc UTF-8格式(bintray-release)
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
 }
 
 allprojects {
@@ -27,9 +31,7 @@ task clean(type: Delete) {
 
 ext {
     compileSdkVersion = 27
-//    buildToolsVersion = "25.0.0"
     minSdkVersion = 14
     targetSdkVersion = 25
     supportVersion = "27.1.1"
-//    supportVersion = "25.3.1"
 }
