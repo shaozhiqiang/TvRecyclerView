@@ -1,11 +1,13 @@
 package com.owen.tvrecyclerview.example.fragment;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
+import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.owen.focus.FocusBorder;
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
@@ -52,7 +55,7 @@ public class VLayoutFragment extends BaseFragment {
     
         final DelegateAdapter delegateAdapter = new DelegateAdapter((VLayoutManager)mRecyclerView.getLayoutManager(), true);
         mRecyclerView.setAdapter(delegateAdapter);
-//        mRecyclerView.setSelectedItemAtCentered(true);
+        mRecyclerView.setSelectedItemAtCentered(true);
 //        mRecyclerView.setSpacingWithMargins(10, 10);
         
         adapters = new LinkedList<>();
@@ -102,6 +105,8 @@ public class VLayoutFragment extends BaseFragment {
     }
     
     private void setDatas() {
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题"));
+        
         {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
 //            helper.setBgColor(0xffef8ba3);
@@ -126,6 +131,8 @@ public class VLayoutFragment extends BaseFragment {
                 }
             });
         }
+    
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题"));
         
         {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
@@ -240,7 +247,12 @@ public class VLayoutFragment extends BaseFragment {
             this.mCount = count;
             this.mLayoutParams = layoutParams;
         }
-        
+    
+        @Override
+        public int getItemViewType(int position) {
+            return 1;
+        }
+    
         @Override
         public LayoutHelper onCreateLayoutHelper() {
             return mLayoutHelper;
@@ -270,6 +282,48 @@ public class VLayoutFragment extends BaseFragment {
         }
     }
     
+    static class TitleAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
+        
+        private Context mContext;
+        private String mTitleText;
+        private LayoutHelper mLayoutHelper;
+        
+        public TitleAdapter(Context context, String titleText) {
+            mContext = context;
+            mTitleText = titleText;
+            mLayoutHelper = new SingleLayoutHelper();
+        }
+    
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
+    
+        @Override
+        public LayoutHelper onCreateLayoutHelper() {
+            return mLayoutHelper;
+        }
+        
+        @Override
+        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_vlayout_title, parent, false));
+        }
+        
+        @Override
+        public void onBindViewHolder(MainViewHolder holder, int position) {
+        
+        }
+        
+        @Override
+        protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+            ((TextView) holder.itemView.findViewById(R.id.title)).setText(mTitleText + Integer.toString(offsetTotal));
+        }
+        
+        @Override
+        public int getItemCount() {
+            return 1;
+        }
+    }
     
     static class MainViewHolder extends RecyclerView.ViewHolder {
         

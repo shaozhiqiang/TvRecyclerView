@@ -30,6 +30,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.FocusFinder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     private boolean mLoadingMore = false;
     private int mLoadMoreBeforehandCount;
     
-    private int mSelectedPosition = 0;
+    private int mSelectedPosition = -1;
     private boolean mHasFocusWithPrevious = false;
 
     private OnItemListener mOnItemListener;
@@ -291,9 +292,9 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             layoutAfterFocus = hasFocus();
             if(!layoutAfterFocus) {
                 if(mSelectedPosition < 0) {
-                    mSelectedPosition = getFirstVisiblePosition();
+                    mSelectedPosition = getFirstVisibleAndFocusablePosition();
                 } else if(mSelectedPosition >= getItemCount()) {
-                    mSelectedPosition = getLastVisiblePosition();
+                    mSelectedPosition = getLastVisibleAndFocusablePosition();
                 }
                 if(mHasFocusWithPrevious && getPreserveFocusAfterLayout()) {
                     requestDefaultFocus();
@@ -362,7 +363,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             start -= getLayoutManager().canScrollVertically() ? getPaddingTop() : getPaddingLeft();
             scrollBy(start, start);
         } else {
-            mSelectedPosition = 0;
+            mSelectedPosition = getFirstVisibleAndFocusablePosition();
         }
     }
     
@@ -627,6 +628,21 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         }
         return result;
     }
+    
+    /**
+     * 获取第一个可获取焦点的item
+     * @return
+     */
+    public int getFirstVisibleAndFocusablePosition() {
+        int position = getFirstVisiblePosition();
+        for(; position < getChildCount(); position ++) {
+            View item = getLayoutManager().findViewByPosition(position);
+            if(null != item && item.isFocusable()) {
+                return position;
+            }
+        }
+        return -1;
+    }
 
     public int getFirstVisiblePosition() {
         if(getChildCount() == 0) {
@@ -637,6 +653,22 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             }
             return getChildAdapterPosition(getChildAt(0));
         }
+    }
+    
+    /**
+     * 获取最后一个可获取焦点的item
+     * @return
+     */
+    public int getLastVisibleAndFocusablePosition() {
+        int fPosition = getFirstVisiblePosition();
+        int lPosition = getLastVisiblePosition();
+        for(; lPosition >= fPosition; lPosition --) {
+            View item = getLayoutManager().findViewByPosition(lPosition);
+            if(null != item && item.isFocusable()) {
+                return lPosition;
+            }
+        }
+        return -1;
     }
     
     public int getLastVisiblePosition() {
@@ -656,9 +688,12 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
      */
     public void requestDefaultFocus() {
         if(mIsMenu || mIsMemoryFocus) {
+            if(mSelectedPosition < 0) {
+                mSelectedPosition = getFirstVisibleAndFocusablePosition();
+            }
             setSelection(mSelectedPosition);
         } else {
-            setSelection(getFirstVisiblePosition());
+            setSelection(getFirstVisibleAndFocusablePosition());
         }
     }
     
@@ -896,7 +931,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     protected Parcelable onSaveInstanceState() {
         RecyclerView.SavedState superSavedState = (RecyclerView.SavedState) super.onSaveInstanceState();
-        ISavedState savedState = new ISavedState(superSavedState.getSuperState());
+        ISavedState savedState = new ISavedState(null != superSavedState ? superSavedState.getSuperState() : null);
         savedState.mISuperState = superSavedState;
         savedState.mSelectedPosition = mSelectedPosition;
         savedState.mVerticalSpacingWithMargins = mVerticalSpacingWithMargins;
