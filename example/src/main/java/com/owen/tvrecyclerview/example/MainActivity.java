@@ -24,6 +24,7 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import com.owen.focus.FocusBorder;
+import com.owen.tab.TvTabLayout;
 import com.owen.tvrecyclerview.example.fragment.BaseFragment;
 import com.owen.tvrecyclerview.example.fragment.GridFragment;
 import com.owen.tvrecyclerview.example.fragment.ListFragment;
@@ -33,8 +34,6 @@ import com.owen.tvrecyclerview.example.fragment.StaggeredFragment;
 import com.owen.tvrecyclerview.example.fragment.UpdateDataFragment;
 import com.owen.tvrecyclerview.example.fragment.V7GridFragment;
 import com.owen.tvrecyclerview.example.fragment.VLayoutFragment;
-import com.owen.tvrecyclerview.example.tablayout.TabLayout;
-import com.owen.tvrecyclerview.example.tablayout.TvTabLayout;
 import com.owen.tvrecyclerview.utils.Loger;
 
 import butterknife.BindView;
@@ -47,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
     private final String LOGTAG = MainActivity.class.getSimpleName();
     private final String[] tabNames = {"VLayout", "Metro", "Spannable", "List", "Grid", "V7Grid", "Staggered", "UpdateData"};
 
-    @BindView(R.id.tab_layout) TvTabLayout mTabLayout;
+    @BindView(R.id.tab_layout)
+    TvTabLayout mTabLayout;
     
     private FocusBorder mFocusBorder;
     
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
                     .build(this);
         }
         
-        mTabLayout.setScaleValue(1.1f);
         mTabLayout.addOnTabSelectedListener(new TabSelectedListener());
         for(String tabName : tabNames) {
             mTabLayout.addTab(mTabLayout.newTab().setText(tabName));
@@ -84,11 +83,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
         return mFocusBorder;
     }
 
-    public class TabSelectedListener implements TabLayout.OnTabSelectedListener {
+    public class TabSelectedListener implements TvTabLayout.OnTabSelectedListener {
         private Fragment mFragment;
 
         @Override
-        public void onTabSelected(TabLayout.Tab tab) {
+        public void onTabSelected(TvTabLayout.Tab tab) {
             final int position = tab.getPosition();
             Log.i(LOGTAG, "onTabSelected...position="+position);
             mFragment = getSupportFragmentManager().findFragmentByTag(position + "");
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
         }
 
         @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
+        public void onTabUnselected(TvTabLayout.Tab tab) {
             if (mFragment != null) {
                 FragmentTransaction mFt = getSupportFragmentManager().beginTransaction();
                 mFt.detach(mFragment);
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
         }
 
         @Override
-        public void onTabReselected(TabLayout.Tab tab) {
+        public void onTabReselected(TvTabLayout.Tab tab) {
 
         }
     }

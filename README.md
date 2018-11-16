@@ -124,6 +124,10 @@ implementation 'com.tv.boost:tv-recyclerview:1.1.0'
 
 ------
 
+### 其它作品
+
 焦点框框架[TvFocusBorder](https://github.com/zhousuqiang/TvFocusBorder)
+
+Tab框架[TvTabLayout](https://github.com/zhousuqiang/TvTabLayout)
 
 作者 [owen](https://github.com/zhousuqiang)

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.owen.tvrecyclerview.example.tablayout.TvTabLayout
+    <com.owen.tab.TvTabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +17,7 @@
         app:tabGravity="center"
         app:tabTexSize="24pt"
         app:tabTextColor="@drawable/selector_tab_font_color"
+        app:tabTextSelectedScale="1.15"
         app:tabMinWidth="160pt"
         app:tabScrollMode="fixed"/>
 
