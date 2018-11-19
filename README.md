@@ -130,4 +130,6 @@ implementation 'com.tv.boost:tv-recyclerview:1.1.0'
 
 Tab框架[TvTabLayout](https://github.com/zhousuqiang/TvTabLayout)
 
+Tv控件[TvWidget](https://github.com/zhousuqiang/TvWidgetDemo)
+
 作者 [owen](https://github.com/zhousuqiang)

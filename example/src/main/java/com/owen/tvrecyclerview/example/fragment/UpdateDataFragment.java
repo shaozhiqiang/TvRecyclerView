@@ -20,9 +20,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
+import com.owen.adapter.CommonRecyclerViewAdapter;
+import com.owen.adapter.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.example.R;
-import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
-import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.example.data.ItemBean;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -225,6 +225,7 @@ public class UpdateDataFragment extends BaseFragment {
         adapter.removeItem(position);
     }
 
+    @Override
     public int getLayoutId() {
         return R.layout.layout_update_data_changed;
     }

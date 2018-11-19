@@ -19,8 +19,8 @@ package com.owen.tvrecyclerview.example.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import com.owen.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.R;
-import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.SpannableAdapter;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
 import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
@@ -29,6 +29,9 @@ import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import butterknife.BindView;
 
+/**
+ * @author ZhouSuQiang
+ */
 public class SpannableFragment extends BaseFragment {
 
     @BindView(R.id.list) TvRecyclerView mRecyclerView;
@@ -103,6 +106,7 @@ public class SpannableFragment extends BaseFragment {
         });*/
     }
 
+    @Override
     public int getLayoutId() {
         return R.layout.layout_spannable_grid;
     }

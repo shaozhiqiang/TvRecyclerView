@@ -4,7 +4,12 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.owen.adapter.CommonRecyclerViewAdapter;
+import com.owen.adapter.CommonRecyclerViewHolder;
+import com.owen.tvrecyclerview.example.App;
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.data.ItemBean;
 import com.owen.tvrecyclerview.widget.MetroGridLayoutManager;
@@ -23,12 +28,17 @@ public class MetroAdapter extends CommonRecyclerViewAdapter<ItemBean> implements
     public int getItemLayoutId(int viewType) {
         return R.layout.item;
     }
+    
+    public void showImage(CommonRecyclerViewHolder helper, int viewId, String url) {
+        ImageView imageView = helper.getHolder().getView(viewId);
+        Glide.with(App.get()).load(url).into(imageView);
+    }
 
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, ItemBean item, int position) {
         helper.getHolder()
-                .setText(R.id.title, String.valueOf(position))
-                .showImage(R.id.image, item.imgUrl);
+                .setText(R.id.title, String.valueOf(position));
+        showImage(helper, R.id.image, item.imgUrl);
         
         final View itemView = helper.itemView;
         MetroGridLayoutManager.LayoutParams lp = (MetroGridLayoutManager.LayoutParams) itemView.getLayoutParams();

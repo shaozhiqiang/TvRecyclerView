@@ -19,8 +19,8 @@ package com.owen.tvrecyclerview.example.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import com.owen.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.R;
-import com.owen.tvrecyclerview.example.adapter.CommonRecyclerViewAdapter;
 import com.owen.tvrecyclerview.example.adapter.GridAdapter;
 import com.owen.tvrecyclerview.example.data.ItemDatas;
 import com.owen.tvrecyclerview.example.display.DisplayAdaptive;
@@ -103,6 +103,7 @@ public class GridFragment extends BaseFragment {
         });*/
     }
 
+    @Override
     public int getLayoutId() {
         return R.layout.layout_grid;
     }

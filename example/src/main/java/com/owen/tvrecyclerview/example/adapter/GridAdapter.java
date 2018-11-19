@@ -17,7 +17,12 @@
 package com.owen.tvrecyclerview.example.adapter;
 
 import android.content.Context;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.owen.adapter.CommonRecyclerViewAdapter;
+import com.owen.adapter.CommonRecyclerViewHolder;
+import com.owen.tvrecyclerview.example.App;
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.data.ItemBean;
 
@@ -34,7 +39,12 @@ public class GridAdapter extends CommonRecyclerViewAdapter<ItemBean> {
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, ItemBean item, int position) {
         helper.getHolder()
-                .setText(R.id.title, String.valueOf(position))
-                .showImage(R.id.image, item.imgUrl);
+                .setText(R.id.title, String.valueOf(position));
+        showImage(helper, R.id.image, item.imgUrl);
+    }
+    
+    public void showImage(CommonRecyclerViewHolder helper, int viewId, String url) {
+        ImageView imageView = helper.getHolder().getView(viewId);
+        Glide.with(App.get()).load(url).into(imageView);
     }
 }

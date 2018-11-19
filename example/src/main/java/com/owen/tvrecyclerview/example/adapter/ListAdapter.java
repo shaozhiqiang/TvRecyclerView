@@ -18,6 +18,8 @@ package com.owen.tvrecyclerview.example.adapter;
 
 import android.content.Context;
 
+import com.owen.adapter.CommonRecyclerViewAdapter;
+import com.owen.adapter.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.data.ItemBean;
 

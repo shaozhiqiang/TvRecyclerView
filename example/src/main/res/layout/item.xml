@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.owen.tvrecyclerview.example.RoundFrameLayout
+<com.owen.widget.RoundFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -34,4 +34,4 @@
             android:padding="10pt"
             android:textSize="20pt"/>
 
-</com.owen.tvrecyclerview.example.RoundFrameLayout>
+</com.owen.widget.RoundFrameLayout>
