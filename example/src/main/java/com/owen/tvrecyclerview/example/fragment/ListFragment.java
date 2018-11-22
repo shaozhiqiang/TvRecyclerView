@@ -32,7 +32,7 @@ public class ListFragment extends BaseFragment {
 
     @BindView(R.id.list) TvRecyclerView mRecyclerView;
     
-    @BindView(R.id.list_v7) TvRecyclerView mRecyclerViewV7;
+    @BindView(R.id.list_v7) TvRecyclerView mMenuRecyclerViewV7;
     
     private ListAdapter mAdapter;
     private ListAdapter mV7Adapter;
@@ -49,8 +49,8 @@ public class ListFragment extends BaseFragment {
         setListener();
 
         // 设置布局的横纵间距
+        mMenuRecyclerViewV7.setSpacingWithMargins(10, 0);
         mRecyclerView.setSpacingWithMargins(0, 10);
-        mRecyclerViewV7.setSpacingWithMargins(10, 0);
 
         mAdapter = new ListAdapter(getContext(), false);
         mAdapter.setDatas(ItemDatas.getDatas(64));
@@ -60,7 +60,7 @@ public class ListFragment extends BaseFragment {
 
         mV7Adapter = new ListAdapter(getContext(), true);
         mV7Adapter.setDatas(ItemDatas.getDatas(20));
-        mRecyclerViewV7.setAdapter(mV7Adapter);
+        mMenuRecyclerViewV7.setAdapter(mV7Adapter);
 
     }
     
@@ -78,7 +78,7 @@ public class ListFragment extends BaseFragment {
     private void setListener() {
         setScrollListener(mRecyclerView);
 
-        mRecyclerViewV7.setOnItemListener(new SimpleOnItemListener() {
+        mMenuRecyclerViewV7.setOnItemListener(new SimpleOnItemListener() {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
@@ -104,7 +104,7 @@ public class ListFragment extends BaseFragment {
             }
         });
         
-        mRecyclerViewV7.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mMenuRecyclerViewV7.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(mRecyclerView.hasFocus() && !hasFocus)
@@ -116,7 +116,7 @@ public class ListFragment extends BaseFragment {
         mRecyclerView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(mRecyclerViewV7.hasFocus() && !hasFocus)
+                if(mMenuRecyclerViewV7.hasFocus() && !hasFocus)
                     return;
                 mFocusBorder.setVisible(hasFocus);
             }
@@ -143,6 +143,7 @@ public class ListFragment extends BaseFragment {
         });*/
     }
 
+    @Override
     public int getLayoutId() {
         return R.layout.layout_list;
     }

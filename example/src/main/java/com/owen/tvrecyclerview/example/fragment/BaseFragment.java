@@ -39,6 +39,9 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
+/**
+ * @author ZhouSuQiang
+ */
 public abstract class BaseFragment extends Fragment {
     private TextView mPositionText;
     private TextView mCountText;

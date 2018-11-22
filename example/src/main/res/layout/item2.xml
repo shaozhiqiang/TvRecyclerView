@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="72pt"
-        android:layout_height="130pt"
+        android:layout_width="172pt"
+        android:layout_height="match_parent"
         android:background="@color/item_default_color"
         android:focusable="true"
         android:clickable="true">

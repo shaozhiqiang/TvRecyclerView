@@ -64,10 +64,10 @@ public class VLayoutFragment extends BaseFragment {
     
         mFocusBorder = new FocusBorder.Builder()
                 .asColor()
-                .borderColor(getResources().getColor(R.color.actionbar_color))
-                .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 2)
-                .shadowColor(getResources().getColor(R.color.green_bright))
-                .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 18)
+                .borderColor(getResources().getColor(R.color.green_bright))
+                .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 3)
+                .shadowColor(getResources().getColor(R.color.actionbar_color))
+                .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 22)
                 .padding(DisplayAdaptive.getInstance().toLocalPx(-5)) //这里的apdding值与item布局的padding一致
                 .build((ViewGroup) view);
     
@@ -79,8 +79,8 @@ public class VLayoutFragment extends BaseFragment {
 //        mRecyclerView.addItemDecoration(itemDecoration);
         
         mRecyclerView.bringToFront(); //将RecyclerView移致前层, 这样焦点就会在RecyclerView底层移动
-        
-//        mRecyclerView.setSelection(20);
+    
+//        mRecyclerView.setSelection(30);
     }
     
     @OnClick({R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4, R.id.btn5})

@@ -24,19 +24,19 @@ import com.owen.tvrecyclerview.example.R;
 import com.owen.tvrecyclerview.example.data.ItemBean;
 
 public class ListAdapter extends CommonRecyclerViewAdapter<ItemBean> {
-    private boolean isV7;
-    public ListAdapter(Context context, boolean isV7) {
+    private boolean isMunu;
+    public ListAdapter(Context context, boolean isMunu) {
         super(context);
-        this.isV7 = isV7;
+        this.isMunu = isMunu;
     }
 
     @Override
     public int getItemLayoutId(int viewType) {
-        return isV7 ? R.layout.item_list_menu : R.layout.item2;
+        return isMunu ? R.layout.item_list_menu : R.layout.item2;
     }
 
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, ItemBean item, int position) {
-        helper.getHolder().setText(R.id.title, String.valueOf(position));
+        helper.getHolder().setText(R.id.title, (isMunu ? "菜单模式 " : "") + String.valueOf(position));
     }
 }

@@ -29,6 +29,7 @@ import com.owen.tvrecyclerview.example.fragment.BaseFragment;
 import com.owen.tvrecyclerview.example.fragment.GridFragment;
 import com.owen.tvrecyclerview.example.fragment.ListFragment;
 import com.owen.tvrecyclerview.example.fragment.MetroFragment;
+import com.owen.tvrecyclerview.example.fragment.NestedFragment;
 import com.owen.tvrecyclerview.example.fragment.SpannableFragment;
 import com.owen.tvrecyclerview.example.fragment.StaggeredFragment;
 import com.owen.tvrecyclerview.example.fragment.UpdateDataFragment;
@@ -44,7 +45,16 @@ import butterknife.ButterKnife;
  */
 public class MainActivity extends AppCompatActivity implements BaseFragment.FocusBorderHelper{
     private final String LOGTAG = MainActivity.class.getSimpleName();
-    private final String[] tabNames = {"VLayout", "Metro", "Spannable", "List", "Grid", "V7Grid", "Staggered", "UpdateData"};
+    private final String[] tabNames = {
+            "VLayout", "Metro", "Spannable",
+            "Nested", "Menu&List", "Grid",
+            "V7Grid", "Staggered", "UpdateData"
+    };
+    private final String[] fragments = {
+            VLayoutFragment.class.getName(), MetroFragment.class.getName(), SpannableFragment.class.getName(),
+            NestedFragment.class.getName(), ListFragment.class.getName(), GridFragment.class.getName(),
+            V7GridFragment.class.getName(), StaggeredFragment.class.getName(), UpdateDataFragment.class.getName()
+    };
 
     @BindView(R.id.tab_layout)
     TvTabLayout mTabLayout;
@@ -89,36 +99,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
         @Override
         public void onTabSelected(TvTabLayout.Tab tab) {
             final int position = tab.getPosition();
-            Log.i(LOGTAG, "onTabSelected...position="+position);
             mFragment = getSupportFragmentManager().findFragmentByTag(position + "");
             FragmentTransaction mFt = getSupportFragmentManager().beginTransaction();
             if (mFragment == null) {
-                switch (position) {
-                    case 0:
-                        mFragment = VLayoutFragment.instantiate(MainActivity.this, VLayoutFragment.class.getName());
-                        break;
-                    case 1:
-                        mFragment = MetroFragment.newInstance();
-                        break;
-                    case 2:
-                        mFragment = SpannableFragment.newInstance();
-                        break;
-                    case 3:
-                        mFragment = ListFragment.newInstance();
-                        break;
-                    case 4:
-                        mFragment = GridFragment.newInstance();
-                        break;
-                    case 5:
-                        mFragment = V7GridFragment.newInstance();
-                        break;
-                    case 6:
-                        mFragment = StaggeredFragment.newInstance();
-                        break;
-                    case 7:
-                        mFragment = UpdateDataFragment.newInstance();
-                        break;
-                }
+                mFragment = Fragment.instantiate(MainActivity.this, fragments[position]);
                 mFt.add(R.id.content, mFragment, String.valueOf(position));
             } else {
                 mFt.attach(mFragment);
