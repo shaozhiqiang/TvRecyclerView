@@ -1,7 +1,5 @@
 # 欢迎使用 TvRecyclerView [ ![Download](https://api.bintray.com/packages/zhousuqiang/maven/tv-recyclerview/images/download.svg) ](https://bintray.com/zhousuqiang/maven/tv-recyclerview/_latestVersion)
 
-群   号：484790001 [群二维码](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/qq.png)
-
 >* 针对TV端的特性对RecyclerView进行了适配与开发;
 >* 优化[TwoWayView](https://github.com/lucasr/twoway-view)在TV端的适配和延伸;
 >* 支持v7包原生的LayoutManager;
@@ -123,6 +121,10 @@ implementation 'com.tv.boost:tv-recyclerview:1.1.0'
 ### 更详细的使用请见exmaple
 
 ------
+
+扣 扣 群：484790001
+
+![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/qq.png)
 
 ### 其它作品
 
