@@ -122,7 +122,7 @@ implementation 'com.tv.boost:tv-recyclerview:1.1.0'
 
 ------
 
-扣 扣 群：484790001
+扣 扣 群：484790001（注：加群时请写明来源及目的）
 
 ![](https://github.com/zhousuqiang/TvRecyclerView/blob/master/images/qq.png)
 
