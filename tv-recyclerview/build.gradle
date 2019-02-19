@@ -27,15 +27,16 @@ publish {
     userOrg = 'zhousuqiang'
     groupId = 'com.owen'
     artifactId = 'tv-recyclerview'
-    publishVersion = '2.0.1'
+    publishVersion = '2.0.3'
     desc = 'TvRecyclerView'
     website = 'https://github.com/zhousuqiang/TvRecyclerView'
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     api "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
-    api ('com.alibaba.android:vlayout:1.2.18') {
+    api "com.android.support:support-v4:$rootProject.ext.supportVersion"
+    api ('com.alibaba.android:vlayout:1.2.8@aar') {
         transitive = true
     }
 }

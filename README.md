@@ -15,7 +15,7 @@
 
 ```java
 // 2.0+版本的引入
-implementation 'com.owen:tv-recyclerview:2.0.1'
+implementation 'com.owen:tv-recyclerview:2.0.3'
 
 // 1.0版本的引入(已过时版本)
 implementation 'com.tv.boost:tv-recyclerview:1.1.0'
