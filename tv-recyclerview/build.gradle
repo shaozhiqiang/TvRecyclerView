@@ -27,7 +27,7 @@ publish {
     userOrg = 'zhousuqiang'
     groupId = 'com.owen'
     artifactId = 'tv-recyclerview'
-    publishVersion = '2.0.3'
+    publishVersion = '2.0.4'
     desc = 'TvRecyclerView'
     website = 'https://github.com/zhousuqiang/TvRecyclerView'
 }

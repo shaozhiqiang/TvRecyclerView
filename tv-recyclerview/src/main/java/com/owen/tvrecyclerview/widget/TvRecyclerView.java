@@ -239,6 +239,19 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         mHasMoreData = hasMoreData;
     }
 
+    public void finishLoadMoreWithNoMore() {
+        mLoadingMore = false;
+        setHasMoreData(false);
+    }
+
+    public void finishLoadMore() {
+        mLoadingMore = false;
+    }
+
+    public boolean isLoadingMore() {
+        return mLoadingMore;
+    }
+
     /**
      * 设置选中的Item距离开始或结束的偏移量；
      * 与滚动方向有关；
@@ -270,14 +283,6 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
     public boolean isSelectedItemCentered() {
         return mSelectedItemCentered;
-    }
-
-    public void setLoadingMore(boolean loadingMore) {
-        mLoadingMore = loadingMore;
-    }
-
-    public boolean isLoadingMore() {
-        return mLoadingMore;
     }
     
     @Override
@@ -478,7 +483,8 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             // 加载更多回调
             if(null != mOnLoadMoreListener && !mLoadingMore && mHasMoreData) {
                 if(getLastVisiblePosition() >= getAdapter().getItemCount() - (1 + mLoadMoreBeforehandCount)) {
-                    mHasMoreData = mOnLoadMoreListener.onLoadMore();
+                    mLoadingMore = true;
+                    mOnLoadMoreListener.onLoadMore();
                 }
             }
         }
@@ -938,19 +944,17 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     }
 
     public void setItemActivated(int position) {
-        if(mIsMenu) {
-            ViewHolder holder;
-            if(position != mSelectedPosition) {
-                holder = findViewHolderForLayoutPosition(mSelectedPosition);
-                if(null != holder && holder.itemView.isActivated()) {
-                    holder.itemView.setActivated(false);
-                }
-                mSelectedPosition = position;
+        ViewHolder holder;
+        if(position != mSelectedPosition) {
+            holder = findViewHolderForLayoutPosition(mSelectedPosition);
+            if(null != holder && holder.itemView.isActivated()) {
+                holder.itemView.setActivated(false);
             }
-            holder = findViewHolderForLayoutPosition(position);
-            if(null != holder && !holder.itemView.isActivated()) {
-                holder.itemView.setActivated(true);
-            }
+            mSelectedPosition = position;
+        }
+        holder = findViewHolderForLayoutPosition(position);
+        if(null != holder && !holder.itemView.isActivated()) {
+            holder.itemView.setActivated(true);
         }
     }
     
@@ -967,7 +971,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     }
 
     public interface OnLoadMoreListener {
-        boolean onLoadMore();
+        void onLoadMore();
     }
 
     public interface OnInBorderKeyEventListener {

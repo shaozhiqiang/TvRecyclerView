@@ -24,7 +24,7 @@
             android:name="design_height_in_dp"
             android:value="720"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
