@@ -306,7 +306,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                 }
                 if(mHasFocusWithPrevious && getPreserveFocusAfterLayout()) {
                     requestDefaultFocus();
-                } else {
+                } else if(mIsMenu){
                     setItemActivated(mSelectedPosition);
                 }
             }
