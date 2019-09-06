@@ -759,27 +759,32 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
      *
      * @param position 对应的位置索引
      */
-    public void setSelection(int position) {
-        if(null == getAdapter() || position < 0 || position >= getItemCount()) {
-            return;
-        }
-        mSelectedPosition = position;
-        View view = null;
-        if(null != getLayoutManager()) {
-            view = getLayoutManager().findViewByPosition(position);
-        }
-        if(null != view) {
-            if(!hasFocus()) {
-                //模拟TvRecyclerView获取焦点
-                onFocusChanged(true, FOCUS_DOWN, null);
+    public void setSelection(final int position) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if(null == getAdapter() || position < 0 || position >= getItemCount()) {
+                    return;
+                }
+                mSelectedPosition = position;
+                View view = null;
+                if(null != getLayoutManager()) {
+                    view = getLayoutManager().findViewByPosition(position);
+                }
+                if(null != view) {
+                    if(!hasFocus()) {
+                        //模拟TvRecyclerView获取焦点
+                        onFocusChanged(true, FOCUS_DOWN, null);
+                    }
+                    view.requestFocus();
+                }
+                else {
+                    TvSmoothScroller scroller = new TvSmoothScroller(getContext(), true, false, mSelectedItemOffsetStart);
+                    scroller.setTargetPosition(position);
+                    getLayoutManager().startSmoothScroll(scroller);
+                }
             }
-            view.requestFocus();
-        }
-        else {
-            TvSmoothScroller scroller = new TvSmoothScroller(getContext(), true, false, mSelectedItemOffsetStart);
-            scroller.setTargetPosition(position);
-            getLayoutManager().startSmoothScroll(scroller);
-        }
+        });
     }
     
     /**
