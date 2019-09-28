@@ -396,23 +396,28 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
     @Override
     public void onFocusChange(final View itemView, boolean hasFocus) {
-        if(null != itemView && !(itemView instanceof RecyclerView)) {
+        if(null != itemView) {
             final int position = getChildAdapterPosition(itemView);
-            itemView.setSelected(hasFocus);
+            final boolean isRv = itemView instanceof RecyclerView;
+            if (!isRv) {
+                itemView.setSelected(hasFocus);
+            }
             if (hasFocus) {
                 mSelectedPosition = position;
-                if(mIsMenu && itemView.isActivated()) {
-                    itemView.setActivated(false);
-                }
-                if(null != mOnItemListener) {
-                    mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, position);
+                if (!isRv) {
+                    if (mIsMenu && itemView.isActivated()) {
+                        itemView.setActivated(false);
+                    }
+                    if (null != mOnItemListener) {
+                        mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, position);
+                    }
                 }
             } else {
                 itemView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(!hasFocus()) {
-                            if(mIsMenu) {
+                            if(mIsMenu && !isRv) {
                                 // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
                                 itemView.setActivated(true);
                             }
@@ -424,7 +429,8 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                         }
                     }
                 }, 6);
-                if(null != mOnItemListener) {
+
+                if(null != mOnItemListener && !isRv) {
                     mOnItemListener.onItemPreSelected(TvRecyclerView.this, itemView, position);
                 }
             }
