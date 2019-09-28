@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
@@ -70,17 +71,6 @@ public class VLayoutFragment extends BaseFragment {
                 .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 22)
                 .padding(DisplayAdaptive.getInstance().toLocalPx(-5)) //这里的apdding值与item布局的padding一致
                 .build((ViewGroup) view);
-    
-//        RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
-//            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//                outRect.set(5, 5, 5, 5);
-//            }
-//        };
-//        mRecyclerView.addItemDecoration(itemDecoration);
-        
-        mRecyclerView.bringToFront(); //将RecyclerView移致前层, 这样焦点就会在RecyclerView底层移动
-    
-//        mRecyclerView.setSelection(30);
     }
     
     @OnClick({R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4, R.id.btn5})
@@ -105,43 +95,45 @@ public class VLayoutFragment extends BaseFragment {
     }
     
     private void setDatas() {
-        adapters.add(new TitleAdapter(getActivity(), "Title 标题"));
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 ColumnLayoutHelper "));
+        {
+            ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
+//            layoutHelper.setHGap(10);
+//            layoutHelper.setVGap(10);
+            layoutHelper.setAspectRatio(14f);
+            adapters.add(new SubAdapter(getActivity(), layoutHelper, 10));
+        }
+
+
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 OnePlus "));
         
         {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
 //            helper.setBgColor(0xffef8ba3);
             helper.setAspectRatio(3.0f);
-            helper.setColWeights(new float[]{40f});
-            helper.setRowWeight(40f);
+            helper.setColWeights(new float[]{30f});
+//            helper.setRowWeight(30f);
 //            helper.setMargin(0, 0, 0, 10);
 //            helper.setPadding(10, 10, 10, 10);
-            adapters.add(new SubAdapter(getActivity(), helper, 4) {
+            adapters.add(new SubAdapter(getActivity(), helper, 5) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-                    if (position == 0) {
-                        lp.rightMargin = 1;
-                    } else if (position == 1) {
-                    
-                    } else if (position == 2) {
-                        lp.topMargin = 1;
-                        lp.rightMargin = 1;
-                    }
+//                    VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+//                    if (position == 0) {
+//                        lp.rightMargin = 1;
+//                    } else if (position == 1) {
+//
+//                    } else if (position == 2) {
+//                        lp.topMargin = 1;
+//                        lp.rightMargin = 1;
+//                    }
                 }
             });
         }
     
-        adapters.add(new TitleAdapter(getActivity(), "Title 标题"));
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 OnePlus "));
         
-        {
-            OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
-//            helper.setBgColor(0xff876384);
-//            helper.setMargin(10, 10, 10, 10);
-//            helper.setPadding(100, 10, 10, 10);
-            adapters.add(new SubAdapter(getActivity(), helper, 3));
-        }
-    
         {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
 //            helper.setBgColor(0xff876384);
@@ -149,7 +141,17 @@ public class VLayoutFragment extends BaseFragment {
 //            helper.setPadding(100, 10, 10, 10);
             adapters.add(new SubAdapter(getActivity(), helper, 4));
         }
-        
+
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 OnePlus "));
+        {
+            OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+//            helper.setBgColor(0xff876384);
+//            helper.setMargin(10, 10, 10, 10);
+//            helper.setPadding(100, 10, 10, 10);
+            adapters.add(new SubAdapter(getActivity(), helper, 4));
+        }
+
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 GridLayoutHelper "));
         {
             GridLayoutHelper layoutHelper;
             layoutHelper = new GridLayoutHelper(8);
@@ -158,7 +160,8 @@ public class VLayoutFragment extends BaseFragment {
             layoutHelper.setAspectRatio(14f);
             adapters.add(new SubAdapter(getActivity(), layoutHelper, 10));
         }
-    
+
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 GridLayoutHelper "));
         {
             GridLayoutHelper layoutHelper;
             layoutHelper = new GridLayoutHelper(2);
@@ -167,7 +170,8 @@ public class VLayoutFragment extends BaseFragment {
             layoutHelper.setAspectRatio(13f);
             adapters.add(new SubAdapter(getActivity(), layoutHelper, 2));
         }
-    
+
+        adapters.add(new TitleAdapter(getActivity(), "Title 标题 GridLayoutHelper "));
         {
             GridLayoutHelper layoutHelper;
             layoutHelper = new GridLayoutHelper(5);

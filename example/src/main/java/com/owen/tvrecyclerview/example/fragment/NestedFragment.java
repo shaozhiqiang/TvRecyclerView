@@ -40,7 +40,7 @@ public class NestedFragment extends BaseFragment {
     
             @Override
             public int getItemCount() {
-                return 2;
+                return 6;
             }
     
             @Override

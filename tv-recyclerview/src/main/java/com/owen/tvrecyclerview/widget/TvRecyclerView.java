@@ -396,7 +396,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
     @Override
     public void onFocusChange(final View itemView, boolean hasFocus) {
-        if(null != itemView && itemView != this) {
+        if(null != itemView && !(itemView instanceof RecyclerView)) {
             final int position = getChildAdapterPosition(itemView);
             itemView.setSelected(hasFocus);
             if (hasFocus) {

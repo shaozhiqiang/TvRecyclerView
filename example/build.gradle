@@ -29,13 +29,13 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    implementation 'me.jessyan:autosize:1.1.0'
+    implementation 'me.jessyan:autosize:1.1.2'
     implementation 'com.owen:tv-tablayout:1.0.1'
     implementation 'com.owen:tv-widget:1.0.1'
-    implementation 'com.owen:tv-focusborder:1.0.8'
+    implementation 'com.owen:tv-focusborder:1.1.2'
 //    implementation project(':tv-focusborder')
 
-    //    implementation 'com.owen:tv-recyclerview:2.0.0'
+    //    implementation 'com.owen:tv-recyclerview:2.0.7'
     implementation project(':tv-recyclerview')
 
 }
