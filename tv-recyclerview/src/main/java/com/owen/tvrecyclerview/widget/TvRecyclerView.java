@@ -69,7 +69,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     private boolean mLoadingMore = false;
     private int mLoadMoreBeforehandCount;
     
-    private int mSelectedPosition = -1;
+    private int mSelectedPosition = NO_POSITION;
     private boolean mHasFocusWithPrevious = false;
 
     private OnItemListener mOnItemListener;
@@ -383,7 +383,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         }
 
         if(resetSelectedPosition) {
-            mSelectedPosition = 0;
+            mSelectedPosition = NO_POSITION;
         }
     }
     
@@ -560,8 +560,6 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
             getDecoratedBoundsWithMargins(focusView, mTempRect);
 
-            Loger.i("zsq mTempRect=" + mTempRect);
-
             if (getLayoutManager().canScrollHorizontally()) {
                 final int right =
                         mTempRect.right
@@ -703,7 +701,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                 return position;
             }
         }
-        return -1;
+        return NO_POSITION;
     }
 
     public int getFirstVisiblePosition() {
