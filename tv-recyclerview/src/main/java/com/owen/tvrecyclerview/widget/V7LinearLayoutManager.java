@@ -12,6 +12,8 @@ import android.view.View;
  */
 
 public class V7LinearLayoutManager extends LinearLayoutManager {
+    private int mExtraLayoutSpace = 500;
+
     public V7LinearLayoutManager(Context context) {
         super(context);
     }
@@ -30,5 +32,14 @@ public class V7LinearLayoutManager extends LinearLayoutManager {
             return parent.requestChildRectangleOnScreen(child, rect, immediate);
         }
         return super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
+    }
+
+    @Override
+    protected int getExtraLayoutSpace(RecyclerView.State state) {
+        return mExtraLayoutSpace;
+    }
+
+    public void setExtraLayoutSpace(int extraLayoutSpace) {
+        mExtraLayoutSpace = extraLayoutSpace;
     }
 }

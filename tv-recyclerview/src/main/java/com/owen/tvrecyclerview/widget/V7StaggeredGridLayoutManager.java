@@ -27,4 +27,5 @@ public class V7StaggeredGridLayoutManager extends StaggeredGridLayoutManager {
         }
         return super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible);
     }
+
 }

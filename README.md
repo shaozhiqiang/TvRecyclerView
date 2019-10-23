@@ -15,7 +15,7 @@
 
 ```java
 // 2.0+版本的引入
-implementation 'com.owen:tv-recyclerview:2.1.0'
+implementation 'com.owen:tv-recyclerview:2.1.1'
 
 ```
 

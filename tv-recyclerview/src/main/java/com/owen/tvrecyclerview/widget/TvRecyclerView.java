@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
+import com.owen.tvrecyclerview.BaseLayoutManager;
 import com.owen.tvrecyclerview.R;
 import com.owen.tvrecyclerview.TwoWayLayoutManager;
 import com.owen.tvrecyclerview.utils.Loger;
@@ -373,7 +374,8 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         newAdapter.registerAdapterDataObserver(mDataObserver);
         //修复重新setAdapter后第一条被遮挡的问题
         View view = getChildAt(0);
-        if(null != view && null != oldAdapter && null != getLayoutManager()) {
+        if(null != view && null != oldAdapter
+                && getLayoutManager() instanceof BaseLayoutManager) {
             mHasFocusWithPrevious = hasFocus();
             int start = getLayoutManager().canScrollVertically() ? getLayoutManager().getDecoratedTop(view) : getLayoutManager().getDecoratedLeft(view);
             start -= getLayoutManager().canScrollVertically() ? getPaddingTop() : getPaddingLeft();
