@@ -208,6 +208,10 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
         return mSelectedPosition;
     }
 
+    public void setSelectedPosition(int selectedPosition) {
+        mSelectedPosition = selectedPosition;
+    }
+
     public void setMemoryFocus(boolean memoryFocus) {
         mIsMemoryFocus = memoryFocus;
     }

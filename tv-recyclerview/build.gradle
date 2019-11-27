@@ -9,6 +9,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 32
         versionName "1.1.0"
+        consumerProguardFiles 'proguard-rules.pro'//把混淆文件打入aar
     }
 
     lintOptions {
@@ -27,7 +28,7 @@ publish {
     userOrg = 'zhousuqiang'
     groupId = 'com.owen'
     artifactId = 'tv-recyclerview'
-    publishVersion = '2.1.1'
+    publishVersion = '2.1.1.1'
     desc = 'TvRecyclerView'
     website = 'https://github.com/zhousuqiang/TvRecyclerView'
 }
@@ -36,7 +37,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
     api "com.android.support:support-v4:$rootProject.ext.supportVersion"
-    api ('com.alibaba.android:vlayout:1.2.26@aar') {
+    api ('com.alibaba.android:vlayout:1.2.31@aar') {
         transitive = true
     }
 }
