@@ -22,6 +22,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 publish {
@@ -35,9 +40,9 @@ publish {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
-    api "com.android.support:support-v4:$rootProject.ext.supportVersion"
-    api ('com.alibaba.android:vlayout:1.2.31@aar') {
+    api "androidx.recyclerview:recyclerview:1.1.0"
+    api "androidx.legacy:legacy-support-v4:1.0.0"
+    api ('com.alibaba.android:vlayout:1.2.37') {
         transitive = true
     }
 }

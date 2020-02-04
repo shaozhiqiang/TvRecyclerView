@@ -3,17 +3,17 @@ package com.owen.tvrecyclerview.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
 import android.util.AttributeSet;
 import android.util.Log;
 
 import com.owen.tvrecyclerview.R;
 
 /**
- * {android.support.v7.widget.RecyclerView.ItemDecoration} that applies a
+ * {androidx.recyclerview.widget.RecyclerView.ItemDecoration} that applies a
  * vertical and horizontal spacing between items of the target
- * {android.support.v7.widget.RecyclerView}.
+ * {androidx.recyclerview.widget.RecyclerView}.
  */
 public class SpacingItemDecoration extends ItemDecoration {
     protected int mVerticalSpacing;

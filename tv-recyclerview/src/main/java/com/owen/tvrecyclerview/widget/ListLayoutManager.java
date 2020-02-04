@@ -17,8 +17,8 @@
 package com.owen.tvrecyclerview.widget;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView.Recycler;
-import android.support.v7.widget.RecyclerView.State;
+import androidx.recyclerview.widget.RecyclerView.Recycler;
+import androidx.recyclerview.widget.RecyclerView.State;
 import android.util.AttributeSet;
 
 import com.owen.tvrecyclerview.BaseLayoutManager;
