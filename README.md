@@ -14,8 +14,11 @@
 ### Android Studio 集成
 
 ```java
-// 2.0+版本的引入
+// support版本
 implementation 'com.owen:tv-recyclerview:2.1.1.1'
+
+// androidx版本
+implementation 'com.owen:tv-recyclerview:3.0.0'
 
 ```
 
