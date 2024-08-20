@@ -3,6 +3,13 @@
 buildscript {
     ext.kotlin_version = "1.3.10"
     repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven { url 'https://jitpack.io' }
         jcenter()
         google()
     }
@@ -23,6 +30,13 @@ task javadoc(type: Javadoc) {
 
 allprojects {
     repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven { url 'https://jitpack.io' }
         jcenter()
         google()
         jcenter { url "http://jcenter.bintray.com/" }
