@@ -583,9 +583,12 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                         mTempRect.bottom
                                 + getPaddingBottom()
                                 - getHeight();
+//                final int top =
+//                        mTempRect.top
+//                                - getPaddingTop();
+                //修改 rv +PaddingTop
                 final int top =
-                        mTempRect.top
-                                - getPaddingTop();
+                        mTempRect.top;
                 Loger.i("zsq top=" + top + " bottom=" + bottom);
                 dy = computeScrollOffset(top, bottom, offsetStart, offsetEnd);
             }
