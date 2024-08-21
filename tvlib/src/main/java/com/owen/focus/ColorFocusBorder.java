@@ -177,7 +177,7 @@ public class ColorFocusBorder extends AbsFocusBorder {
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
             if(mBorderStartColor!=0&&mBorderEndColor !=0) {
-                mBorderGradient =new LinearGradient(0,0,mTempRectF.width(), mTempRectF.height(),new int[]{mBorderStartColor,mBorderEndColor},null, Shader.TileMode.CLAMP);
+                mBorderGradient =new LinearGradient(0,0,mTempRectF.width(), 0,new int[]{mBorderStartColor,mBorderEndColor},null, Shader.TileMode.CLAMP);
                 mBorderPaint.setShader(mBorderGradient);
             }else{
                 mBorderPaint.setShader(null);
