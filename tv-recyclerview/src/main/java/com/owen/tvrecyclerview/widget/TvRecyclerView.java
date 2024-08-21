@@ -897,7 +897,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             }
             return null;
         } else {
-            return nextFocusedView;
+            return nextFocusedView!=null?nextFocusedView:super.focusSearch(focused, direction);
         }
     }
 
