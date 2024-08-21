@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -29,19 +29,20 @@ android {
     }
 }
 
-publish {
-    userOrg = 'zhousuqiang'
-    groupId = 'com.owen'
-    artifactId = 'tv-recyclerview'
-    publishVersion = '3.0.0'
-    desc = 'TvRecyclerView'
-    website = 'https://github.com/zhousuqiang/TvRecyclerView'
-}
+//publish {
+//    userOrg = 'zhousuqiang'
+//    groupId = 'com.owen'
+//    artifactId = 'tv-recyclerview'
+//    publishVersion = '3.0.0'
+//    desc = 'TvRecyclerView'
+//    website = 'https://github.com/zhousuqiang/TvRecyclerView'
+//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "androidx.recyclerview:recyclerview:1.1.0"
+    api "androidx.recyclerview:recyclerview:1.2.1"
     api "androidx.legacy:legacy-support-v4:1.0.0"
+    api "androidx.gridlayout:gridlayout:1.0.0"
     api ('com.alibaba.android:vlayout:1.2.37') {
         transitive = true
     }

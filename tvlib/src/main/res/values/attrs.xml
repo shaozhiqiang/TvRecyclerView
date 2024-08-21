@@ -57,4 +57,15 @@
         <attr name="tv_rowSpan" format="integer"/>
     </declare-styleable>
 
+    <declare-styleable name="LabelView"><attr format="string" name="lv_text"/><attr format="color" name="lv_text_color"/><attr format="dimension" name="lv_text_size"/><attr format="boolean" name="lv_text_bold"/><attr format="boolean" name="lv_text_all_caps"/><attr format="color" name="lv_background_color"/><attr format="dimension" name="lv_min_size"/><attr format="dimension" name="lv_padding"/><attr format="enum" name="lv_gravity">
+        <enum name="TOP_LEFT" value="51"/>
+        <enum name="TOP_RIGHT" value="53"/>
+        <enum name="BOTTOM_LEFT" value="83"/>
+        <enum name="BOTTOM_RIGHT" value="85"/>
+    </attr><attr format="boolean" name="lv_fill_triangle"/><attr format="dimension" name="lv_radius"/></declare-styleable>
+    <declare-styleable name="RoundFrameLayout"><attr format="dimension" name="rfl_radius"/><attr format="dimension" name="topLeftRadius"/><attr format="dimension" name="topRightRadius"/><attr format="dimension" name="bottomLeftRadius"/><attr format="dimension" name="bottomRightRadius"/></declare-styleable>
+    <declare-styleable name="TvHorizontalScrollView"><attr format="dimension" name="hsv_selected_offset_start"/><attr format="dimension" name="hsv_selected_offset_end"/><attr format="boolean" name="hsv_is_selected_centered"/><attr format="integer" name="hsv_scroller_duration"/></declare-styleable>
+    <declare-styleable name="TvIconButton"><attr format="reference" name="tv_icon"/><attr format="dimension" name="tv_iconWidth"/><attr format="dimension" name="tv_iconHeight"/><attr format="dimension" name="tv_iconMoveOffset"/><attr format="string|reference" name="tv_text"/><attr format="reference|color" name="tv_textColor"/><attr format="dimension" name="tv_textSize"/><attr format="dimension" name="tv_textPadding"/><attr format="reference" name="tv_textBg"/></declare-styleable>
+    <declare-styleable name="TvVerticalScrollView"><attr format="dimension" name="vsv_selected_offset_start"/><attr format="dimension" name="vsv_selected_offset_end"/><attr format="boolean" name="vsv_is_selected_centered"/><attr format="integer" name="vsv_scroller_duration"/></declare-styleable>
+
 </resources>

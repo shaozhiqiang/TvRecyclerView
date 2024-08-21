@@ -16,6 +16,7 @@
 
 package com.owen.tvrecyclerview.example;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,10 +75,13 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Focu
         if(null == mFocusBorder) {
             mFocusBorder = new FocusBorder.Builder()
                     .asColor()
-                    .borderColorRes(R.color.actionbar_color)
+                    .borderColor(Color.parseColor("#1278FF"))
+                    .borderGradientColor(Color.parseColor("#00BBFF"),Color.parseColor("#1278FF"))
                     .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 3.2f)
-                    .shadowColorRes(R.color.green_bright)
+//                    .shadowColorRes(R.color.green_bright)
                     .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 22f)
+                    .noBreathing()
+                    .noShimmer()
                     .build(this);
         }
         
