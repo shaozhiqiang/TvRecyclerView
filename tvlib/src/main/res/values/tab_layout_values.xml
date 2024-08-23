@@ -6,6 +6,7 @@
         <attr name="android:layout"/>
     </declare-styleable>
 
+    <attr name="tabTextSelectedScaleAnimationDuration" format="integer" />
     <attr name="tabIndicatorAnimationDurationVal" format="integer"/>
     <attr name="tabIndicatorResId" format="reference" />
     <attr name="tabIndicatorWidth" format="dimension"/>
@@ -49,6 +50,7 @@
 
     <declare-styleable name="TvTabLayout">
         <attr name="tabIndicatorAnimationDurationVal"/>
+        <attr name="tabTextSelectedScaleAnimationDuration"/>
         <attr name="tabIndicatorResId" />
         <attr name="tabIndicatorWidth" />
         <attr name="tabIndicatorHeight" />

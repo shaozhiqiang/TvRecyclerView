@@ -278,8 +278,9 @@ public class TvTabLayout extends HorizontalScrollView {
     private AdapterChangeListener mAdapterChangeListener;
     private boolean mSetupViewPagerImplicitly;
 
-    //add
+    //add indicator动画时间
     private  int tabIndicatorAnimationDuration;
+    private int tabTextSelectedScaleAnimationDuration;
 
     // Pool we use as a simple RecyclerBin
     private final Pools.Pool<TabView> mTabViewPool = new Pools.SimplePool<>(12);
@@ -355,13 +356,13 @@ public class TvTabLayout extends HorizontalScrollView {
         mTabTextSelectedScaleValue = a.getFloat(R.styleable.TvTabLayout_tabTextSelectedScale, 0);
         tabIndicatorAnimationDuration =
                 a.getInt(R.styleable.TvTabLayout_tabIndicatorAnimationDurationVal, ANIMATION_DURATION);
+        tabTextSelectedScaleAnimationDuration = a.getInteger(R.styleable.TvTabLayout_tabTextSelectedScaleAnimationDuration,ANIMATION_DURATION);
         a.recycle();
 
         // TODO add attr for these
         final Resources res = getResources();
         mTabTextMultiLineSize = res.getDimensionPixelOffset(R.dimen.tablayout_tab_text_size_2line);
         mScrollableTabMinWidth = res.getDimensionPixelOffset(R.dimen.tablayout_tab_scrollable_min_width);
-
         // Now apply the tab mode and gravity
         applyModeAndGravity();
     }
@@ -1342,11 +1343,11 @@ public class TvTabLayout extends HorizontalScrollView {
             animator.scaleX(mTabTextSelectedScaleValue).scaleY(mTabTextSelectedScaleValue)
                     .translationY((getHeight() - tab.getView().getHeight()) / 2)
                     .setInterpolator(new AccelerateDecelerateInterpolator())
-                    .setDuration(700)
+                    .setDuration(tabTextSelectedScaleAnimationDuration)
                     .start();
         } else if(mTabTextSelectedScaleValue > 0) {
             animator.scaleX(mTabTextSelectedScaleValue).scaleY(mTabTextSelectedScaleValue)
-                    .setDuration(500)
+                    .setDuration(tabTextSelectedScaleAnimationDuration)
                     .start();
         }
     }
@@ -1357,11 +1358,11 @@ public class TvTabLayout extends HorizontalScrollView {
             animator.scaleX(1f).scaleY(1f)
                     .translationY(0)
                     .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(500)
+                    .setDuration(tabTextSelectedScaleAnimationDuration)
                     .start();
         } else if(mTabTextSelectedScaleValue > 0) {
             animator.scaleX(1f).scaleY(1f)
-                    .setDuration(500)
+                    .setDuration(tabTextSelectedScaleAnimationDuration)
                     .start();
         }
     }
